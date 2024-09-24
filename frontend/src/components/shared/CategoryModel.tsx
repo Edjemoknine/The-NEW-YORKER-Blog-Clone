@@ -11,7 +11,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function CatDialog({ addCategory, setCategory, category }) {
+export function CatDialog({ 
+  addCategory,
+  setCategory,
+  category
+}: {
+  addCategory: () => void;
+  setCategory: (value: string) => void;
+  category: string;
+}) {
   return (
     <Dialog>
       <DialogTrigger asChild>

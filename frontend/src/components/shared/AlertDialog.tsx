@@ -8,9 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-
-export function AlertDialogDemo({ open, setOpen, action }) {
+export function AlertDialogDemo({ open, setOpen, action }: { open: boolean; setOpen: (open: boolean) => void; action: () => void }) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>

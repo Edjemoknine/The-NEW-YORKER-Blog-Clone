@@ -13,12 +13,20 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { cn } from "./utils";
 type BlogProps = {
-  data: [];
+  data: BlogItem[];
 };
-const Slider = ({ data }) => {
+
+interface BlogItem {
+  image: string;
+  category: string;
+  title: string;
+  username: string;
+}
+
+const Slider = ({ data }: BlogProps) => {
   const pagination = {
     clickable: true,
-    renderBullet: function (index, className) {
+    renderBullet: function (index: number, className: string) {
       return `<span class=${cn(className)}>  </span>`;
     },
   };

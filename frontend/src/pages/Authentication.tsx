@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Login from "@/components/shared/Login";
 import Register from "@/components/shared/Register";
 import { Button } from "@/components/ui/button";
@@ -7,11 +8,11 @@ import { useSelector } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
 const Authentication = () => {
   const [login, setLogin] = useState(false);
-  const { user } = useSelector((store) => store.auth);
+  const { user } = useSelector((store:any) => store.auth);
   if (user) return <Navigate to={"/"} />;
   return (
     <div className="flex overflow-hidde w-full  relative h-screen pt-28  ">
-      <Login isLogin={login} />
+      <Login isLogin={login} setIsLogin={setLogin}/>
       <Register setLogin={setLogin} isLogin={login} />
       <div
         className={cn(

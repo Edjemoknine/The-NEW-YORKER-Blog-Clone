@@ -1,7 +1,7 @@
-const Heading = ({ title, paragraph, image }) => {
+const Heading = ({ title, paragraph, image }: { title: string; paragraph: string; image?: string }) => {
   return (
     <div className="pb-4 border-t pt-8 border-gray-500 text-center">
-      {image == !"" && (
+      {image && image !== "" && (
         <img
           src={image}
           alt="Image"

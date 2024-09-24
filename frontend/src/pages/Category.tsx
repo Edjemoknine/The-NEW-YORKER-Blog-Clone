@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Sponsor from "@/components/utils/Sponsor";
 import { useInView } from "react-intersection-observer";
 import { useParams } from "react-router-dom";
@@ -8,7 +9,7 @@ import Card from "@/components/utils/Card";
 
 const Category = () => {
   const { title } = useParams();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -20,12 +21,13 @@ const Category = () => {
       const data = await fetchPosts({
         category: title,
         pageParam: page,
+        limit: 10, // Add a default limit or adjust as needed
       });
       setPosts((prevPosts) => [...prevPosts, ...data.posts]);
       setHasMore(data.currentPage < data.totalPages);
       setPage((prevPage) => prevPage + 1);
-    } catch (err) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err instanceof Error ? err.message : 'An unknown error occurred') as any);
     } finally {
       setLoading(false);
     }

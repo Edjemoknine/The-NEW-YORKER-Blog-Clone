@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Sheet,
   SheetContent,
@@ -13,13 +14,13 @@ import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, reset } from "@/context/authSlice";
 
-export function Sidebar({ scrollDown, pathname }) {
+
+export function Sidebar({ scrollDown, pathname }: { scrollDown: boolean; pathname: string }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((store) => store.auth);
-
+  const { user } = useSelector((store: any) => store.auth);
   const onLogout = () => {
-    dispatch(logout());
+    dispatch(logout() as any);
     dispatch(reset());
     navigate("/auth");
   };

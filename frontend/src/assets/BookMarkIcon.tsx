@@ -1,8 +1,9 @@
-const BookMarkIcon = (props, fill) => {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const BookMarkIcon = ({ size, ...props }: { size: number, [key: string]: any }, fill: string) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={props.size}
+      width={size}
       height={props.size}
       viewBox="0 0 24 24"
       {...props}

@@ -22,7 +22,7 @@ const Card = ({ item }: Props) => {
             className="w-full h-full object-cover absolute inset-0"
           />
         </div>
-        <h3 className="font-grotesk font-semibold text-xl text-gray-700">
+        <h3 className="font-grotesk font-semibold break-words text-xl text-gray-700">
           {item?.title}
         </h3>
         <p className="font-light text-sm line-clamp-3">{item?.desc}</p>

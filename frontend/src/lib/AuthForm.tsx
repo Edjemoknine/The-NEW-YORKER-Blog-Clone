@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,11 +11,12 @@ import { useNavigate } from "react-router-dom";
 // import axios from "axios";
 
 import axios from "axios";
+import { AppDispatch } from "@/context/store";
 
-export function SignupForm({ isLogin, setLogin }) {
-  const dispatch = useDispatch();
+export function SignupForm({ isLogin, setLogin }: { isLogin: boolean; setLogin: (value: boolean) => void }) {
+  const dispatch = useDispatch<AppDispatch>();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (store) => store.auth
+    (store: any) => store.auth
   );
   const navigate = useNavigate();
 
@@ -24,7 +26,7 @@ export function SignupForm({ isLogin, setLogin }) {
     password: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
@@ -46,12 +48,12 @@ export function SignupForm({ isLogin, setLogin }) {
 
     if (isLogin) {
       if (data.password && data.email) {
-        dispatch(login(data));
-        navigate("/user");
+        dispatch(login(data) as any);
+        // Navigation will be handled by the useEffect hook
       }
     } else {
       if (data.password && data.email) {
-        dispatch(register(data));
+        dispatch(register(data)as any);
       }
 
       setLogin(true);

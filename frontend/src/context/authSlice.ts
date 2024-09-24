@@ -14,11 +14,16 @@ const initialState = {
   message: "",
 };
 
+interface LoginPayload {
+  name: string;
+  email:string,
+  password: string;
+}
 // Register
 
 export const register = createAsyncThunk(
   "auth/register",
-  async (payload, thunkAPI) => {
+  async (payload:LoginPayload, thunkAPI) => {
     try {
       const response = await axios.post("/api/auth/register", payload);
       if (response.data) {
@@ -26,16 +31,20 @@ export const register = createAsyncThunk(
       }
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.message);
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(error.response.data.message);
+      }
+      return thunkAPI.rejectWithValue('An unexpected error occurred');
     }
   }
 );
 
 // Login
 
+
 export const login = createAsyncThunk(
   "auth/login",
-  async (payload, thunkAPI) => {
+  async (payload:LoginPayload, thunkAPI) => {
     try {
       const response = await axios.post("/api/auth/login", payload);
       if (response.data) {
@@ -43,7 +52,10 @@ export const login = createAsyncThunk(
       }
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.message);
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(error.response.data.message);
+      }
+      return thunkAPI.rejectWithValue('An unexpected error occurred');
     }
   }
 );
@@ -56,7 +68,10 @@ export const logout = createAsyncThunk(
       //   const response = await axios.post("/api/auth/logout");  // use it if u built logout in the server
       localStorage.removeItem("user");
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.message);
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(error.response.data.message);
+      }
+      return thunkAPI.rejectWithValue('An unexpected error occurred');
     }
   }
 );
@@ -77,7 +92,7 @@ const authSlice = createSlice({
       .addCase(register.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(register.fulfilled, (state, action) => {
+      .addCase(register.fulfilled, (state) => {
         state.isLoading = false;
         // state.isSuccess = true;
         // state.user = action.payload;
@@ -85,7 +100,7 @@ const authSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload;
+        state.message = action.payload as string;
         state.user = null;
       })
       .addCase(login.pending, (state) => {
@@ -99,7 +114,7 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload;
+        state.message = action.payload as string;
         state.user = null;
       })
 
