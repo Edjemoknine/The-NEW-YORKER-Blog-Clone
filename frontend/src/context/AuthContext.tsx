@@ -1,9 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useContext, useState } from "react";
 
-const AuthContext = createContext(null);
+interface AuthContextType {
+  user: any;
+  setUser: React.Dispatch<React.SetStateAction<any>>;
+}
 
-const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+const AuthContext = createContext<AuthContextType | null>(null);
+
+const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<any>(null);
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>

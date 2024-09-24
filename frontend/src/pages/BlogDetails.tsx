@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Grid from "@/components/utils/Grid";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -13,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 const BlogDetails = () => {
   const { id } = useParams();
-  const { user } = useSelector((store) => store.auth);
+  const { user } = useSelector((store:any) => store.auth);
   const name = user?.otherData?._id;
   const naviagte = useNavigate();
   const [open, setOpen] = useState(false);
@@ -25,11 +26,11 @@ const BlogDetails = () => {
   });
 
   const [isEdit, setIsEdit] = useState(false);
-  const isOwner = user.otherData._id === details?.username._id;
+  const isOwner = user?.otherData._id === details?.username._id;
 
   const { data } = useQuery({
     queryKey: [details?.categories[0]],
-    queryFn: () => fetchPosts({ category: details?.categories[0] }),
+    queryFn: () => fetchPosts({ category: details?.categories[0], limit: 10 }),
   });
 
   const deletePost = async () => {
@@ -81,11 +82,11 @@ const BlogDetails = () => {
     queryKey: ["userProfile", name],
     queryFn: () => userData(name!),
   });
-  const isSaved = profile?.savedPost.some((post) => post._id === id);
+  const isSaved = profile?.savedPost.some((post: { _id: string }) => post._id === id);
 
   return (
     <div className="">
-      <div className=" w-full flex flex-col pt-40  max-w-[90rem] mx-auto px-4 md:px-6 py-10">
+      <div className="w-full flex flex-col pt-40 max-w-[90rem] mx-auto px-4 md:px-6 py-10">
         <div className=" relative md:pb-20 pb-10 w-full border-b border-neutral-200  flex  items-center  font-grotesk">
           <div>
             <h5 className="text-red-600 mb-3 uppercase font-grotesk">

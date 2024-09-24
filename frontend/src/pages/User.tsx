@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PostForm } from "@/components/shared/PostForm";
 import { Button } from "@/components/ui/button";
-import { z } from "zod";
+import { any, z } from "zod";
 import {
   Card,
   CardContent,
@@ -36,7 +38,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 // axios.defaults.withCredentials = true;
 const User = () => {
-  const { user } = useSelector((store) => store.auth);
+  const { user } = useSelector((store:any) => store.auth);
   const navigate = useNavigate();
 
   const name = user?.otherData?._id;
@@ -97,24 +99,15 @@ const formSchema = z.object({
   }),
   bio: z.string().min(6, { message: "Bio must be provided" }),
 });
-const UserInfo = ({ profile }) => {
+const UserInfo = ({ profile }:{profile:any}) => {
   // const [userInfo, setUserInfo] = useState({});
-  const { user } = useSelector((store) => store.auth);
+  const { user } = useSelector((store:any) => store.auth);
   const [ImG, setImage] = useState(profile?.avatar);
 
   const { toast } = useToast();
   const id = user?.otherData?._id;
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`/api/users/${id}`)
-  //     .then((res) => {
-  //       setUserInfo(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, [id]);
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -126,7 +119,7 @@ const UserInfo = ({ profile }) => {
     },
   });
 
-  const handleImage = (e) => {
+  const handleImage = (e:any) => {
     const preset_key = "download";
     const cloud_name = "drcatqidu";
     const url = e.target.files[0];
@@ -260,7 +253,7 @@ const UserInfo = ({ profile }) => {
     </div>
   );
 };
-const SavedPosts = (posts) => {
+const SavedPosts = (posts:any) => {
   return (
     <div>
       {" "}
@@ -287,7 +280,7 @@ const CreatePost = () => {
   );
 };
 
-const UserPosts = (posts) => {
+const UserPosts = (posts:any) => {
   return (
     <div>
       {posts ? (

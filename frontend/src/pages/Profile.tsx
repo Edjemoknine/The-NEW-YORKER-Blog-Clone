@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useParams } from "react-router-dom";
 import SearchCard from "../components/shared/SearchCard";
 import { userData } from "@/api/FetchPots";
@@ -46,7 +47,7 @@ const Profile = () => {
           </p>
         </div>
       </div>
-      {profile.posts.map((item) => (
+      {profile.posts.map((item:any) => (
         <SearchCard item={item} key={item.id} />
       ))}
     </div>

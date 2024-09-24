@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,20 +39,23 @@ const FormSchema = z.object({
   category: z.string().min(2, {
     message: "Category must be provided.",
   }),
+  image:z.string().optional()
 });
 
-export function PostForm({ type, post, close }: { type: string }) {
-  const { user } = useSelector((store) => store.auth);
+export function PostForm({ type, post, close }: { type?: string; post?: any; close?: () => void }) {
+  const { user } = useSelector((store: any) => store.auth);
   const preset_key = "download";
   const cloud_name = "drcatqidu";
   const [ImG, setImage] = useState(post?.image ?? "");
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleImage = (e) => {
-    const url = e.target.files[0];
+  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
     const formData = new FormData();
-    formData.append("file", url);
+    formData.append("file", file);
     formData.append("upload_preset", preset_key);
     axios
       .post(
@@ -98,12 +103,20 @@ export function PostForm({ type, post, close }: { type: string }) {
           navigate(`/profile/${user?.otherData?._id}`);
           form.reset();
           setImage("");
-        } catch (error) {
-          toast({
-            title: error.message,
-            type: "background",
-          });
-          console.log(error);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            toast({
+              title: error.message,
+              type: "background",
+            });
+            console.error(error);
+          } else {
+            toast({
+              title: "An unknown error occurred",
+              type: "background",
+            });
+            console.error("An unknown error occurred:", error);
+          }
         }
       } else {
         try {
@@ -117,18 +130,28 @@ export function PostForm({ type, post, close }: { type: string }) {
           });
           form.reset();
           setImage("");
-          close();
+          if (close) {
+            close();
+          }
           toast({
-            title: "Post has been updated successfully !",
+            title: "Post has been updated successfully!",
             type: "background",
           });
           navigate(`/profile/${user?.otherData?._id}`);
-        } catch (error) {
-          toast({
-            title: error.message,
-            type: "background",
-          });
-          console.log(error);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            toast({
+              title: error.message,
+              type: "background",
+            });
+            console.error(error);
+          } else {
+            toast({
+              title: "An unknown error occurred",
+              type: "background",
+            });
+            console.error("An unknown error occurred:", error);
+          }
         }
       }
     } else {

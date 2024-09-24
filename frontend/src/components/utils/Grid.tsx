@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Heading from "./Heading";
 import Card from "./Card";
 import GameCard from "../shared/GameCard";
@@ -14,7 +15,7 @@ const Grid = ({ type, data, HeadingTitle, HeadingSubTitle, image }: Props) => {
     <div className="max-w-[90rem] mx-auto px-4 pb-10 md:px-6">
       <Heading image={image} title={HeadingTitle} paragraph={HeadingSubTitle} />
       <div className="grid sm:grid-cols-2 md:grid-cols-3 my-6 lg:grid-cols-4 gap-6 divide-x2 divide-gray-500">
-        {data?.posts?.map((item, index: number) => {
+        {data?.posts?.map((item: any, index: number) => {
           return type === "game" ? (
             <GameCard key={index} />
           ) : (

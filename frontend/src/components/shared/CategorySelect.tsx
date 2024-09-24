@@ -12,9 +12,9 @@ import { useEffect, useState } from "react";
 
 import { CatDialog } from "./CategoryModel";
 
-export function SelectCategory({ onChange, value }) {
-  const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState("");
+export function SelectCategory({ onChange, value }: { onChange: (value: string) => void; value: string }) {
+  const [categories, setCategories] = useState<Array<{ name: string }>>([]);
+  const [category, setCategory] = useState<string>("");
 
   const fetchCategories = async () => {
     axios.get("/api/categories").then((res) => {

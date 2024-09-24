@@ -60,20 +60,20 @@ export const data = [
 const Home = () => {
   const { data: tech } = useQuery({
     queryKey: ["posts"],
-    queryFn: () => fetchPosts({ category: "Tech", page: 0 }),
+    queryFn: () => fetchPosts({ category: "Tech", limit: 4 }),
   });
 
   const { data: Saas } = useQuery({
-    queryKey: ["Saas"],
-    queryFn: () => fetchPosts({ category: "Saas" }),
+    queryKey: ["saas"],
+    queryFn: () => fetchPosts({ category: "Saas" ,limit:4}),
   });
   const { data: Finance } = useQuery({
     queryKey: ["Politics"],
-    queryFn: () => fetchPosts({ category: "Politics" }),
+    queryFn: () => fetchPosts({ category: "Politics", limit: 4 }),
   });
   const { data: Shopping } = useQuery({
     queryKey: ["Books and culture"],
-    queryFn: () => fetchPosts({ category: "Books and culture" }),
+    queryFn: () => fetchPosts({ category: "Books and culture", limit: 4 }),
   });
 
   return (

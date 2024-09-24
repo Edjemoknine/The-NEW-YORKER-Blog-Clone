@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import SearchForm from "@/components/shared/SearchForm";
 // import { data } from "./Home";
 import SearchCard from "../components/shared/SearchCard";
@@ -11,7 +13,7 @@ const Search = () => {
 
   const { data } = useQuery({
     queryKey: ["serachPosts", search],
-    queryFn: () => fetchPosts({ search, page }),
+    queryFn: () => fetchPosts({ search, pageParam: page, limit: 10 }),
   });
 
   return (
@@ -26,7 +28,7 @@ const Search = () => {
       </div>
 
       <div className="flex-col flex gap-3 px-8">
-        {data?.posts?.map((item) => (
+        {data?.posts?.map((item:any) => (
           <SearchCard item={item} key={item.id} />
         ))}
       </div>

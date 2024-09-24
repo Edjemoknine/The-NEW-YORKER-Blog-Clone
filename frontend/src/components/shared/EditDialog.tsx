@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   AlertDialog,
   AlertDialogContent,
@@ -7,7 +8,7 @@ import {
 import { PostForm } from "./PostForm";
 import { Button } from "../ui/button";
 
-export function EditPostDialog({ open, setOpen, post }) {
+export function EditPostDialog({ open, setOpen, post }: { open: boolean; setOpen: (open: boolean) => void; post: any }) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
