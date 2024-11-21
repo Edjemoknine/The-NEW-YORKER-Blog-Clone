@@ -17,7 +17,7 @@ import User from "./pages/User.tsx";
 import Authentication from "./pages/Authentication.tsx";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL = "https://the-new-yorker-backend.vercel.app";
 axios.defaults.withCredentials = true;
 
 const router = createBrowserRouter(
