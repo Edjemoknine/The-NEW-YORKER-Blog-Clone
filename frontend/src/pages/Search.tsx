@@ -9,11 +9,11 @@ import { useState } from "react";
 
 const Search = () => {
   const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-
+//   const [page, setPage] = useState(1);
+// const page=1
   const { data } = useQuery({
     queryKey: ["serachPosts", search],
-    queryFn: () => fetchPosts({ search, pageParam: page, limit: 10 }),
+    queryFn: () => fetchPosts({ search, pageParam: 1, limit: 10 }),
   });
 
   return (

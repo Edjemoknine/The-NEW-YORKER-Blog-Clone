@@ -67,6 +67,8 @@ export const logout = createAsyncThunk(
     try {
       //   const response = await axios.post("/api/auth/logout");  // use it if u built logout in the server
       localStorage.removeItem("user");
+      console.log(user);
+      return user;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         return thunkAPI.rejectWithValue(error.response.data.message);

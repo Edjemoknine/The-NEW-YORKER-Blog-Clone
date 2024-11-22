@@ -138,7 +138,7 @@ const Home = () => {
         }
         author={"By Abe Streep"}
         subtitle={"Dispatch"}
-        title={"Nova Scotia’s Billion-Dollar Lobster Wars"}
+        title={"Nova Scotia is Billion-Dollar Lobster Wars"}
         content={
           "How Indigenous fishermen are defending their rights—and corporate profits—in the most lucrative fishery in North America."
         }

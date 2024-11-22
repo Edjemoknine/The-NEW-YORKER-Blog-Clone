@@ -1,5 +1,5 @@
 import { ChevronsDown } from "lucide-react";
-import React from "react";
+
 
 const Section = () => {
   return (
