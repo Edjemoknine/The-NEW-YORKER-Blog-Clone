@@ -172,7 +172,7 @@ export function PostForm({ type, post, close }: { type?: string; post?: any; clo
           <FormField
             control={form.control}
             name="image"
-            render={({ field }) => (
+            render={({ }) => (
               <FormItem>
                 <FormLabel>
                   <div className="w-full bg-neutral-300 overflow-hidden relative rounded-xl h-72 cursor-pointer flex justify-center items-center">

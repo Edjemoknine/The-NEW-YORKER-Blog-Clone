@@ -13,7 +13,7 @@ export const fetchPosts = async ({
   limit = 8,
   search = "",
   pageParam = 1,
-  sort,
+  // sort,
 }: Props) => {
   console.log(search);
   console.log(pageParam);

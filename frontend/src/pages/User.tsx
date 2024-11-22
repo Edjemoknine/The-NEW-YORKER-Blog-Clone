@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PostForm } from "@/components/shared/PostForm";
 import { Button } from "@/components/ui/button";
-import { any, z } from "zod";
+import {  z } from "zod";
 import {
   Card,
   CardContent,
@@ -68,6 +68,11 @@ const User = () => {
             <TabsTrigger value="saved">Saved Posts</TabsTrigger>
             <TabsTrigger value="create">Create Post</TabsTrigger>
           </TabsList>
+        </div>
+        <div>
+          {isLoading && (
+            <p className="text-center text-2xl mt-10 font-grotesk">Loading...</p>
+          )}
         </div>
         <TabsContent value="user">
           <UserInfo profile={profile} />

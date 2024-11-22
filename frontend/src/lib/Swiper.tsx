@@ -27,6 +27,7 @@ const Slider = ({ data }: BlogProps) => {
   const pagination = {
     clickable: true,
     renderBullet: function (index: number, className: string) {
+      console.log(index);
       return `<span class=${cn(className)}>  </span>`;
     },
   };
