@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL = "https://the-new-yorker-backend.vercel.app";
 axios.defaults.withCredentials = true;
 
 const user = JSON.parse(localStorage.getItem("user")!);
