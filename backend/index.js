@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://the-new-yorker-blog-frontend.vercel.app/",
+    origin: "https://the-new-yorker-blog-frontend.vercel.app",
     credentials: true,
   })
 );
