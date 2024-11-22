@@ -8,6 +8,9 @@ type Props = {
   sort?: string; // "desc" or "asc"
 };
 
+axios.defaults.baseURL = "https://the-new-yorker-backend.vercel.app";
+axios.defaults.withCredentials = true;
+
 export const fetchPosts = async ({
   category = "",
   limit = 8,
