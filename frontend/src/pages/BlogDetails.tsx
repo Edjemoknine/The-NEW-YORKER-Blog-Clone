@@ -13,6 +13,8 @@ import axios from "axios";
 import { cn } from "@/lib/utils";
 
 const BlogDetails = () => {
+  axios.defaults.baseURL = "https://the-new-yorker-backend.vercel.app";
+axios.defaults.withCredentials = true;
   const { id } = useParams();
   const { user } = useSelector((store:any) => store.auth);
   const name = user?.otherData?._id;
