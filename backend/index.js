@@ -8,12 +8,7 @@ const mongoose = require("mongoose");
 
 app.use(express.json());
 app.use(
-  cors({
-    origin: ['https://the-new-yorker-blog-frontend.vercel.app', 'http://localhost:5173'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  })
+  cors()
 );
 
 app.use(cookieParser());
