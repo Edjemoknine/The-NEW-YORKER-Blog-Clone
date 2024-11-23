@@ -12,7 +12,7 @@ app.use(
     origin: ['https://the-new-yorker-blog-frontend.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
-  }))
+  })
 );
 
 app.use(cookieParser());
