@@ -1,7 +1,7 @@
 const express = require("express");
 const User = require("../models/User");
 const authRoute = express.Router();
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
 
 const {
   generateAccessToken,
@@ -13,7 +13,9 @@ authRoute.post("/register", async (req, res) => {
 
   const user = await User.findOne({ name: data.name });
   if (user) return res.status(409).json({ message: "User already exists" });
-  const hashedPassword = await bcrypt.hash(data.password, 10);
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(data.password, salt);
+  // const hashedPassword = await bcrypt.hash(data.password, 10);
   try {
     const newUser = new User({
       name: data.name,
@@ -38,6 +40,7 @@ authRoute.post("/login", async (req, res) => {
     if (!user) res.status(404).json({ message: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
+    // const isMatch = await bcrypt.compare(password, hashedPassword);
     if (!isMatch) res.status(404).json({ message: "User not found" });
 
     const { ...otherData } = user._doc;
