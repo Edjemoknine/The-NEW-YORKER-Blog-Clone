@@ -1,7 +1,7 @@
 const express = require("express");
 const userRoute = express.Router();
 const User = require("../models/User.js");
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
 const Post = require("../models/Post.js");
 const { verifytoken } = require("../middleware/verify.js");
 
@@ -25,7 +25,9 @@ userRoute.put("/:id", async (req, res) => {
 
   try {
     if (req.body.password) {
-      const hashPassword = await bcrypt.hash(req.body.password, 10);
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      // const hashPassword = await bcrypt.hash(req.body.password, 10);
       rest.password = hashPassword;
     }
 
