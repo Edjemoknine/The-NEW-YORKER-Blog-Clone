@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PostForm } from "@/components/shared/PostForm";
 import { Button } from "@/components/ui/button";
-import {  z } from "zod";
+import { z } from "zod";
 import {
   Card,
   CardContent,
@@ -36,9 +36,11 @@ import { userData } from "@/api/FetchPots";
 import Grid from "@/components/utils/Grid";
 import { Textarea } from "@/components/ui/textarea";
 
-// axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "https://the-new-yorker-backend.vercel.app";
+axios.defaults.withCredentials = true;
+
 const User = () => {
-  const { user } = useSelector((store:any) => store.auth);
+  const { user } = useSelector((store: any) => store.auth);
   const navigate = useNavigate();
 
   const name = user?.otherData?._id;
@@ -104,9 +106,12 @@ const formSchema = z.object({
   }),
   bio: z.string().min(6, { message: "Bio must be provided" }),
 });
-const UserInfo = ({ profile }:{profile:any}) => {
+const UserInfo = ({ profile }: { profile: any }) => {
   // const [userInfo, setUserInfo] = useState({});
-  const { user } = useSelector((store:any) => store.auth);
+  axios.defaults.baseURL = "https://the-new-yorker-backend.vercel.app";
+  axios.defaults.withCredentials = true;
+
+  const { user } = useSelector((store: any) => store.auth);
   const [ImG, setImage] = useState(profile?.avatar);
 
   const { toast } = useToast();
@@ -124,7 +129,7 @@ const UserInfo = ({ profile }:{profile:any}) => {
     },
   });
 
-  const handleImage = (e:any) => {
+  const handleImage = (e: any) => {
     const preset_key = "download";
     const cloud_name = "drcatqidu";
     const url = e.target.files[0];
@@ -258,7 +263,7 @@ const UserInfo = ({ profile }:{profile:any}) => {
     </div>
   );
 };
-const SavedPosts = (posts:any) => {
+const SavedPosts = (posts: any) => {
   return (
     <div>
       {" "}
@@ -285,7 +290,7 @@ const CreatePost = () => {
   );
 };
 
-const UserPosts = (posts:any) => {
+const UserPosts = (posts: any) => {
   return (
     <div>
       {posts ? (
