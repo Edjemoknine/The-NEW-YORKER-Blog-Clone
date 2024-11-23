@@ -2,9 +2,9 @@ const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-
 const dostenv = require("dotenv");
 const mongoose = require("mongoose");
+dostenv.config();
 
 app.use(express.json());
 app.use(
@@ -15,8 +15,13 @@ app.use(
   })
 );
 
+
 app.use(cookieParser());
-dostenv.config();
+
+// Add a test route to verify the API is working
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'API is working' });
+});
 
 const authRoute = require("./routes/auth.js");
 const userRoute = require("./routes/user.js");
@@ -27,20 +32,26 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/categories", catRoute);
-// Add a test route to verify the API is working
-app.get('/api/test', (req, res) => {
-  res.json({ message: 'API is working' });
-});
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something broke!', error: err.message });
-});
 
-// 404 handler
+
+
+// Handle 404 - Keep this after all valid routes
 app.use((req, res) => {
-  res.status(404).json({ message: `Route ${req.originalUrl} not found` });
+  console.log('Not found:', req.originalUrl);
+  res.status(404).json({
+    message: `Route ${req.originalUrl} not found`,
+    status: 404
+  });
+});
+
+// Error handling middleware - Keep this last
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({
+    message: 'Internal server error',
+    error: err.message
+  });
 });
 
 mongoose
@@ -51,5 +62,3 @@ mongoose
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-// mongoose.connect(process.env.MONGODB_URI);
-// app.listen(process.env.PORT, () => console.log("server running on post 5000"));
