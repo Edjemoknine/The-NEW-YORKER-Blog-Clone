@@ -29,4 +29,4 @@ app.use("/api/posts", postRoute);
 app.use("/api/categories", catRoute);
 
 mongoose.connect(process.env.MONGODB_URI);
-app.listen(5000, () => console.log("server running on post 5000"));
+app.listen(process.env.PORT, () => console.log("server running on post 5000"));
