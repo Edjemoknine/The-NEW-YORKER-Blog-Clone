@@ -9,9 +9,10 @@ import postRoute from "./routes/post.js";
 
 const app = express();
 const allowedOrigins = [
+ "http://localhost:5173",
   process.env.FRONTEND_URL,
-  "https://the-new-yorker-blog-frontend.vercel.app",
-  "http://localhost:5173",
+/*   "https://the-new-yorker-blog-frontend.vercel.app",
+  "https://the-new-yorker-blog-frontend.onrender.com", */
 ].filter(Boolean);
 
 app.use(express.json());
@@ -45,5 +46,5 @@ app.use((error, _req, res, _next) => {
   res.status(500).json({ message: "Internal server error" });
 });
 
-const port = process.env.PORT || 5000;
+const port =  5000;
 app.listen(port, () => console.log(`Server running on port ${port}`));

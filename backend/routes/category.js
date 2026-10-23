@@ -1,27 +1,17 @@
-const express = require("express");
-const Category = require("../models/Category");
-const { verifytoken } = require("../middleware/verify");
-const catRoute = express.Router();
+import { Router } from "express";
+import { verifytoken } from "../middleware/verify.js";
+import {
+  createCategory,
+  getCategories,
+  deleteCategory,
+} from "../controller/category.controller.js";
 
-catRoute.post("/", verifytoken, async (req, res) => {
-  const data = req.body;
-  console.log(data);
-  try {
-    const category = new Category({ name: data.category });
-    await category.save();
-    res.json(category);
-  } catch (error) {
-    console.log(error);
-  }
-});
+const catRoute = Router();
 
-catRoute.get("/", async (req, res) => {
-  try {
-    const categories = await Category.find();
-    res.json(categories);
-  } catch (error) {
-    console.log(error);
-  }
-});
+catRoute.post("/", verifytoken, createCategory);
+catRoute.get("/", getCategories);
 
-module.exports = catRoute;
+// Optional: protect category deletion too.
+catRoute.delete("/:id", verifytoken, deleteCategory);
+
+export default catRoute;
