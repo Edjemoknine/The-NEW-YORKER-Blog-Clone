@@ -15,10 +15,6 @@ import CreatePost from "./pages/CreatePost.tsx";
 import UpdatePost from "./pages/UpdatePost.tsx";
 import User from "./pages/User.tsx";
 import Authentication from "./pages/Authentication.tsx";
-import axios from "axios";
-
-axios.defaults.baseURL = "https://the-new-yorker-backend.vercel.app";
-axios.defaults.withCredentials = true;
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,8 +28,8 @@ const router = createBrowserRouter(
       <Route path="/create" element={<CreatePost />} />
       <Route path="/user" element={<User />} />
       <Route path="/auth" element={<Authentication />} />
-    </Route>
-  )
+    </Route>,
+  ),
 );
 function App() {
   return <RouterProvider router={router} />;

@@ -13,10 +13,8 @@ import axios from "axios";
 import { cn } from "@/lib/utils";
 
 const BlogDetails = () => {
-  axios.defaults.baseURL = "https://the-new-yorker-backend.vercel.app";
-axios.defaults.withCredentials = true;
   const { id } = useParams();
-  const { user } = useSelector((store:any) => store.auth);
+  const { user } = useSelector((store: any) => store.auth);
   const name = user?.otherData?._id;
   const naviagte = useNavigate();
   const [open, setOpen] = useState(false);
@@ -84,7 +82,9 @@ axios.defaults.withCredentials = true;
     queryKey: ["userProfile", name],
     queryFn: () => userData(name!),
   });
-  const isSaved = profile?.savedPost.some((post: { _id: string }) => post._id === id);
+  const isSaved = profile?.savedPost.some(
+    (post: { _id: string }) => post._id === id,
+  );
 
   return (
     <div className="">
@@ -117,7 +117,7 @@ axios.defaults.withCredentials = true;
             strokeWidth={1}
             onClick={() => onSavePost.mutate()}
             className={cn(
-              "cursor-pointer text-7xl   hover:text-sky-500 p-1.5 absolute md:top-1/3 md:left-3 right-3 top-2  border rounded-lg"
+              "cursor-pointer text-7xl   hover:text-sky-500 p-1.5 absolute md:top-1/3 md:left-3 right-3 top-2  border rounded-lg",
             )}
           />
           <div className="md:w-2/3 h-full mt-16 ">

@@ -1,9 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-axios.defaults.baseURL = "https://the-new-yorker-backend.vercel.app";
-axios.defaults.withCredentials = true;
-
+import api from "@/api/client";
 const user = JSON.parse(localStorage.getItem("user")!);
 
 const initialState = {
@@ -16,48 +13,47 @@ const initialState = {
 
 interface LoginPayload {
   name: string;
-  email:string,
+  email: string;
   password: string;
 }
 // Register
 
 export const register = createAsyncThunk(
   "auth/register",
-  async (payload:LoginPayload, thunkAPI) => {
+  async (payload: LoginPayload, thunkAPI) => {
     try {
-      const response = await axios.post("/api/auth/register", payload);
+      const response = await api.post("/api/auth/register", payload);
       if (response.data) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
       return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
+    } catch (error: any) {
+      if (error.response) {
         return thunkAPI.rejectWithValue(error.response.data.message);
       }
-      return thunkAPI.rejectWithValue('An unexpected error occurred');
+      return thunkAPI.rejectWithValue("An unexpected error occurred");
     }
-  }
+  },
 );
 
 // Login
 
-
 export const login = createAsyncThunk(
   "auth/login",
-  async (payload:LoginPayload, thunkAPI) => {
+  async (payload: LoginPayload, thunkAPI) => {
     try {
-      const response = await axios.post("/api/auth/login", payload);
+      const response = await api.post("/api/auth/login", payload);
       if (response.data) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
       return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
+    } catch (error: any) {
+      if (error.response) {
         return thunkAPI.rejectWithValue(error.response.data.message);
       }
-      return thunkAPI.rejectWithValue('An unexpected error occurred');
+      return thunkAPI.rejectWithValue("An unexpected error occurred");
     }
-  }
+  },
 );
 
 // Logout
@@ -69,13 +65,13 @@ export const logout = createAsyncThunk(
       localStorage.removeItem("user");
       console.log(user);
       return user;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
+    } catch (error: any) {
+      if (error.response) {
         return thunkAPI.rejectWithValue(error.response.data.message);
       }
-      return thunkAPI.rejectWithValue('An unexpected error occurred');
+      return thunkAPI.rejectWithValue("An unexpected error occurred");
     }
-  }
+  },
 );
 
 const authSlice = createSlice({

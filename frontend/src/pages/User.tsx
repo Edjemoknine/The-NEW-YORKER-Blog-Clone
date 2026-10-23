@@ -36,9 +36,6 @@ import { userData } from "@/api/FetchPots";
 import Grid from "@/components/utils/Grid";
 import { Textarea } from "@/components/ui/textarea";
 
-axios.defaults.baseURL = "https://the-new-yorker-backend.vercel.app";
-axios.defaults.withCredentials = true;
-
 const User = () => {
   const { user } = useSelector((store: any) => store.auth);
   const navigate = useNavigate();
@@ -73,7 +70,9 @@ const User = () => {
         </div>
         <div>
           {isLoading && (
-            <p className="text-center text-2xl mt-10 font-grotesk">Loading...</p>
+            <p className="text-center text-2xl mt-10 font-grotesk">
+              Loading...
+            </p>
           )}
         </div>
         <TabsContent value="user">
@@ -117,8 +116,6 @@ const UserInfo = ({ profile }: { profile: any }) => {
   const { toast } = useToast();
   const id = user?.otherData?._id;
 
-
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     values: {
@@ -145,7 +142,7 @@ const UserInfo = ({ profile }: { profile: any }) => {
             "Content-Type": "multipart/form-data",
           },
           withCredentials: false,
-        }
+        },
       )
       .then((res) => {
         setImage(res.data.secure_url);

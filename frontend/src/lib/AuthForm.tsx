@@ -8,15 +8,19 @@ import { Label } from "./LabelUi";
 import { Input } from "./InputUi";
 import { cn } from "./utils";
 import { useNavigate } from "react-router-dom";
-// import axios from "axios";
 
-import axios from "axios";
 import { AppDispatch } from "@/context/store";
 
-export function SignupForm({ isLogin, setLogin }: { isLogin: boolean; setLogin: (value: boolean) => void }) {
+export function SignupForm({
+  isLogin,
+  setLogin,
+}: {
+  isLogin: boolean;
+  setLogin: (value: boolean) => void;
+}) {
   const dispatch = useDispatch<AppDispatch>();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (store: any) => store.auth
+    (store: any) => store.auth,
   );
   const navigate = useNavigate();
 
@@ -41,8 +45,6 @@ export function SignupForm({ isLogin, setLogin }: { isLogin: boolean; setLogin: 
     dispatch(reset());
   }, [user, isError, isLoading, message, dispatch, navigate, isSuccess]);
 
-  axios.defaults.withCredentials = true;
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -53,7 +55,7 @@ export function SignupForm({ isLogin, setLogin }: { isLogin: boolean; setLogin: 
       }
     } else {
       if (data.password && data.email) {
-        dispatch(register(data)as any);
+        dispatch(register(data) as any);
       }
 
       setLogin(true);

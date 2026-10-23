@@ -1,65 +1,92 @@
-const express = require("express");
-const User = require("../models/User");
-const authRoute = express.Router();
-const bcrypt = require('bcryptjs');
-
-const {
+import { Router } from "express";
+import bcrypt from "bcryptjs";
+import { eq, or } from "drizzle-orm";
+import { db } from "../db/index.js";
+import { users } from "../db/schema.js";
+import { publicUser } from "../db/serialize.js";
+import {
   generateAccessToken,
   generateRefreshToken,
-} = require("../middleware/verify");
+} from "../middleware/verify.js";
+
+const authRoute = Router();
 
 authRoute.post("/register", async (req, res) => {
-  const data = req.body;
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: "Name, email, and password are required" });
+  }
 
-  const user = await User.findOne({ name: data.name });
-  if (user) return res.status(409).json({ message: "User already exists" });
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(data.password, salt);
-  // const hashedPassword = await bcrypt.hash(data.password, 10);
   try {
-    const newUser = new User({
-      name: data.name,
-      email: data.email,
-      password: hashedPassword,
-    });
+    const existingUser = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(or(eq(users.name, name), eq(users.email, email)))
+      .limit(1);
 
-    const user = await newUser.save();
-    res.status(201).json({ message: "success", user });
+    if (existingUser.length > 0) {
+      return res.status(409).json({ message: "User already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const [user] = await db
+      .insert(users)
+      .values({ name, email, password: hashedPassword })
+      .returning();
+
+    return res.status(201).json({ message: "success", user: publicUser(user) });
   } catch (error) {
-    console.log(error);
+    if (error.code === "23505") {
+      return res.status(409).json({ message: "User already exists" });
+    }
+    console.error("User registration failed:", error);
+    return res.status(500).json({ message: "Unable to register user" });
   }
 });
 
-// ----------------- Login -------------------------
 authRoute.post("/login", async (req, res) => {
-  console.log(req.body);
   const { password, email } = req.body;
+  if (!password || !email) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
   try {
-    const user = await User.findOne({ email });
-    console.log(user);
-    if (!user) res.status(404).json({ message: "User not found" });
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    // const isMatch = await bcrypt.compare(password, hashedPassword);
-    if (!isMatch) res.status(404).json({ message: "User not found" });
-
-    const { ...otherData } = user._doc;
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
-
-    res.cookie("accessToken", accessToken, { maxAge: 6000 });
-    res.cookie("refreshToken", refreshToken, {
-      maxAge: 3000000,
+    const isProduction = process.env.NODE_ENV === "production";
+    const cookieOptions = {
       httpOnly: true,
-      secure: true,
-      sameSite: "strict",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+    };
+
+    res.cookie("accessToken", accessToken, {
+      ...cookieOptions,
+      maxAge: 60 * 60 * 1000,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      ...cookieOptions,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({ otherData, accessToken });
+    return res.status(200).json({
+      otherData: publicUser(user),
+      accessToken,
+    });
   } catch (error) {
-    console.log(error);
+    console.error("User login failed:", error);
+    return res.status(500).json({ message: "Unable to log in" });
   }
 });
 
-module.exports = authRoute;
+export default authRoute;
