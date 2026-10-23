@@ -16,18 +16,18 @@
 
 ## Introduction
 
-The **MERN Stack Blog** is a full-stack blog application built using the MERN (MongoDB, Express.js, React.js, Node.js) stack. The application allows users to create, edit, and manage blog posts with full CRUD (Create, Read, Update, Delete) functionality. It also includes user authentication for managing personalized blog posts.
+The **New Yorker Blog** is a full-stack blog application built with React, Express, and Neon Postgres. The application allows users to create, edit, and manage blog posts with full CRUD functionality and authentication.
 
 ## Technologies
 
 The project uses the following technologies:
 
-- **MongoDB**: For the database to store blog posts and user data.
+- **Neon**: Serverless PostgreSQL database for blog posts and user data.
 - **Express.js**: To handle the backend routing and API requests.
 - **React.js**: For building the user interface and client-side routing.
 - **Node.js**: As the runtime environment for running the backend server.
 - **JWT (JSON Web Tokens)**: For handling user authentication and authorization.
-- **Mongoose**: For object modeling and MongoDB interaction.
+- **Drizzle ORM**: For PostgreSQL schema management and queries.
 - **Axios**: To handle HTTP requests from the frontend to the backend.
 - **Tailwind CSS**: For styling the user interface components.
 
@@ -47,7 +47,7 @@ The project uses the following technologies:
 ### Prerequisites
 
 - Node.js and npm/yarn installed.
-- MongoDB installed and running locally or accessible through a service like MongoDB Atlas.
+- A Neon PostgreSQL database and its connection URL.
 
 ### Installation
 
@@ -66,11 +66,15 @@ The project uses the following technologies:
       ```bash
       npm install
       ```
-    - Create a `.env` file in the `backend` directory with the following environment variables:
+    - Create a `.env` file in the `backend` directory with:
       ```env
-      MONGO_URI=your_mongodb_connection_string
+      DATABASE_URL=your_neon_postgres_connection_string
       JWT_SECRET=your_jwt_secret
       PORT=5000
+      ```
+    - Apply the database schema:
+      ```bash
+      npm run db:migrate
       ```
     - Start the backend server:
       ```bash
@@ -78,9 +82,9 @@ The project uses the following technologies:
       ```
 
 3. **Frontend Setup**:
-    - Navigate to the `frontend` directory:
+    - In a second terminal, navigate to the `frontend` directory:
       ```bash
-      cd ../frontend
+      cd frontend
       ```
     - Install dependencies:
       ```bash
@@ -88,16 +92,23 @@ The project uses the following technologies:
       ```
     - Create a `.env` file in the `frontend` directory:
       ```env
-      REACT_APP_API_URL=http://localhost:5000
+      VITE_API_URL=http://localhost:5000
       ```
     - Start the frontend server:
       ```bash
-      npm start
+      npm run dev
       ```
 
 4. **Access the Application**:
-    - Frontend: `http://localhost:3000`
+    - Frontend: `http://localhost:5173`
     - Backend: `http://localhost:5000`
+
+### Database migrations
+
+Update `backend/db/schema.js`, generate a migration with
+`cd backend && npm run db:generate -- --name describe_change`, and apply it with
+`npm run db:migrate`. The application now reads and writes Neon data through the shared
+Drizzle instance in `backend/db/index.js`; existing MongoDB records are not migrated.
 
 ## Usage
 
@@ -122,7 +133,7 @@ mern-blog/
 │
 ├── backend/             # Express.js backend
 │   ├── controllers/     # API controllers
-│   ├── models/          # Mongoose models
+│   ├── db/              # Drizzle schema, connection, and migrations
 │   ├── routes/          # Express routes
 │   └── server.js        # Entry point for the backend
 │

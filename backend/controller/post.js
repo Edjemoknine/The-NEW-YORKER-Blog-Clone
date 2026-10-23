@@ -1,104 +1,191 @@
-const Post = require("../models/Post");
-const User = require("../models/User");
-const { options } = require("../routes/user");
+import {
+  and,
+  arrayContains,
+  asc,
+  count,
+  desc,
+  eq,
+  ilike,
+  or,
+} from "drizzle-orm";
+import { db } from "../db/index.js";
+import { posts, users } from "../db/schema.js";
+import { postWithAuthor } from "../db/serialize.js";
 
-const createPost = async (req, res) => {
-  const data = req.body;
-  console.log(data);
-
-  try {
-    const newPost = new Post(data);
-    newPost.categories.push(data.category);
-    const post = await newPost.save();
-
-    await User.findByIdAndUpdate(data.username, { $push: { posts: post._id } });
-    res.json(post);
-  } catch (error) {
-    console.log(error);
-  }
+const getJoinedPost = async (id) => {
+  const [row] = await db
+    .select({ post: posts, author: users })
+    .from(posts)
+    .innerJoin(users, eq(posts.userId, users.id))
+    .where(eq(posts.id, id))
+    .limit(1);
+  return row ? postWithAuthor(row.post, row.author) : null;
 };
 
-const getPosts = async (req, res) => {
+export const createPost = async (req, res) => {
   const {
+    title,
+    desc,
+    content,
     category,
-    search,
-    page,
-    limit,
-    sortBy = "title",
-    order = "asc",
-  } = req.query;
-
-  let filters = {};
-
-  if (category) filters.categories = { $in: [category] };
-
-  if (search) {
-    filters.$or = [
-      { title: { $regex: search, $options: "i" } },
-      { desc: { $regex: search, $options: "i" } },
-      { content: { $regex: search, $options: "i" } },
-    ];
+    categories: submittedCategories,
+    image,
+    username,
+  } = req.body;
+  const userId = username || req.user.id;
+  if (!title || !desc || !content || !userId) {
+    return res.status(400).json({
+      message: "Title, description, content, and author are required",
+    });
   }
 
   try {
-    const sortOrder = order === "asc" ? 1 : -1;
-
-    const posts = await Post.find(filters)
-      .populate("username", "-password")
-      .skip((Number(page) - 1) * Number(limit))
-      .limit(Number(limit))
-      .sort({ [sortBy]: sortOrder });
-
-    const count = await Post.countDocuments(filters);
-    console.log({ count });
-    const totalPages = Math.ceil(count / Number(limit));
-    console.log({ totalPages });
-
-    res.json({
-      posts,
-      totalPages,
-      currentPage: Number(page),
-    });
+    const [post] = await db
+      .insert(posts)
+      .values({
+        title,
+        desc,
+        content,
+        userId,
+        image: image || "",
+        categories: submittedCategories || (category ? [category] : []),
+      })
+      .returning();
+    return res.status(201).json(await getJoinedPost(post.id));
   } catch (error) {
-    console.log(error);
+    if (error.code === "23505") {
+      return res.status(409).json({ message: "A post with this title already exists" });
+    }
+    if (error.code === "22P02" || error.code === "23503") {
+      return res.status(400).json({ message: "Invalid author id" });
+    }
+    console.error("Unable to create post:", error);
+    return res.status(500).json({ message: "Unable to create post" });
   }
 };
 
-const getPost = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const post = await Post.findOne({ _id: id }).populate(
-      "username",
-      "-password"
+export const getPosts = async (req, res) => {
+  const page = Math.max(1, Number.parseInt(req.query.page, 10) || 1);
+  const limit = Math.min(100, Math.max(1, Number.parseInt(req.query.limit, 10) || 8));
+  const filters = [];
+  if (req.query.category) {
+    filters.push(arrayContains(posts.categories, [String(req.query.category)]));
+  }
+  if (req.query.search) {
+    const searchTerm = `%${String(req.query.search).replace(/[\\%_]/g, "\\$&")}%`;
+    filters.push(
+      or(
+        ilike(posts.title, searchTerm),
+        ilike(posts.desc, searchTerm),
+        ilike(posts.content, searchTerm),
+      ),
     );
-    res.status(200).json(post);
-  } catch (error) {
-    console.log(error);
   }
-};
 
-const deletePost = async (req, res) => {
-  const { id } = req.params;
+  const sortColumns = {
+    title: posts.title,
+    date: posts.date,
+    createdAt: posts.createdAt,
+  };
+  const sortColumn = sortColumns[req.query.sortBy] || posts.title;
+  const sortDirection = req.query.order === "desc" ? desc : asc;
+  const where = filters.length ? and(...filters) : undefined;
 
   try {
-    await Post.findByIdAndDelete(id);
-    res.status(200).json({
-      message: "Post deleted successfully",
+    const [result, [countResult]] = await Promise.all([
+      db
+        .select({ post: posts, author: users })
+        .from(posts)
+        .innerJoin(users, eq(posts.userId, users.id))
+        .where(where)
+        .orderBy(sortDirection(sortColumn))
+        .limit(limit)
+        .offset((page - 1) * limit),
+      db.select({ total: count() }).from(posts).where(where),
+    ]);
+
+    return res.json({
+      posts: result.map(({ post, author }) => postWithAuthor(post, author)),
+      totalPages: Math.ceil(Number(countResult.total) / limit),
+      currentPage: page,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Unable to fetch posts:", error);
+    return res.status(500).json({ message: "Unable to fetch posts" });
   }
 };
-const updatePost = async (req, res) => {
-  const { id } = req.params;
-  const updatedPost = req.body;
+
+export const getPost = async (req, res) => {
+  try {
+    const post = await getJoinedPost(req.params.id);
+    return post
+      ? res.status(200).json(post)
+      : res.status(404).json({ message: "Post not found" });
+  } catch (error) {
+    if (error.code === "22P02") {
+      return res.status(400).json({ message: "Invalid post id" });
+    }
+    console.error("Unable to fetch post:", error);
+    return res.status(500).json({ message: "Unable to fetch post" });
+  }
+};
+
+export const deletePost = async (req, res) => {
+  try {
+    const deleted = await db
+      .delete(posts)
+      .where(eq(posts.id, req.params.id))
+      .returning({ id: posts.id });
+    if (!deleted.length) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    return res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    if (error.code === "22P02") {
+      return res.status(400).json({ message: "Invalid post id" });
+    }
+    console.error("Unable to delete post:", error);
+    return res.status(500).json({ message: "Unable to delete post" });
+  }
+};
+
+export const updatePost = async (req, res) => {
+  const {
+    title,
+    desc,
+    content,
+    category,
+    categories: submittedCategories,
+    image,
+    username,
+  } = req.body;
+  const values = { updatedAt: new Date() };
+  if (title !== undefined) values.title = title;
+  if (desc !== undefined) values.desc = desc;
+  if (content !== undefined) values.content = content;
+  if (username !== undefined) values.userId = username;
+  if (image !== undefined) values.image = image;
+  if (submittedCategories !== undefined) values.categories = submittedCategories;
+  else if (category !== undefined) values.categories = [category];
 
   try {
-    const post = await Post.findByIdAndUpdate(id, updatedPost, { new: true });
-    res.status(200).json(post);
+    const updated = await db
+      .update(posts)
+      .set(values)
+      .where(eq(posts.id, req.params.id))
+      .returning({ id: posts.id });
+    if (!updated.length) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    return res.status(200).json(await getJoinedPost(updated[0].id));
   } catch (error) {
-    console.log(error);
+    if (error.code === "23505") {
+      return res.status(409).json({ message: "A post with this title already exists" });
+    }
+    if (error.code === "22P02" || error.code === "23503") {
+      return res.status(400).json({ message: "Invalid post or author id" });
+    }
+    console.error("Unable to update post:", error);
+    return res.status(500).json({ message: "Unable to update post" });
   }
 };
-
-module.exports = { createPost, getPosts, getPost, deletePost, updatePost };
