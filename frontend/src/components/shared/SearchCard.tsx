@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 interface SearchCardProps {
   item: {
-    _id: string;
+    id: string;
     title?: string;
     desc?: string;
     username?: {
@@ -16,7 +16,7 @@ interface SearchCardProps {
 const SearchCard: React.FC<SearchCardProps> = ({ item }) => {
   return (
     <div className="max-w-5xl w-full">
-      <Link to={`/blog/${item._id}`}>
+      <Link to={`/blog/${item.id}`}>
         <div className="flex h-72 w-full py-6 border-b border-neutral-200 gap-10">
           <div className="flex flex-col gap-2 flex-[2]">
             <h3 className="text-xs uppercase text-red-500">

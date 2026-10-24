@@ -1,5 +1,6 @@
+import api from "./client";
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import axios from "axios";
 type Props = {
   category?: string;
   limit: number;
@@ -18,17 +19,17 @@ export const fetchPosts = async ({
   console.log(search);
   console.log(pageParam);
   console.log(category);
-  const { data } = await axios.get(
+  const { data } = await api.get(
     `/api/posts?category=${category}&limit=${limit}&search=${search}&page=${pageParam}`,
   );
   return data;
 };
 
 export const fetchPost = async (id: string) => {
-  const { data } = await axios.get(`/api/posts/${id}`);
+  const { data } = await api.get(`/api/posts/${id}`);
   return data;
 };
 export const userData = async (name: string) => {
-  const { data } = await axios.get(`/api/users/${name}`);
+  const { data } = await api.get(`/api/users/${name}`);
   return data;
 };

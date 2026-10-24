@@ -25,6 +25,7 @@ import { SelectCategory } from "./CategorySelect";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useToast } from "../ui/use-toast";
+import api from "@/api/client";
 
 const FormSchema = z.object({
   title: z.string().min(2, {
@@ -39,10 +40,18 @@ const FormSchema = z.object({
   category: z.string().min(2, {
     message: "Category must be provided.",
   }),
-  image:z.string().optional()
+  image: z.string().optional(),
 });
 
-export function PostForm({ type, post, close }: { type?: string; post?: any; close?: () => void }) {
+export function PostForm({
+  type,
+  post,
+  close,
+}: {
+  type?: string;
+  post?: any;
+  close?: () => void;
+}) {
   const { user } = useSelector((store: any) => store.auth);
   const preset_key = "download";
   const cloud_name = "drcatqidu";
@@ -66,7 +75,7 @@ export function PostForm({ type, post, close }: { type?: string; post?: any; clo
             "Content-Type": "multipart/form-data",
           },
           withCredentials: false,
-        }
+        },
       )
       .then((res) => setImage(res.data.secure_url))
       .catch((err) => console.log(err));
@@ -87,7 +96,7 @@ export function PostForm({ type, post, close }: { type?: string; post?: any; clo
     if (ImG) {
       if (type !== "Edit") {
         try {
-          await axios.post("/api/posts", {
+          await api.post("/api/posts", {
             title: data.title,
             desc: data.description,
             content: data.content,
@@ -120,7 +129,7 @@ export function PostForm({ type, post, close }: { type?: string; post?: any; clo
         }
       } else {
         try {
-          await axios.put(`/api/posts/${post._id}`, {
+          await api.put(`/api/posts/${post._id}`, {
             title: data.title,
             desc: data.description,
             content: data.content,
@@ -172,7 +181,7 @@ export function PostForm({ type, post, close }: { type?: string; post?: any; clo
           <FormField
             control={form.control}
             name="image"
-            render={({ }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>
                   <div className="w-full bg-neutral-300 overflow-hidden relative rounded-xl h-72 cursor-pointer flex justify-center items-center">
