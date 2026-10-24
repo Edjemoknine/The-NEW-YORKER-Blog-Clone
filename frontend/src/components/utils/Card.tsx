@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 type Props = {
   item: {
-    _id: string;
+    id: string;
     title: string;
     desc: string;
     username: {
@@ -13,7 +13,7 @@ type Props = {
 };
 const Card = ({ item }: Props) => {
   return (
-    <Link to={`/blog/${item?._id}`}>
+    <Link to={`/blog/${item?.id ?? item?._id}`}>
       <div className="flex flex-col gap-2">
         <div className="min-h-64 w-full relative">
           <img

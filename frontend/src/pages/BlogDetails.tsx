@@ -9,8 +9,8 @@ import { AlertDialogDemo } from "@/components/shared/AlertDialog";
 import { useState } from "react";
 import { EditPostDialog } from "@/components/shared/EditDialog";
 import { useToast } from "@/components/ui/use-toast";
-import axios from "axios";
 import { cn } from "@/lib/utils";
+import api from "@/api/client";
 
 const BlogDetails = () => {
   const { id } = useParams();
@@ -35,7 +35,7 @@ const BlogDetails = () => {
 
   const deletePost = async () => {
     try {
-      await axios.delete(`/api/posts/${id}`);
+      await api.delete(`/api/posts/${id}`);
       toast({
         title: "Post has been deleted successfully !",
         type: "background",
@@ -49,7 +49,7 @@ const BlogDetails = () => {
   const queryClient = useQueryClient();
   const savePost = async () => {
     try {
-      await axios.put(`/api/users/${name}`, {
+      await api.put(`/api/users/${name}`, {
         postId: id,
       });
       toast({
@@ -83,7 +83,7 @@ const BlogDetails = () => {
     queryFn: () => userData(name!),
   });
   const isSaved = profile?.savedPost.some(
-    (post: { _id: string }) => post._id === id,
+    (post: { id: string }) => post.id === id,
   );
 
   return (
@@ -103,10 +103,10 @@ const BlogDetails = () => {
               {details?.desc}
             </p>
             <Link
-              to={`/profile/${details?.username._id}`}
+              to={`/profile/${details?.username.id}`}
               className="max-w-md   hover:border-neutral-700 border-b border-transparent font-semibold text-neutral-800"
             >
-              By {details?.username?.name}
+              By @{details?.username?.name}
             </Link>
           </div>
         </div>

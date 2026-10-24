@@ -7,31 +7,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import axios from "axios";
 import { useEffect, useState } from "react";
 
 import { CatDialog } from "./CategoryModel";
+import api from "@/api/client";
 
-export function SelectCategory({ onChange, value }: { onChange: (value: string) => void; value: string }) {
+export function SelectCategory({
+  onChange,
+  value,
+}: {
+  onChange: (value: string) => void;
+  value: string;
+}) {
   const [categories, setCategories] = useState<Array<{ name: string }>>([]);
-  const [category, setCategory] = useState<string>("");
 
   const fetchCategories = async () => {
-    axios.get("/api/categories").then((res) => {
+    api.get("/api/categories").then((res) => {
       setCategories(res.data);
     });
   };
   useEffect(() => {
     fetchCategories();
   }, []);
-
-  const addCategory = async () => {
-    try {
-      await axios.post("/api/categories", { category });
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <Select onValueChange={onChange} value={value}>
@@ -48,11 +45,7 @@ export function SelectCategory({ onChange, value }: { onChange: (value: string) 
           ))}
         </SelectGroup>
 
-        <CatDialog
-          addCategory={addCategory}
-          category={category}
-          setCategory={setCategory}
-        />
+        <CatDialog />
       </SelectContent>
     </Select>
   );

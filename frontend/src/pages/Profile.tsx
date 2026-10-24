@@ -37,17 +37,17 @@ const Profile = () => {
           </h2>
           <p className="">
             {profile.bio}
-            {/* Andrew Marantz, a staff writer, has contributed to The New Yorker
+            Andrew Marantz, a staff writer, has contributed to The New Yorker
             since 2011, writing extensively about technology, social media,
             politics, and the press, and also about comedy and pop culture. He
             has written about virtual-reality narratives, hip-hop purism, and
             the “Truman Show” delusion, plus dozens of Talk of the Town pieces.
             He is the author of “Antisocial: Online Extremists, Techno-Utopians,
-            and the Hijacking of the American Conversation.” */}
+            and the Hijacking of the American Conversation.”
           </p>
         </div>
       </div>
-      {profile.posts.map((item:any) => (
+      {profile.posts.map((item: any) => (
         <SearchCard item={item} key={item.id} />
       ))}
     </div>
