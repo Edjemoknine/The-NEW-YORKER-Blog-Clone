@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
-import { db } from "../db/index.js";
-import { categories } from "../db/schema.js";
+import { db } from "../db/index.ts";
+import { categories } from "../db/schema.ts";
 
-export const createCategory = async (req, res) => {
+export const createCategory = async (req: any, res: any) => {
   const { category } = req.body;
 
   if (typeof category !== "string" || !category.trim()) {
@@ -20,7 +20,7 @@ export const createCategory = async (req, res) => {
       .returning();
 
     return res.status(201).json(createdCategory);
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === "23505") {
       return res.status(409).json({
         message: "Category already exists",
@@ -35,7 +35,7 @@ export const createCategory = async (req, res) => {
   }
 };
 
-export const getCategories = async (_req, res) => {
+export const getCategories = async (_req: any, res: any) => {
   try {
     const result = await db.select().from(categories).orderBy(categories.name);
 
@@ -49,7 +49,7 @@ export const getCategories = async (_req, res) => {
   }
 };
 
-export const deleteCategory = async (req, res) => {
+export const deleteCategory = async (req: any, res: any) => {
   const id = Number(req.params.id);
 
   if (!Number.isSafeInteger(id) || id < 1) {

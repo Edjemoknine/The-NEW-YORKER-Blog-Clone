@@ -1,12 +1,10 @@
-
 import { and, eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
-import { db } from "../db/index.js";
-import { users, posts, savedPosts } from "../db/schema.js";
-
+import { db } from "../db/index.ts";
+import { users, posts, savedPosts } from "../db/schema.ts";
 
 // GET /api/users/:id
-export const getUser = async (req, res) => {
+export const getUser = async (req: any, res: any) => {
   const { id } = req.params;
 
   try {
@@ -48,10 +46,7 @@ export const getUser = async (req, res) => {
 };
 
 // PUT /api/users/:id
-export const updateUser = async (
-  req,
-  res,
-) => {
+export const updateUser = async (req, res) => {
   const { id } = req.params;
 
   if (!req.user || req.user.id !== id) {
@@ -211,10 +206,7 @@ export const updateUser = async (
 };
 
 // DELETE /api/users/:id
-export const deleteUser = async (
-  req,
-  res,
-) => {
+export const deleteUser = async (req, res) => {
   const { id } = req.params;
 
   if (!req.user || req.user.id !== id) {

@@ -1,0 +1,1 @@
+ALTER TABLE "embedding_jobs" ADD COLUMN "dispatched_at" timestamp with time zone;

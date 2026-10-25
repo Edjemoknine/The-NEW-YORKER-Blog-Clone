@@ -6,8 +6,8 @@ import {
   getPost,
   deletePost,
   updatePost,
-} from "../controller/post.js";
-import { verifytoken } from "../middleware/verify.js";
+} from "../controller/post.controller.ts";
+import { verifytoken } from "../middleware/verify.ts";
 
 postRoute.get("/", getPosts);
 postRoute.get("/:id", getPost);

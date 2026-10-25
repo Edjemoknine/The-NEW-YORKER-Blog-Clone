@@ -8,6 +8,20 @@
       "when": 1792924447164,
       "tag": "0000_careful_galactus",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792930823063,
+      "tag": "0001_special_khan",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792933921793,
+      "tag": "0002_broad_cardiac",
+      "breakpoints": true
     }
   ]
 }
