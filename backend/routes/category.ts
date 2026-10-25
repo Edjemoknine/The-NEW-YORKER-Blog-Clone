@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { verifytoken } from "../middleware/verify.js";
+import { verifytoken } from "../middleware/verify.ts";
 import {
   createCategory,
   getCategories,
   deleteCategory,
-} from "../controller/category.controller.js";
+} from "../controller/category.controller.ts";
 
 const catRoute = Router();
 

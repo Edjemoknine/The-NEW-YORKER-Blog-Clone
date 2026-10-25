@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
-import { db } from "../db/index.js";
-import { posts } from "../db/schema.js";
+import { db } from "../db/index.ts";
+import { posts } from "../db/schema.ts";
 
 export async function searchPosts(query: string) {
   const normalized = query.trim().slice(0, 200);

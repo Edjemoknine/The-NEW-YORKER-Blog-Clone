@@ -1,20 +1,22 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import { eq, or } from "drizzle-orm";
-import { db } from "../db/index.js";
-import { users } from "../db/schema.js";
-import { publicUser } from "../db/serialize.js";
+import { db } from "../db/index.ts";
+import { users } from "../db/schema.ts";
+import { publicUser } from "../db/serialize.ts";
 import {
   generateAccessToken,
   generateRefreshToken,
-} from "../middleware/verify.js";
+} from "../middleware/verify.ts";
 
 const authRoute = Router();
 
 authRoute.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
-    return res.status(400).json({ message: "Name, email, and password are required" });
+    return res
+      .status(400)
+      .json({ message: "Name, email, and password are required" });
   }
 
   try {

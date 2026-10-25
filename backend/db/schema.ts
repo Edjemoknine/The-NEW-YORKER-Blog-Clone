@@ -8,6 +8,8 @@ import {
   integer,
   index,
   vector,
+  uniqueIndex,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -155,6 +157,62 @@ export const recommendationEvents = pgTable(
     index("recommendation_events_post_type_idx").on(
       table.postId,
       table.eventType,
+    ),
+  ],
+);
+
+export const embeddingJobStatus = pgEnum("embedding_job_status", [
+  "pending",
+  "processing",
+  "completed",
+  "failed",
+]);
+
+export const embeddingJobs = pgTable(
+  "embedding_jobs",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+
+    postId: uuid("post_id")
+      .notNull()
+      .references(() => posts.id, { onDelete: "cascade" }),
+
+    status: embeddingJobStatus("status").notNull().default("pending"),
+
+    attempts: integer("attempts").notNull().default(0),
+
+    nextAttemptAt: timestamp("next_attempt_at", {
+      withTimezone: true,
+    })
+      .notNull()
+      .defaultNow(),
+
+    lockedAt: timestamp("locked_at", {
+      withTimezone: true,
+    }),
+
+    lastError: text("last_error"),
+
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+    })
+      .notNull()
+      .defaultNow(),
+
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+    })
+      .notNull()
+      .defaultNow(),
+    dispatchedAt: timestamp("dispatched_at", {
+      withTimezone: true,
+    }),
+  },
+  (table) => [
+    uniqueIndex("embedding_jobs_post_id_idx").on(table.postId),
+    index("embedding_jobs_status_retry_idx").on(
+      table.status,
+      table.nextAttemptAt,
     ),
   ],
 );

@@ -1,7 +1,7 @@
-import { and, cosineDistance, desc, eq, isNotNull, ne, sql } from "drizzle-orm";
+import { and, cosineDistance, isNotNull, ne, sql } from "drizzle-orm";
 
-import { db } from "../db/index.js";
-import { posts } from "../db/schema.js";
+import { db } from "../db/index.ts";
+import { posts } from "../db/schema.ts";
 
 export async function findSimilarPosts(
   embedding: number[],
