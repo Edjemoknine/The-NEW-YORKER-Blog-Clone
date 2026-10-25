@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 import { db } from "../db/index.ts";
 import { users, posts, savedPosts } from "../db/schema.ts";
 
-// GET /api/users/:id
 export const getUser = async (req: any, res: any) => {
   const { id } = req.params;
 
@@ -46,7 +45,7 @@ export const getUser = async (req: any, res: any) => {
 };
 
 // PUT /api/users/:id
-export const updateUser = async (req, res) => {
+export const updateUser = async (req: any, res: any) => {
   const { id } = req.params;
 
   if (!req.user || req.user.id !== id) {
@@ -55,7 +54,7 @@ export const updateUser = async (req, res) => {
 
   const { postId, name, email, password, bio, avatar } = req.body ?? {};
 
-  const values = {};
+  const values: any = {};
 
   if (name !== undefined) {
     if (typeof name !== "string" || !name.trim()) {
@@ -206,7 +205,7 @@ export const updateUser = async (req, res) => {
 };
 
 // DELETE /api/users/:id
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (req: any, res: any) => {
   const { id } = req.params;
 
   if (!req.user || req.user.id !== id) {
@@ -238,7 +237,7 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-function hasErrorCode(error, code) {
+function hasErrorCode(error: any, code: any) {
   return (
     typeof error === "object" &&
     error !== null &&
@@ -247,6 +246,6 @@ function hasErrorCode(error, code) {
   );
 }
 
-function isInvalidUuidError(error, code) {
+function isInvalidUuidError(error: any) {
   return hasErrorCode(error, "22P02");
 }

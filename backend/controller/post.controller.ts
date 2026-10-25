@@ -75,8 +75,6 @@ export const createPost = async (req: any, res: any) => {
       };
     });
 
-    // Best-effort immediate dispatch. The durable job remains
-    // in Neon if this request to QStash fails.
     try {
       const baseUrl = process.env.APP_BASE_URL;
 
@@ -85,7 +83,7 @@ export const createPost = async (req: any, res: any) => {
       }
 
       await qstash.publishJSON({
-        url: `${process.env.APP_BASE_URL}/api/jobs/embed-post`,
+        url: `${baseUrl}/api/jobs/embed-post`,
         body: { jobId: job.id },
         retries: 5,
       });
@@ -98,8 +96,6 @@ export const createPost = async (req: any, res: any) => {
         })
         .where(eq(embeddingJobs.id, job.id));
     } catch (dispatchError) {
-      // Do not lose the created post just because dispatch failed.
-      // A recovery dispatcher must find and republish undispatched jobs.
       console.error("Embedding job dispatch failed:", dispatchError);
     }
 
@@ -151,7 +147,7 @@ export const getPosts = async (req: any, res: any) => {
     );
   }
 
-  const sortColumns = {
+  const sortColumns: any = {
     title: posts.title,
     date: posts.date,
     createdAt: posts.createdAt,
@@ -228,7 +224,7 @@ export const updatePost = async (req: any, res: any) => {
     image,
     username,
   } = req.body;
-  const values = { updatedAt: new Date() };
+  const values: any = { updatedAt: new Date() };
   if (title !== undefined) values.title = title;
   if (desc !== undefined) values.desc = desc;
   if (content !== undefined) values.content = content;
