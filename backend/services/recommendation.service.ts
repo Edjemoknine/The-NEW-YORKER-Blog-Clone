@@ -1,5 +1,4 @@
 import { and, eq, isNotNull, ne, sql } from "drizzle-orm";
-
 import { db } from "../db/index.ts";
 import { posts } from "../db/schema.ts";
 
@@ -9,6 +8,9 @@ export async function getRecommendedPosts(postId: string, limit = 5) {
   const [sourcePost] = await db
     .select({
       id: posts.id,
+      title: posts.title,
+      desc: posts.desc,
+      categories: posts.categories,
       embedding: posts.embedding,
     })
     .from(posts)
@@ -23,17 +25,64 @@ export async function getRecommendedPosts(postId: string, limit = 5) {
     return [];
   }
 
-  // Serialize the embedding as a single pgvector value.
+  // Serialize the embedding as one PostgreSQL vector parameter.
   const embeddingLiteral = `[${sourcePost.embedding.join(",")}]`;
 
-  // Explicitly cast the parameter to PostgreSQL's vector type.
   const distance = sql<number>`
     ${posts.embedding} <=> ${embeddingLiteral}::vector
   `;
 
-  const similarity = sql<number>`
-    1 - (${distance})
+  // Cosine similarity: higher is better.
+  const semanticSimilarity = sql<number>`
+    greatest(0, 1 - (${distance}))
   `;
+
+  const escapedSourceTitle = sourcePost.title.replace(/[\\%_]/g, "\\$&");
+
+  // Match the source post's title and description against candidates.
+  const keywordScore = sql<number>`
+  (
+    CASE
+      WHEN lower(coalesce(${posts.title}, '')) LIKE
+        '%' || lower(${escapedSourceTitle}) || '%'
+      THEN 1
+      ELSE 0
+    END
+  ) * 0.6
+  +
+  (
+    CASE
+      WHEN lower(coalesce(${posts.desc}, '')) LIKE
+        '%' || lower(${escapedSourceTitle}) || '%'
+      THEN 1
+      ELSE 0
+    END
+  ) * 0.4
+`;
+
+  // PostgreSQL array overlap: true when at least one category matches.
+  const categoryArray =
+    sourcePost.categories.length > 0
+      ? sql`ARRAY[${sql.join(
+          sourcePost.categories.map((category) => sql`${category}`),
+          sql`, `,
+        )}]::text[]`
+      : sql`ARRAY[]::text[]`;
+
+  const categoryScore = sql<number>`
+  CASE
+    WHEN cardinality(${posts.categories}) > 0
+      AND ${posts.categories} && ${categoryArray}
+    THEN 1
+    ELSE 0
+  END
+`;
+
+  const hybridScore = sql<number>`
+  ((${semanticSimilarity}) * 0.60)
+  + ((${keywordScore}) * 0.25)
+  + ((${categoryScore}) * 0.15)
+`;
 
   return db
     .select({
@@ -41,7 +90,10 @@ export async function getRecommendedPosts(postId: string, limit = 5) {
       title: posts.title,
       desc: posts.desc,
       categories: posts.categories,
-      similarity,
+      similarity: semanticSimilarity,
+      keywordScore,
+      categoryScore,
+      score: hybridScore,
     })
     .from(posts)
     .where(
@@ -51,6 +103,6 @@ export async function getRecommendedPosts(postId: string, limit = 5) {
         eq(posts.embeddingModel, EMBEDDING_MODEL),
       ),
     )
-    .orderBy(distance)
+    .orderBy(sql`${hybridScore} DESC`)
     .limit(Math.max(1, Math.min(limit, 20)));
 }

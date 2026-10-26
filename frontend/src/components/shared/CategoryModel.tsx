@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
 export function CatDialog() {
-  const [category, setCategory] = useState<string>("nature");
+  const [category, setCategory] = useState<string>("");
 
   const addCategory = async () => {
     try {

@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { db } from "../db/index.ts";
 import { categories } from "../db/schema.ts";
 
@@ -11,12 +11,18 @@ export const createCategory = async (req: any, res: any) => {
     });
   }
 
+  const name = category.trim();
+
+  if (name.length > 255) {
+    return res.status(400).json({
+      message: "Category name must not exceed 255 characters",
+    });
+  }
+
   try {
     const [createdCategory] = await db
       .insert(categories)
-      .values({
-        name: category.trim(),
-      })
+      .values({ name })
       .returning();
 
     return res.status(201).json(createdCategory);
@@ -37,7 +43,10 @@ export const createCategory = async (req: any, res: any) => {
 
 export const getCategories = async (_req: any, res: any) => {
   try {
-    const result = await db.select().from(categories).orderBy(categories.name);
+    const result = await db
+      .select()
+      .from(categories)
+      .orderBy(asc(categories.name));
 
     return res.status(200).json(result);
   } catch (error) {
