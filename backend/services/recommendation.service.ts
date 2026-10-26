@@ -1,24 +1,39 @@
-import { and, cosineDistance, isNotNull, ne, sql } from "drizzle-orm";
+import { and, eq, isNotNull, ne, sql } from "drizzle-orm";
 
 import { db } from "../db/index.ts";
 import { posts } from "../db/schema.ts";
 
-export async function findSimilarPosts(
-  embedding: number[],
-  currentPostId?: string,
-  limit = 6,
-) {
-  if (embedding.length !== 384) {
-    throw new Error("Unexpected embedding dimensions");
+const EMBEDDING_MODEL = "Xenova/paraphrase-multilingual-MiniLM-L12-v2";
+
+export async function getRecommendedPosts(postId: string, limit = 5) {
+  const [sourcePost] = await db
+    .select({
+      id: posts.id,
+      embedding: posts.embedding,
+    })
+    .from(posts)
+    .where(eq(posts.id, postId))
+    .limit(1);
+
+  if (!sourcePost) {
+    throw new Error("Post not found");
   }
 
-  const distance = cosineDistance(posts.embedding, embedding);
-
-  const conditions = [isNotNull(posts.embedding)];
-
-  if (currentPostId) {
-    conditions.push(ne(posts.id, currentPostId));
+  if (!sourcePost.embedding) {
+    return [];
   }
+
+  // Serialize the embedding as a single pgvector value.
+  const embeddingLiteral = `[${sourcePost.embedding.join(",")}]`;
+
+  // Explicitly cast the parameter to PostgreSQL's vector type.
+  const distance = sql<number>`
+    ${posts.embedding} <=> ${embeddingLiteral}::vector
+  `;
+
+  const similarity = sql<number>`
+    1 - (${distance})
+  `;
 
   return db
     .select({
@@ -26,11 +41,16 @@ export async function findSimilarPosts(
       title: posts.title,
       desc: posts.desc,
       categories: posts.categories,
-      image: posts.image,
-      similarity: sql<number>`1 - (${distance})`,
+      similarity,
     })
     .from(posts)
-    .where(and(...conditions))
+    .where(
+      and(
+        ne(posts.id, postId),
+        isNotNull(posts.embedding),
+        eq(posts.embeddingModel, EMBEDDING_MODEL),
+      ),
+    )
     .orderBy(distance)
-    .limit(Math.min(Math.max(limit, 1), 20));
+    .limit(Math.max(1, Math.min(limit, 20)));
 }

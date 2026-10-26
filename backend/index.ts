@@ -7,6 +7,8 @@ import authRoute from "./routes/auth.ts";
 import userRoute from "./routes/user.ts";
 import catRoute from "./routes/category.ts";
 import postRoute from "./routes/post.ts";
+import recommendationRoute from "./routes/recommendation.route.ts";
+
 import { embedPostJob } from "./controller/embedding-job.controller.ts";
 import { dispatchPendingEmbeddingJobs } from "./controller/embedding-dispatcher.controller.ts";
 
@@ -44,6 +46,7 @@ app.get("/api/test", (_req, res) => {
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
+app.use("/api/posts", recommendationRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/categories", catRoute);
 
