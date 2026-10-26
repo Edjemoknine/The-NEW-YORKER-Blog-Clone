@@ -92,6 +92,7 @@ export const posts = pgTable(
     embeddingUpdatedAt: timestamp("embedding_updated_at", {
       withTimezone: true,
     }),
+    embeddingVersion: integer("embedding_version").notNull().default(1),
 
     createdAt: timestamp("created_at", {
       withTimezone: true,
@@ -207,6 +208,7 @@ export const embeddingJobs = pgTable(
     dispatchedAt: timestamp("dispatched_at", {
       withTimezone: true,
     }),
+    requestedVersion: integer("requested_version").notNull().default(1),
   },
   (table) => [
     uniqueIndex("embedding_jobs_post_id_idx").on(table.postId),

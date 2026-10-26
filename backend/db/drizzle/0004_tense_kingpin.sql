@@ -1,0 +1,1 @@
+ALTER TABLE "embedding_jobs" ADD COLUMN "requested_version" integer DEFAULT 1 NOT NULL;

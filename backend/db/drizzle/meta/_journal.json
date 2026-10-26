@@ -22,6 +22,20 @@
       "when": 1792933921793,
       "tag": "0002_broad_cardiac",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792943719639,
+      "tag": "0003_pretty_marvel_boy",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793004094152,
+      "tag": "0004_tense_kingpin",
+      "breakpoints": true
     }
   ]
 }

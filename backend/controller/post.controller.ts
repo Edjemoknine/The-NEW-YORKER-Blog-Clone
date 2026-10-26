@@ -214,7 +214,7 @@ export const deletePost = async (req: any, res: any) => {
   }
 };
 
-export const updatePost = async (req: any, res: any) => {
+/* export const updatePost = async (req: any, res: any) => {
   const {
     title,
     desc,
@@ -256,11 +256,9 @@ export const updatePost = async (req: any, res: any) => {
     console.error("Unable to update post:", error);
     return res.status(500).json({ message: "Unable to update post" });
   }
-};
+}; */
 
-/* create post with embedding without background jobs
- */ /*
- export const createPost = async (req: any, res: any) => {
+export const updatePost = async (req: any, res: any) => {
   const {
     title,
     desc,
@@ -268,64 +266,146 @@ export const updatePost = async (req: any, res: any) => {
     category,
     categories: submittedCategories,
     image,
+    username,
   } = req.body;
+  const postId = req.params.id;
 
-  // Use the authenticated user's ID, not a client-supplied user ID.
-  const userId = req.user?.id;
-
-  if (!title || !desc || !content || !userId) {
-    return res.status(400).json({
-      message: "Title, description, content, and author are required",
-    });
-  }
-
-  const categories = submittedCategories || (category ? [category] : []);
+  const embeddingModel = "Xenova/paraphrase-multilingual-MiniLM-L12-v2";
 
   try {
-    // Put the most important information first.
-    const embeddingText = getPostEmbeddingText({
-      title,
-      desc,
-      content,
-      categories,
+    const result = await db.transaction(async (tx) => {
+      const [existing] = await tx
+        .select()
+        .from(posts)
+        .where(eq(posts.id, postId))
+        .limit(1);
+
+      if (!existing) return null;
+
+      const values: Record<string, any> = {
+        updatedAt: new Date(),
+      };
+      const nextVersion = existing.embeddingVersion + 1;
+
+      if (title !== undefined) values.title = title;
+      if (desc !== undefined) values.desc = desc;
+      if (content !== undefined) values.content = content;
+      if (username !== undefined) values.userId = username;
+      if (image !== undefined) values.image = image;
+
+      if (submittedCategories !== undefined) {
+        values.categories = submittedCategories;
+      } else if (category !== undefined) {
+        values.categories = [category];
+      }
+
+      const embeddingChanged =
+        (title !== undefined && title !== existing.title) ||
+        (desc !== undefined && desc !== existing.desc) ||
+        (content !== undefined && content !== existing.content) ||
+        (submittedCategories !== undefined &&
+          JSON.stringify(submittedCategories) !==
+            JSON.stringify(existing.categories)) ||
+        (category !== undefined &&
+          submittedCategories === undefined &&
+          JSON.stringify([category]) !== JSON.stringify(existing.categories));
+
+      if (embeddingChanged) {
+        // Invalidate the old vector immediately.
+        values.embeddingVersion = existing.embeddingVersion + 1;
+        values.embedding = null;
+        values.embeddingUpdatedAt = null;
+        values.embeddingModel = embeddingModel;
+        values.embeddingVersion = nextVersion;
+      }
+
+      const [updated] = await tx
+        .update(posts)
+        .set(values)
+        .where(eq(posts.id, postId))
+        .returning();
+
+      let jobId: string | null = null;
+
+      if (embeddingChanged) {
+        const [existingJob] = await tx
+          .select()
+          .from(embeddingJobs)
+          .where(eq(embeddingJobs.postId, postId))
+          .limit(1);
+
+        if (existingJob) {
+          const [updatedJob] = await tx
+            .update(embeddingJobs)
+            .set({
+              status: "pending",
+              attempts: 0,
+              nextAttemptAt: new Date(),
+              lockedAt: null,
+              dispatchedAt: null,
+              lastError: null,
+              updatedAt: new Date(),
+              requestedVersion: nextVersion,
+            })
+            .where(eq(embeddingJobs.id, existingJob.id))
+            .returning();
+
+          jobId = updatedJob.id;
+        } else {
+          const [createdJob] = await tx
+            .insert(embeddingJobs)
+            .values({ postId })
+            .returning();
+
+          jobId = createdJob.id;
+        }
+      }
+
+      return { post: updated, jobId };
     });
 
-    // Generate the 384-dimensional embedding locally.
-    const embedding = await generateEmbedding(embeddingText);
-
-    const [post] = await db
-      .insert(posts)
-      .values({
-        title,
-        desc,
-        content,
-        userId,
-        image: image || "",
-        categories,
-        embedding,
-        embeddingModel: "Xenova/paraphrase-multilingual-MiniLM-L12-v2",
-        embeddingUpdatedAt: new Date(),
-      })
-      .returning();
-
-    return res.status(201).json(await getJoinedPost(post.id));
-  } catch (error: any) {
-    if (error.code === "23505") {
-      return res.status(409).json({
-        message: "A post with this title already exists",
-      });
+    if (!result) {
+      return res.status(404).json({ message: "Post not found" });
     }
 
+    if (result.jobId) {
+      try {
+        const baseUrl = process.env.APP_BASE_URL;
+        if (!baseUrl) throw new Error("Missing APP_BASE_URL");
+
+        await qstash.publishJSON({
+          url: `${baseUrl}/api/jobs/embed-post`,
+          body: { jobId: result.jobId },
+          retries: 5,
+        });
+
+        await db
+          .update(embeddingJobs)
+          .set({
+            dispatchedAt: new Date(),
+            updatedAt: new Date(),
+          })
+          .where(eq(embeddingJobs.id, result.jobId));
+      } catch (error) {
+        console.error("Updated post embedding dispatch failed:", error);
+        // The recovery dispatcher can redispatch this job.
+      }
+    }
+
+    return res.status(200).json({
+      ...(await getJoinedPost(result.post.id)),
+      embeddingStatus: result.jobId ? "pending" : "unchanged",
+    });
+  } catch (error: any) {
     if (error.code === "22P02" || error.code === "23503") {
       return res.status(400).json({
-        message: "Invalid author id",
+        message: "Invalid post or author id",
       });
     }
 
-    console.error("Unable to create post:", error);
-
+    console.error("Unable to update post:", error);
     return res.status(500).json({
-      message: "Unable to create post",
+      message: "Unable to update post",
     });
   }
-}; */
+};
