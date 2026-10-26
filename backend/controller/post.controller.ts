@@ -26,15 +26,7 @@ const getJoinedPost = async (id: string) => {
 const EMBEDDING_MODEL = "Xenova/paraphrase-multilingual-MiniLM-L12-v2";
 
 export const createPost = async (req: any, res: any) => {
-  const {
-    title,
-    desc,
-    content,
-    category,
-    categories: submittedCategories,
-    image,
-  } = req.body;
-
+  const { title, desc, content, categories, image } = req.body;
   const userId = req.user?.id;
 
   if (!title || !desc || !content || !userId) {
@@ -43,7 +35,22 @@ export const createPost = async (req: any, res: any) => {
     });
   }
 
-  const categories = submittedCategories ?? (category ? [category] : []);
+  if (
+    !Array.isArray(categories) ||
+    categories.length === 0 ||
+    !categories.every(
+      (category: unknown) =>
+        typeof category === "string" && category.trim().length > 0,
+    )
+  ) {
+    return res.status(400).json({
+      message: "categories must be a non-empty array of strings",
+    });
+  }
+
+  const normalizedCategories = [
+    ...new Set(categories.map((category: string) => category.trim())),
+  ];
 
   try {
     const { post, job } = await db.transaction(async (tx) => {
@@ -55,7 +62,7 @@ export const createPost = async (req: any, res: any) => {
           content,
           userId,
           image: image || "",
-          categories,
+          categories: normalizedCategories,
           embedding: null,
           embeddingModel: EMBEDDING_MODEL,
           embeddingUpdatedAt: null,
@@ -114,7 +121,7 @@ export const createPost = async (req: any, res: any) => {
 
     if (error.code === "22P02" || error.code === "23503") {
       return res.status(400).json({
-        message: "Invalid author id",
+        message: "Invalid post or author data",
       });
     }
 
@@ -214,63 +221,41 @@ export const deletePost = async (req: any, res: any) => {
   }
 };
 
-/* export const updatePost = async (req: any, res: any) => {
-  const {
-    title,
-    desc,
-    content,
-    category,
-    categories: submittedCategories,
-    image,
-    username,
-  } = req.body;
-  const values: any = { updatedAt: new Date() };
-  if (title !== undefined) values.title = title;
-  if (desc !== undefined) values.desc = desc;
-  if (content !== undefined) values.content = content;
-  if (username !== undefined) values.userId = username;
-  if (image !== undefined) values.image = image;
-  if (submittedCategories !== undefined)
-    values.categories = submittedCategories;
-  else if (category !== undefined) values.categories = [category];
-
-  try {
-    const updated = await db
-      .update(posts)
-      .set(values)
-      .where(eq(posts.id, req.params.id))
-      .returning({ id: posts.id });
-    if (!updated.length) {
-      return res.status(404).json({ message: "Post not found" });
-    }
-    return res.status(200).json(await getJoinedPost(updated[0].id));
-  } catch (error: any) {
-    if (error.code === "23505") {
-      return res
-        .status(409)
-        .json({ message: "A post with this title already exists" });
-    }
-    if (error.code === "22P02" || error.code === "23503") {
-      return res.status(400).json({ message: "Invalid post or author id" });
-    }
-    console.error("Unable to update post:", error);
-    return res.status(500).json({ message: "Unable to update post" });
-  }
-}; */
-
 export const updatePost = async (req: any, res: any) => {
   const {
     title,
     desc,
     content,
-    category,
     categories: submittedCategories,
     image,
-    username,
   } = req.body;
-  const postId = req.params.id;
 
-  const embeddingModel = "Xenova/paraphrase-multilingual-MiniLM-L12-v2";
+  const postId = req.params.id;
+  const embeddingModel = EMBEDDING_MODEL;
+
+  if (submittedCategories !== undefined) {
+    if (
+      !Array.isArray(submittedCategories) ||
+      submittedCategories.length === 0 ||
+      !submittedCategories.every(
+        (category: unknown) =>
+          typeof category === "string" && category.trim().length > 0,
+      )
+    ) {
+      return res.status(400).json({
+        message: "categories must be a non-empty array of strings",
+      });
+    }
+  }
+
+  const normalizedCategories: string[] | undefined =
+    submittedCategories === undefined
+      ? undefined
+      : [
+          ...new Set(
+            submittedCategories.map((category: string) => category.trim()),
+          ),
+        ];
 
   try {
     const result = await db.transaction(async (tx) => {
@@ -285,38 +270,36 @@ export const updatePost = async (req: any, res: any) => {
       const values: Record<string, any> = {
         updatedAt: new Date(),
       };
+
       const nextVersion = existing.embeddingVersion + 1;
 
       if (title !== undefined) values.title = title;
       if (desc !== undefined) values.desc = desc;
       if (content !== undefined) values.content = content;
-      if (username !== undefined) values.userId = username;
       if (image !== undefined) values.image = image;
 
-      if (submittedCategories !== undefined) {
-        values.categories = submittedCategories;
-      } else if (category !== undefined) {
-        values.categories = [category];
+      if (normalizedCategories !== undefined) {
+        values.categories = normalizedCategories;
       }
+
+      const categoriesChanged =
+        normalizedCategories !== undefined &&
+        (normalizedCategories.length !== existing.categories.length ||
+          normalizedCategories.some(
+            (category, index) => category !== existing.categories[index],
+          ));
 
       const embeddingChanged =
         (title !== undefined && title !== existing.title) ||
         (desc !== undefined && desc !== existing.desc) ||
         (content !== undefined && content !== existing.content) ||
-        (submittedCategories !== undefined &&
-          JSON.stringify(submittedCategories) !==
-            JSON.stringify(existing.categories)) ||
-        (category !== undefined &&
-          submittedCategories === undefined &&
-          JSON.stringify([category]) !== JSON.stringify(existing.categories));
+        categoriesChanged;
 
       if (embeddingChanged) {
-        // Invalidate the old vector immediately.
-        values.embeddingVersion = existing.embeddingVersion + 1;
+        values.embeddingVersion = nextVersion;
         values.embedding = null;
         values.embeddingUpdatedAt = null;
         values.embeddingModel = embeddingModel;
-        values.embeddingVersion = nextVersion;
       }
 
       const [updated] = await tx
@@ -354,7 +337,10 @@ export const updatePost = async (req: any, res: any) => {
         } else {
           const [createdJob] = await tx
             .insert(embeddingJobs)
-            .values({ postId })
+            .values({
+              postId,
+              requestedVersion: nextVersion,
+            })
             .returning();
 
           jobId = createdJob.id;
@@ -365,13 +351,18 @@ export const updatePost = async (req: any, res: any) => {
     });
 
     if (!result) {
-      return res.status(404).json({ message: "Post not found" });
+      return res.status(404).json({
+        message: "Post not found",
+      });
     }
 
     if (result.jobId) {
       try {
         const baseUrl = process.env.APP_BASE_URL;
-        if (!baseUrl) throw new Error("Missing APP_BASE_URL");
+
+        if (!baseUrl) {
+          throw new Error("Missing APP_BASE_URL");
+        }
 
         await qstash.publishJSON({
           url: `${baseUrl}/api/jobs/embed-post`,
@@ -388,7 +379,6 @@ export const updatePost = async (req: any, res: any) => {
           .where(eq(embeddingJobs.id, result.jobId));
       } catch (error) {
         console.error("Updated post embedding dispatch failed:", error);
-        // The recovery dispatcher can redispatch this job.
       }
     }
 
@@ -399,11 +389,12 @@ export const updatePost = async (req: any, res: any) => {
   } catch (error: any) {
     if (error.code === "22P02" || error.code === "23503") {
       return res.status(400).json({
-        message: "Invalid post or author id",
+        message: "Invalid post or author data",
       });
     }
 
     console.error("Unable to update post:", error);
+
     return res.status(500).json({
       message: "Unable to update post",
     });

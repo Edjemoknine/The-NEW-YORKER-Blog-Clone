@@ -28,17 +28,6 @@ export const users = pgTable("users", {
     .defaultNow(),
 });
 
-export const categories = pgTable("categories", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  name: varchar("name", { length: 255 }).notNull().unique(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
-
 export const savedPosts = pgTable(
   "saved_posts",
   {
@@ -54,7 +43,16 @@ export const savedPosts = pgTable(
   },
   (table) => [primaryKey({ columns: [table.userId, table.postId] })],
 );
-
+export const categories = pgTable("categories", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull().unique(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
 export const posts = pgTable(
   "posts",
   {

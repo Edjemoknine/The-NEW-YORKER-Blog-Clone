@@ -29,16 +29,16 @@ import api from "@/api/client";
 
 const FormSchema = z.object({
   title: z.string().min(2, {
-    message: "Username must be at least 10 characters.",
+    message: "Title must be at least 2 characters.",
   }),
   description: z.string().min(2, {
-    message: "Description must be at least 100 characters.",
+    message: "Description must be at least 2 characters.",
   }),
   content: z.string().min(2, {
-    message: "Content must be at least 500 characters.",
+    message: "Content must be at least 2 characters.",
   }),
-  category: z.string().min(2, {
-    message: "Category must be provided.",
+  categories: z.array(z.string().min(1)).min(1, {
+    message: "Select at least one category.",
   }),
   image: z.string().optional(),
 });
@@ -87,7 +87,11 @@ export function PostForm({
       title: post?.title ?? "",
       description: post?.desc ?? "",
       content: post?.content ?? "",
-      category: post?.categories[0] ?? "",
+      categories: Array.isArray(post?.categories)
+        ? post.categories
+        : post?.categories
+          ? [post.categories]
+          : [],
       image: post?.image ?? "",
     },
   });
@@ -100,7 +104,7 @@ export function PostForm({
             title: data.title,
             desc: data.description,
             content: data.content,
-            category: data.category,
+            categories: data.categories,
             image: ImG,
             username: user.otherData._id,
           });
@@ -133,7 +137,7 @@ export function PostForm({
             title: data.title,
             desc: data.description,
             content: data.content,
-            category: data.category,
+            categories: data.categories,
             image: ImG,
             username: user.otherData._id,
           });
@@ -249,23 +253,23 @@ export function PostForm({
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
-            name="category"
+            name="categories"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
                   <SelectCategory
-                    onChange={field.onChange}
                     value={field.value}
+                    onChange={field.onChange}
                   />
-                  {/* <Textarea placeholder="content" {...field} /> */}
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <Button type="submit">Submit</Button>
         </form>
       </Form>
