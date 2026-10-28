@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { fetchPosts } from "@/api/posts";
 
 import { useCallback, useEffect, useState } from "react";
-import Card from "@/components/utils/Card";
+import { EditorialPostCard } from "@/components/utils/PostCard";
 
 const Category = () => {
   const { title } = useParams();
@@ -46,9 +46,6 @@ const Category = () => {
     }
   }, [inView, hasMore, loading, fetchMorePosts]);
 
-  // useEffect(() => {
-  //   fetchMorePosts();
-  // }, []);
   console.log(posts);
   return (
     <div className="pt-40  max-w-[90rem] mx-auto px-4 md:px-6 py-10">
@@ -56,7 +53,7 @@ const Category = () => {
       <Sponsor />
       <div className="grid sm:grid-cols-2 md:grid-cols-3 min-h-96 my-6 lg:grid-cols-4 gap-6 divide-x2 divide-gray-500">
         {posts?.map((item, index: number) => (
-          <Card item={item} key={index} />
+          <EditorialPostCard post={item} key={index} />
         ))}
       </div>
       {posts?.length == 0 && (

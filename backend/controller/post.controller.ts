@@ -5,6 +5,7 @@ import {
   count,
   desc,
   eq,
+  gte,
   ilike,
   or,
 } from "drizzle-orm";
@@ -399,5 +400,49 @@ export const updatePost = async (req: any, res: any) => {
     return res.status(500).json({
       message: "Unable to update post",
     });
+  }
+};
+
+export const getInCaseMissedPosts = async (req: any, res: any) => {
+  try {
+    // 1. Paramètres de pagination et de limite
+    const page = Math.max(1, Number.parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(
+      50,
+      Math.max(1, Number.parseInt(req.query.limit, 10) || 4),
+    );
+    const offset = (page - 1) * limit;
+
+    // 2. Calculer la date d'il y a 3 jours
+    const threeDaysAgo = new Date();
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+
+    // 3. Clause WHERE commune pour le filtre des 3 derniers jours
+    const whereCondition = gte(posts.createdAt, threeDaysAgo);
+
+    // 4. Exécuter en parallèle la requête des posts paginés et le comptage total
+    const [result, [countResult]] = await Promise.all([
+      db
+        .select({ post: posts, author: users })
+        .from(posts)
+        .innerJoin(users, eq(posts.userId, users.id))
+        .where(whereCondition)
+        .orderBy(desc(posts.createdAt))
+        .limit(limit)
+        .offset(offset),
+      db.select({ total: count() }).from(posts).where(whereCondition),
+    ]);
+
+    const totalPosts = Number(countResult?.total || 0);
+
+    return res.json({
+      posts: result.map(({ post, author }) => postWithAuthor(post, author)),
+      currentPage: page,
+      totalPages: Math.ceil(totalPosts / limit),
+      totalPosts,
+    });
+  } catch (error) {
+    console.error("Unable to fetch missed posts:", error);
+    return res.status(500).json({ message: "Unable to fetch missed posts" });
   }
 };
