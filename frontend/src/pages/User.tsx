@@ -32,9 +32,10 @@ import { useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
-import { userData } from "@/api/FetchPots";
 import Grid from "@/components/utils/Grid";
 import { Textarea } from "@/components/ui/textarea";
+import { userData } from "@/api/auth";
+import api from "@/api/client";
 
 const User = () => {
   const { user } = useSelector((store: any) => store.auth);
@@ -106,10 +107,6 @@ const formSchema = z.object({
   bio: z.string().min(6, { message: "Bio must be provided" }),
 });
 const UserInfo = ({ profile }: { profile: any }) => {
-  // const [userInfo, setUserInfo] = useState({});
-  axios.defaults.baseURL = "https://the-new-yorker-backend.vercel.app";
-  axios.defaults.withCredentials = true;
-
   const { user } = useSelector((store: any) => store.auth);
   const [ImG, setImage] = useState(profile?.avatar);
 
@@ -152,7 +149,7 @@ const UserInfo = ({ profile }: { profile: any }) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await axios.put(`/api/users/${id}`, {
+      await api.put(`/api/users/${id}`, {
         name: values.username,
         email: values.email,
         password: values.password,
@@ -183,7 +180,7 @@ const UserInfo = ({ profile }: { profile: any }) => {
                 <PlusCircle className="text-neutral-500" size={50} />
                 {ImG !== "" && (
                   <img
-                    src={ImG}
+                    src={ImG ?? profile?.avatar}
                     alt="Image"
                     className="w-full h-full object-cover object-top absolute inset-0 "
                   />

@@ -1,12 +1,12 @@
-import { Router } from "express";
+import express from "express";
+const userRoute = express.Router();
+
 import { verifytoken } from "../middleware/verify.ts";
 import {
   getUser,
   updateUser,
   deleteUser,
 } from "../controller/user.controller.ts";
-
-const userRoute = Router();
 
 userRoute.get("/:id", getUser);
 userRoute.put("/:id", verifytoken, updateUser);

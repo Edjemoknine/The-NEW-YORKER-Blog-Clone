@@ -2,7 +2,7 @@
 import Sponsor from "@/components/utils/Sponsor";
 import { useInView } from "react-intersection-observer";
 import { useParams } from "react-router-dom";
-import { fetchPosts } from "@/api/FetchPots";
+import { fetchPosts } from "@/api/posts";
 
 import { useCallback, useEffect, useState } from "react";
 import Card from "@/components/utils/Card";
@@ -27,7 +27,11 @@ const Category = () => {
       setHasMore(data.currentPage < data.totalPages);
       setPage((prevPage) => prevPage + 1);
     } catch (err: unknown) {
-      setError((err instanceof Error ? err.message : 'An unknown error occurred') as any);
+      setError(
+        (err instanceof Error
+          ? err.message
+          : "An unknown error occurred") as any,
+      );
     } finally {
       setLoading(false);
     }

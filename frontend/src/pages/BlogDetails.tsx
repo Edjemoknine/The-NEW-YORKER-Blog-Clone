@@ -1,28 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Grid from "@/components/utils/Grid";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { fetchPost, fetchPosts, userData } from "@/api/FetchPots";
+import { useQuery } from "@tanstack/react-query";
+import { Link, useParams } from "react-router-dom";
+import { fetchPost, fetchPosts } from "@/api/posts";
 import { Bookmark, Edit, Trash } from "lucide-react";
 import { useSelector } from "react-redux";
 import { AlertDialogDemo } from "@/components/shared/AlertDialog";
 import { useState } from "react";
 import { EditPostDialog } from "@/components/shared/EditDialog";
-import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
-import api from "@/api/client";
+import { userData } from "@/api/auth";
+import { useSavePost } from "@/api/hooks/usePosts";
 
 const BlogDetails = () => {
-  const { id } = useParams();
+  const { id: postId } = useParams();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { user } = useSelector((store: any) => store.auth);
-  const name = user?.otherData?._id;
-  const naviagte = useNavigate();
+  const userId = user?.otherData?._id;
   const [open, setOpen] = useState(false);
-  const { toast } = useToast();
 
   const { data: details } = useQuery({
-    queryKey: ["details", id],
-    queryFn: () => fetchPost(id!),
+    queryKey: ["details", postId],
+    queryFn: () => fetchPost(postId!),
   });
 
   const [isEdit, setIsEdit] = useState(false);
@@ -32,58 +31,14 @@ const BlogDetails = () => {
     queryKey: [details?.categories[0]],
     queryFn: () => fetchPosts({ category: details?.categories[0], limit: 10 }),
   });
+  const { mutateAsync: savePost } = useSavePost();
 
-  const deletePost = async () => {
-    try {
-      await api.delete(`/api/posts/${id}`);
-      toast({
-        title: "Post has been deleted successfully !",
-        type: "background",
-      });
-      naviagte(`/`);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const queryClient = useQueryClient();
-  const savePost = async () => {
-    try {
-      await api.put(`/api/users/${name}`, {
-        postId: id,
-      });
-      toast({
-        title: "Post has been saved successfully !",
-        type: "background",
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  queryClient.invalidateQueries({ queryKey: ["userProfile"] });
-
-  const onSavePost = useMutation({
-    mutationKey: ["savePost", id],
-    mutationFn: async () => {
-      await savePost();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
-      toast({
-        title: "Post has been saved successfully!",
-        type: "background",
-      });
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
   const { data: profile } = useQuery({
-    queryKey: ["userProfile", name],
-    queryFn: () => userData(name!),
+    queryKey: ["userProfile", userId],
+    queryFn: () => userData(userId!),
   });
   const isSaved = profile?.savedPost.some(
-    (post: { id: string }) => post.id === id,
+    (post: { id: string }) => post.id === postId,
   );
 
   return (
@@ -112,10 +67,10 @@ const BlogDetails = () => {
         </div>
         <div className="md:pl-32 relative ">
           <Bookmark
-            fill={isSaved && "blue"}
+            fill={isSaved ? "blue" : "none"}
             size={50}
             strokeWidth={1}
-            onClick={() => onSavePost.mutate()}
+            onClick={async () => await savePost({ userId, postId })}
             className={cn(
               "cursor-pointer text-7xl   hover:text-sky-500 p-1.5 absolute md:top-1/3 md:left-3 right-3 top-2  border rounded-lg",
             )}
@@ -139,11 +94,7 @@ const BlogDetails = () => {
                 open={isEdit}
                 setOpen={setIsEdit}
               />
-              <AlertDialogDemo
-                action={deletePost}
-                open={open}
-                setOpen={setOpen}
-              />
+              <AlertDialogDemo id={postId!} open={open} setOpen={setOpen} />
               <Trash
                 onClick={() => setOpen(true)}
                 className="  p-1 border rounded cursor-pointer hover:text-red-500"

@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
 
-import api from "@/api/client";
 import { CatDialog } from "./CategoryModel";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,40 +10,21 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-type Category = {
-  name: string;
-};
+import { useCategories } from "@/api/hooks/useCategories";
 
 type SelectCategoryProps = {
   value: string[];
   onChange: (value: string[]) => void;
 };
+type Category = {
+  id: number;
+  name: string;
+};
 
 export function SelectCategory({ onChange, value }: SelectCategoryProps) {
-  const [categories, setCategories] = useState<Category[]>([]);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    let active = true;
-
-    async function fetchCategories() {
-      try {
-        const res = await api.get("/api/categories");
-
-        if (active) {
-          setCategories(res.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-      }
-    }
-
-    fetchCategories();
-
-    return () => {
-      active = false;
-    };
-  }, []);
+  const { data: categories } = useCategories();
 
   const toggleCategory = (name: string, checked: boolean) => {
     if (checked) {
@@ -82,7 +62,7 @@ export function SelectCategory({ onChange, value }: SelectCategoryProps) {
         </div>
 
         <div className="max-h-60 space-y-3 overflow-y-auto">
-          {categories.map((category) => (
+          {categories?.map((category: Category) => (
             <label
               key={category.name}
               className="flex cursor-pointer items-center gap-2 text-sm"
@@ -97,7 +77,7 @@ export function SelectCategory({ onChange, value }: SelectCategoryProps) {
             </label>
           ))}
 
-          {categories.length === 0 && (
+          {categories?.length === 0 && (
             <p className="text-sm text-muted-foreground">
               No categories available.
             </p>

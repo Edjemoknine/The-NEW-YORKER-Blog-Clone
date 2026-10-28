@@ -17,22 +17,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-// import { toast } from "@/components/ui/use-toast";
 import { Textarea } from "../ui/textarea";
 import { PlusCircle } from "lucide-react";
-// import { useAuth } from "@/context/AuthContext";
 import { SelectCategory } from "./CategorySelect";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useToast } from "../ui/use-toast";
-import api from "@/api/client";
+import { useCreatePost, useUpdatePost } from "@/api/hooks/usePosts";
+import { handleImage } from "@/lib/cloudinaryUp";
 
 const FormSchema = z.object({
   title: z.string().min(2, {
     message: "Title must be at least 2 characters.",
   }),
-  description: z.string().min(2, {
-    message: "Description must be at least 2 characters.",
+  desc: z.string().min(2, {
+    message: "desc must be at least 2 characters.",
   }),
   content: z.string().min(2, {
     message: "Content must be at least 2 characters.",
@@ -42,6 +40,8 @@ const FormSchema = z.object({
   }),
   image: z.string().optional(),
 });
+
+export type FormValues = z.infer<typeof FormSchema>;
 
 export function PostForm({
   type,
@@ -53,39 +53,15 @@ export function PostForm({
   close?: () => void;
 }) {
   const { user } = useSelector((store: any) => store.auth);
-  const preset_key = "download";
-  const cloud_name = "drcatqidu";
   const [ImG, setImage] = useState(post?.image ?? "");
   const navigate = useNavigate();
-  const { toast } = useToast();
-
-  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", preset_key);
-    axios
-      .post(
-        `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: false,
-        },
-      )
-      .then((res) => setImage(res.data.secure_url))
-      .catch((err) => console.log(err));
-  };
-
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const userId = user?.otherData?._id;
+  const postId = post?._id;
+  const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       title: post?.title ?? "",
-      description: post?.desc ?? "",
+      desc: post?.desc ?? "",
       content: post?.content ?? "",
       categories: Array.isArray(post?.categories)
         ? post.categories
@@ -95,83 +71,37 @@ export function PostForm({
       image: post?.image ?? "",
     },
   });
+  const { mutateAsync: onCreate, isPending: isCreating } = useCreatePost();
+  const { mutateAsync: onUpdate, isPending: isUpdating } = useUpdatePost();
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: FormValues) {
     if (ImG) {
       if (type !== "Edit") {
         try {
-          await api.post("/api/posts", {
-            title: data.title,
-            desc: data.description,
-            content: data.content,
-            categories: data.categories,
-            image: ImG,
-            username: user.otherData._id,
-          });
-          toast({
-            title: "Post has been created successfully !",
-            type: "background",
-          });
+          await onCreate({ ...data, userId });
 
-          navigate(`/profile/${user?.otherData?._id}`);
+          navigate(`/profile/${userId}`);
           form.reset();
           setImage("");
         } catch (error: unknown) {
-          if (error instanceof Error) {
-            toast({
-              title: error.message,
-              type: "background",
-            });
-            console.error(error);
-          } else {
-            toast({
-              title: "An unknown error occurred",
-              type: "background",
-            });
-            console.error("An unknown error occurred:", error);
-          }
+          console.log(error);
         }
       } else {
         try {
-          await api.put(`/api/posts/${post._id}`, {
-            title: data.title,
-            desc: data.description,
-            content: data.content,
-            categories: data.categories,
-            image: ImG,
-            username: user.otherData._id,
-          });
+          await onUpdate({ ...data, userId, postId });
           form.reset();
           setImage("");
           if (close) {
             close();
           }
-          toast({
-            title: "Post has been updated successfully!",
-            type: "background",
-          });
-          navigate(`/profile/${user?.otherData?._id}`);
+
+          navigate(`/profile/${userId}`);
         } catch (error: unknown) {
-          if (error instanceof Error) {
-            toast({
-              title: error.message,
-              type: "background",
-            });
-            console.error(error);
-          } else {
-            toast({
-              title: "An unknown error occurred",
-              type: "background",
-            });
-            console.error("An unknown error occurred:", error);
-          }
+          console.log(error);
         }
       }
     } else {
-      toast({
-        title: "Image Post is Required !",
-        type: "foreground",
-      });
+      alert("Please upload an image");
     }
   }
 
@@ -200,10 +130,22 @@ export function PostForm({
                   </div>
                 </FormLabel>
                 <FormControl>
-                  <Input
+                  {/*   <Input
                     onChange={handleImage}
                     style={{ display: "none" }}
                     type="file"
+                  /> */}
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={async (e) => {
+                      const url = await handleImage(e);
+                      if (url) {
+                        form.setValue("image", url);
+                        setImage(url);
+                      }
+                    }}
                   />
                 </FormControl>
 
@@ -227,12 +169,12 @@ export function PostForm({
           />
           <FormField
             control={form.control}
-            name="description"
+            name="desc"
             render={({ field }) => (
               <FormItem>
-                {/* <FormLabel>Description</FormLabel> */}
+                {/* <FormLabel>desc</FormLabel> */}
                 <FormControl>
-                  <Textarea placeholder="description" {...field} />
+                  <Textarea placeholder="desc" {...field} />
                 </FormControl>
 
                 <FormMessage />
@@ -270,7 +212,13 @@ export function PostForm({
             )}
           />
 
-          <Button type="submit">Submit</Button>
+          <Button disabled={isCreating || isUpdating} type="submit">
+            {isCreating
+              ? "Creating..."
+              : isUpdating
+                ? "Updating..."
+                : "Submit"}{" "}
+          </Button>
         </form>
       </Form>
     </div>

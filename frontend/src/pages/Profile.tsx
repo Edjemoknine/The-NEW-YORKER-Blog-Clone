@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useParams } from "react-router-dom";
 import SearchCard from "../components/shared/SearchCard";
-import { userData } from "@/api/FetchPots";
 import { useQuery } from "@tanstack/react-query";
+import { userData } from "@/api/auth";
 
 const Profile = () => {
   const { name } = useParams();

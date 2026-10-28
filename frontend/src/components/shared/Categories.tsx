@@ -1,4 +1,4 @@
-import api from "@/api/client";
+import { useCategories } from "@/api/hooks/useCategories";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -15,13 +15,7 @@ const Categories = () => {
     }
     setPrevScroll(window.scrollY);
   };
-  const [Categories, setCategories] = useState([]);
-  useEffect(() => {
-    api.get("/api/categories").then((res) => {
-      setCategories(res.data);
-    });
-  }, []);
-
+  const { data: categories } = useCategories();
   useEffect(() => {
     window.addEventListener("scroll", hideNavbar);
     return () => {
@@ -40,7 +34,7 @@ const Categories = () => {
         hideScroll ? "-top-full" : "top-24",
       )}
     >
-      {Categories?.map((item: Props) => (
+      {categories?.map((item: Props) => (
         <Link
           to={`/category/${item.name}`}
           key={item.name}
