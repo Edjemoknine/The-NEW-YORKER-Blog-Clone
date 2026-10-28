@@ -1,4 +1,3 @@
-import Grid from "@/components/utils/Grid";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import { fetchPost, fetchPosts } from "@/api/posts";
@@ -10,6 +9,8 @@ import { EditPostDialog } from "@/components/shared/EditDialog";
 import { cn } from "@/lib/utils";
 import { userData } from "@/api/auth";
 import { useSavePost } from "@/api/hooks/usePosts";
+import { useRecommendations } from "@/api/hooks/useRecommendation";
+import Recommendations from "@/components/utils/Recommendations";
 
 const BlogDetails = () => {
   const { id: postId } = useParams();
@@ -31,6 +32,7 @@ const BlogDetails = () => {
     queryKey: [details?.categories[0]],
     queryFn: () => fetchPosts({ category: details?.categories[0], limit: 10 }),
   });
+  const { data: recommendations, isLoading } = useRecommendations(postId!);
   const { mutateAsync: savePost } = useSavePost();
 
   const { data: profile } = useQuery({
@@ -112,13 +114,9 @@ const BlogDetails = () => {
           </div>
         </div>
       </div>
-
-      <Grid
-        data={data}
-        HeadingTitle={"READ MORE"}
-        HeadingSubTitle={""}
-        image={""}
-        type={"news"}
+      <Recommendations
+        isLoading={isLoading}
+        recommendations={recommendations ?? data}
       />
     </div>
   );
