@@ -15,6 +15,7 @@ import CreatePost from "./pages/CreatePost.tsx";
 import UpdatePost from "./pages/UpdatePost.tsx";
 import User from "./pages/User.tsx";
 import Authentication from "./pages/Authentication.tsx";
+import MissedPostsPage from "./pages/MissedPosts.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +27,7 @@ const router = createBrowserRouter(
       <Route path="/profile/:name" element={<Profile />} />
       <Route path="/update/:id" element={<UpdatePost />} />
       <Route path="/create" element={<CreatePost />} />
+      <Route path="/missed" element={<MissedPostsPage />} />
       <Route path="/user" element={<User />} />
       <Route path="/auth" element={<Authentication />} />
     </Route>,

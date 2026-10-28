@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Heading from "./Heading";
-import Card from "./Card";
 import GameCard from "../shared/GameCard";
+import { EditorialPostCard } from "./PostCard";
 
 type Props = {
   type: string;
   data: any;
   HeadingTitle: string;
   HeadingSubTitle: string;
-  image: string;
+  image?: string;
 };
 const Grid = ({ type, data, HeadingTitle, HeadingSubTitle, image }: Props) => {
   return (
@@ -19,7 +19,7 @@ const Grid = ({ type, data, HeadingTitle, HeadingSubTitle, image }: Props) => {
           return type === "game" ? (
             <GameCard key={index} />
           ) : (
-            <Card item={item} key={index} />
+            <EditorialPostCard post={item} key={index} />
           );
         })}
       </div>

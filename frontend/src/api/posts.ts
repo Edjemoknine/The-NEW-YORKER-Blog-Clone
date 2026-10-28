@@ -66,3 +66,10 @@ export const savePost = async (userId: string, postId: string) => {
     console.log(error);
   }
 };
+
+export const fetchMissedPosts = async ({ page = 1, limit = 4 }) => {
+  const { data } = await api.get(
+    `/api/posts/missed?page=${page}&limit=${limit}`,
+  );
+  return data;
+};
