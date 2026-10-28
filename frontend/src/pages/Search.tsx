@@ -4,13 +4,13 @@ import SearchForm from "@/components/shared/SearchForm";
 // import { data } from "./Home";
 import SearchCard from "../components/shared/SearchCard";
 import { useQuery } from "@tanstack/react-query";
-import { fetchPosts } from "@/api/FetchPots";
+import { fetchPosts } from "@/api/posts";
 import { useState } from "react";
 
 const Search = () => {
   const [search, setSearch] = useState("");
-//   const [page, setPage] = useState(1);
-// const page=1
+  //   const [page, setPage] = useState(1);
+  // const page=1
   const { data } = useQuery({
     queryKey: ["serachPosts", search],
     queryFn: () => fetchPosts({ search, pageParam: 1, limit: 10 }),
@@ -28,7 +28,7 @@ const Search = () => {
       </div>
 
       <div className="flex-col flex gap-3 px-8">
-        {data?.posts?.map((item:any) => (
+        {data?.posts?.map((item: any) => (
           <SearchCard item={item} key={item.id} />
         ))}
       </div>

@@ -28,6 +28,7 @@ const EMBEDDING_MODEL = "Xenova/paraphrase-multilingual-MiniLM-L12-v2";
 export const createPost = async (req: any, res: any) => {
   const { title, desc, content, categories, image } = req.body;
   const userId = req.user?.id;
+  console.log({ body: req.body });
 
   if (!title || !desc || !content || !userId) {
     return res.status(400).json({

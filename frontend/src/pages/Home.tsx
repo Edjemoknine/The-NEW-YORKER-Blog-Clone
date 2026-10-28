@@ -1,4 +1,4 @@
-import { fetchPosts } from "@/api/FetchPots";
+import { fetchPosts } from "@/api/posts";
 import Categories from "@/components/shared/Categories";
 import Hero from "@/components/shared/Hero";
 import Grid from "@/components/utils/Grid";
@@ -6,56 +6,6 @@ import InCaseMissed from "@/components/utils/InCaseMissed";
 import Sponsor from "@/components/utils/Sponsor";
 import View from "@/components/utils/View";
 import { useQuery } from "@tanstack/react-query";
-export const data = [
-  {
-    id: 1,
-    title: "  Faux ScarJo and the Descent of the A.I. Vultures",
-    author: "By Kyle Chayka",
-    category: "Politics and debates",
-    date: "May 25, 2024",
-    description:
-      " OpenAI’s snafu over its “Her”-like voice assistant might be funny if it didn’t portend a larger crisis in the integrity of digital information",
-
-    image:
-      "https://media.newyorker.com/photos/664cb11d23865d8369f5e627/16:9/w_960,c_limit/r44325.jpg",
-  },
-  {
-    id: 2,
-    title: "  Faux ScarJo and the Descent of the A.I. Vultures",
-    author: "By Kyle Chayka",
-    category: "Politics and debates",
-    date: "May 25, 2024",
-    description:
-      " OpenAI’s snafu over its “Her”-like voice assistant might be funny if it didn’t portend a larger crisis in the integrity of digital information",
-
-    image:
-      "https://media.newyorker.com/photos/664cb11d23865d8369f5e627/16:9/w_960,c_limit/r44325.jpg",
-  },
-  {
-    id: 3,
-    title: "  Faux ScarJo and the Descent of the A.I. Vultures",
-    author: "By Kyle Chayka",
-    category: "Politics and debates",
-    date: "May 25, 2024",
-    description:
-      " OpenAI’s snafu over its “Her”-like voice assistant might be funny if it didn’t portend a larger crisis in the integrity of digital information",
-
-    image:
-      "https://media.newyorker.com/photos/664cb11d23865d8369f5e627/16:9/w_960,c_limit/r44325.jpg",
-  },
-  {
-    id: 4,
-    title: "  Faux ScarJo and the Descent of the A.I. Vultures",
-    author: "By Kyle Chayka",
-    category: "Politics and debates",
-    date: "May 25, 2024",
-    description:
-      " OpenAI’s snafu over its “Her”-like voice assistant might be funny if it didn’t portend a larger crisis in the integrity of digital information",
-
-    image:
-      "https://media.newyorker.com/photos/664cb11d23865d8369f5e627/16:9/w_960,c_limit/r44325.jpg",
-  },
-];
 
 const Home = () => {
   const { data: tech } = useQuery({
@@ -65,7 +15,7 @@ const Home = () => {
 
   const { data: Saas } = useQuery({
     queryKey: ["saas"],
-    queryFn: () => fetchPosts({ category: "Saas" ,limit:4}),
+    queryFn: () => fetchPosts({ category: "Saas", limit: 4 }),
   });
   const { data: Finance } = useQuery({
     queryKey: ["Politics"],

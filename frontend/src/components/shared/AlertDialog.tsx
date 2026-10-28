@@ -1,3 +1,4 @@
+import { useDeletePost } from "@/api/hooks/usePosts";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,7 +9,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-export function AlertDialogDemo({ open, setOpen, action }: { open: boolean; setOpen: (open: boolean) => void; action: () => void }) {
+import { useNavigate } from "react-router-dom";
+export function AlertDialogDemo({
+  open,
+  setOpen,
+  id,
+}: {
+  id: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
+  const naviagte = useNavigate();
+
+  const { mutateAsync: deletePost, isPending } = useDeletePost();
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
@@ -23,7 +36,18 @@ export function AlertDialogDemo({ open, setOpen, action }: { open: boolean; setO
           <AlertDialogCancel onClick={() => setOpen(false)}>
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction onClick={action}>Continue</AlertDialogAction>
+          <AlertDialogAction
+            disabled={isPending}
+            onClick={() =>
+              deletePost(id!, {
+                onSuccess: () => {
+                  naviagte("/user");
+                },
+              })
+            }
+          >
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

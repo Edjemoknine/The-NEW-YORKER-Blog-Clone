@@ -1,4 +1,4 @@
-import api from "@/api/client";
+import { useAddCategory } from "@/api/hooks/useCategories";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,16 +15,24 @@ import { useState } from "react";
 
 export function CatDialog() {
   const [category, setCategory] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false); // 1. Add open state
 
-  const addCategory = async () => {
-    try {
-      await api.post("/api/categories", { category });
-    } catch (error) {
-      console.log(error);
-    }
+  const { mutate, isPending } = useAddCategory();
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!category.trim()) return;
+
+    mutate(category, {
+      onSuccess: () => {
+        setCategory("");
+        setOpen(false);
+      },
+    });
   };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="w-full" size={"sm"}>
           Add Category
@@ -34,24 +42,26 @@ export function CatDialog() {
         <DialogHeader>
           <DialogTitle>Add New Category</DialogTitle>
           <DialogDescription>
-            Create new category that related to that post.
+            Create a new category related to that post.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
-              name
+              Name
             </Label>
             <Input
+              id="name"
               value={category}
               className="col-span-3"
               onChange={(e) => setCategory(e.target.value)}
+              placeholder="Enter category name..."
             />
           </div>
         </div>
         <DialogFooter>
-          <Button type="button" onClick={addCategory}>
-            Add
+          <Button disabled={isPending} type="button" onClick={handleFormSubmit}>
+            {isPending ? `Loading...` : `Add`}
           </Button>
         </DialogFooter>
       </DialogContent>
