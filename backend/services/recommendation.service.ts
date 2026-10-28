@@ -91,6 +91,7 @@ export async function getRecommendedPosts(postId: string, limit = 5) {
       desc: posts.desc,
       categories: posts.categories,
       similarity: semanticSimilarity,
+      image: posts.image,
       keywordScore,
       categoryScore,
       score: hybridScore,

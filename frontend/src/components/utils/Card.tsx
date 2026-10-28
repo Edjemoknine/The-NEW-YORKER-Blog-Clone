@@ -12,6 +12,8 @@ type Props = {
   };
 };
 const Card = ({ item }: Props) => {
+  console.log(item);
+
   return (
     <Link to={`/blog/${item?.id ?? item?._id}`}>
       <div className="flex flex-col gap-2">
