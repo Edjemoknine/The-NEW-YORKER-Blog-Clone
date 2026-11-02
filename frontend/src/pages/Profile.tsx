@@ -2,7 +2,7 @@
 import { useParams } from "react-router-dom";
 import SearchCard from "../components/shared/SearchCard";
 import { useQuery } from "@tanstack/react-query";
-import { userData } from "@/api/auth";
+import { userData } from "@/api/handlers/auth";
 
 const Profile = () => {
   const { name } = useParams();

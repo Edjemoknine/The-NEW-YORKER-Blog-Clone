@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "@/api/client";
+import api from "@/api/handlers/client";
 const user = JSON.parse(localStorage.getItem("user")!);
 
 const initialState = {

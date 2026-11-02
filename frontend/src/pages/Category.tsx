@@ -2,7 +2,7 @@
 import Sponsor from "@/components/utils/Sponsor";
 import { useInView } from "react-intersection-observer";
 import { useParams } from "react-router-dom";
-import { fetchPosts } from "@/api/posts";
+import { fetchPosts } from "@/api/handlers/posts";
 
 import { useCallback, useEffect, useState } from "react";
 import { EditorialPostCard } from "@/components/utils/PostCard";

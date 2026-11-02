@@ -11,7 +11,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-import { cn } from "./utils";
+import { cn } from "../../lib/utils";
 type BlogProps = {
   data: BlogItem[];
 };

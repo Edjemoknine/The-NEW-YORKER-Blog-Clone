@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchRecommendedPosts } from "../recommendations";
+import { fetchRecommendedPosts } from "../handlers/recommendations";
 
 export const useRecommendations = (postId: string) => {
   return useQuery({

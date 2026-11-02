@@ -29,8 +29,8 @@ export const useCategories = () => {
     queryFn: fetchCategories,
   });
 };
-import { fetchPosts } from "@/api/posts";
-import api from "../client";
+import { fetchPosts } from "@/api/handlers/posts";
+import api from "../handlers/client";
 
 export const useCategoryPosts = (category: string, limit = 4) => {
   return useQuery({

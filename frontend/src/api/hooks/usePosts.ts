@@ -6,7 +6,7 @@ import {
   deletePost,
   savePost,
   updatePost,
-} from "../posts";
+} from "../handlers/posts";
 
 export const useCreatePost = () => {
   const queryClient = useQueryClient();

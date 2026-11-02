@@ -2,14 +2,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { login, register, reset } from "../context/authSlice";
+import { login, register, reset } from "../../context/authSlice";
 
-import { Label } from "./LabelUi";
-import { Input } from "./InputUi";
-import { cn } from "./utils";
+import { Label } from "../shared/LabelUi";
+import { cn } from "../../lib/utils";
 import { useNavigate } from "react-router-dom";
 
 import { AppDispatch } from "@/context/store";
+import { Input } from "../shared/InputUi";
 
 export function SignupForm({
   isLogin,

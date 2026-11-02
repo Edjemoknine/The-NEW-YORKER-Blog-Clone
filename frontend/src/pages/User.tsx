@@ -34,8 +34,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import Grid from "@/components/utils/Grid";
 import { Textarea } from "@/components/ui/textarea";
-import { userData } from "@/api/auth";
-import api from "@/api/client";
+import { userData } from "@/api/handlers/auth";
+import api from "@/api/handlers/client";
 
 const User = () => {
   const { user } = useSelector((store: any) => store.auth);
