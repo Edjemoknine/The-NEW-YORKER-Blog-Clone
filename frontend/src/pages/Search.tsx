@@ -1,19 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import SearchForm from "@/components/shared/SearchForm";
-// import { data } from "./Home";
 import SearchCard from "../components/shared/SearchCard";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPosts } from "@/api/handlers/posts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Search = () => {
   const [search, setSearch] = useState("");
-  //   const [page, setPage] = useState(1);
-  // const page=1
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setDebouncedSearch(search), 400);
+    return () => clearTimeout(timeout);
+  }, [search]);
+
   const { data } = useQuery({
-    queryKey: ["serachPosts", search],
-    queryFn: () => fetchPosts({ search, pageParam: 1, limit: 10 }),
+    queryKey: ["serachPosts", debouncedSearch],
+    queryFn: () =>
+      fetchPosts({ search: debouncedSearch, pageParam: 1, limit: 10 }),
   });
 
   return (
