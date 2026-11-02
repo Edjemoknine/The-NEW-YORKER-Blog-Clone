@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -23,7 +21,7 @@ import { SelectCategory } from "./CategorySelect";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useCreatePost, useUpdatePost } from "@/api/hooks/usePosts";
-import { handleImage } from "@/lib/cloudinaryUp";
+import { handleImage } from "@/lib/cloudinaryUpload";
 
 const FormSchema = z.object({
   title: z.string().min(2, {

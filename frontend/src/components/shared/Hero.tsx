@@ -1,4 +1,4 @@
-import Slider from "@/lib/Swiper";
+import Slider from "@/components/shared/Swiper";
 const data = [
   {
     id: 1,

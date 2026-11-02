@@ -4,7 +4,7 @@ import SearchForm from "@/components/shared/SearchForm";
 // import { data } from "./Home";
 import SearchCard from "../components/shared/SearchCard";
 import { useQuery } from "@tanstack/react-query";
-import { fetchPosts } from "@/api/posts";
+import { fetchPosts } from "@/api/handlers/posts";
 import { useState } from "react";
 
 const Search = () => {

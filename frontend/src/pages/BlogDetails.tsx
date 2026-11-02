@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-import { fetchPost, fetchPosts } from "@/api/posts";
+import { fetchPost, fetchPosts } from "@/api/handlers/posts";
 import { Bookmark, Edit, Trash } from "lucide-react";
 import { useSelector } from "react-redux";
 import { AlertDialogDemo } from "@/components/shared/AlertDialog";
 import { useState } from "react";
 import { EditPostDialog } from "@/components/shared/EditDialog";
 import { cn } from "@/lib/utils";
-import { userData } from "@/api/auth";
+import { userData } from "@/api/handlers/auth";
 import { useSavePost } from "@/api/hooks/usePosts";
 import { useRecommendations } from "@/api/hooks/useRecommendation";
 import Recommendations from "@/components/utils/Recommendations";

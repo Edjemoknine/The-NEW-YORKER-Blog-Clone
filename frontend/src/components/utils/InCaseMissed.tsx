@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom"; // or next/router / next/navigation depending on your setup
 import { EditorialPostCard } from "./PostCard";
-import { fetchMissedPosts } from "@/api/posts";
+import { fetchMissedPosts } from "@/api/handlers/posts";
 
 const InCaseMissed = () => {
   const navigate = useNavigate(); // Or router.push if using Next.js

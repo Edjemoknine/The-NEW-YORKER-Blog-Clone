@@ -1,4 +1,4 @@
-import { SignupForm } from "@/lib/AuthForm";
+import { SignupForm } from "@/components/utils/AuthForm";
 import { cn } from "@/lib/utils";
 
 const Login = ({

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { fetchMissedPosts } from "@/api/posts";
+import { fetchMissedPosts } from "@/api/handlers/posts";
 import { EditorialPostCard } from "@/components/utils/PostCard";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
