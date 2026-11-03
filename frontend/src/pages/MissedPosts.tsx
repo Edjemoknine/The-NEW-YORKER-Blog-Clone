@@ -9,7 +9,7 @@ const MissedPostsPage = () => {
   const [limit, setLimit] = useState(8);
 
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["missed-posts-paginated", page],
+    queryKey: ["missed-posts-paginated", "before-today", page],
     queryFn: () => fetchMissedPosts({ page, limit }),
     keepPreviousData: true,
   } as any);
@@ -21,10 +21,10 @@ const MissedPostsPage = () => {
     <main className="max-w-[90rem] mx-auto px-4 py-12 md:px-6 min-h-screen">
       <div className="mb-8 border-b pb-4">
         <h1 className="font-serif text-3xl font-bold tracking-tight mb-2">
-          All Stories – Last 3 Days
+          All Earlier Stories
         </h1>
         <p className="text-muted-foreground text-sm">
-          Browse everything you might have missed over the past 72 hours.
+          Browse stories published before today.
         </p>
       </div>
 
@@ -39,7 +39,7 @@ const MissedPostsPage = () => {
         </div>
       ) : posts.length === 0 ? (
         <div className="py-20 text-center text-muted-foreground">
-          <p>No stories found from the last three days.</p>
+          <p>No stories published before today.</p>
         </div>
       ) : (
         <>

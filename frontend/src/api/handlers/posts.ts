@@ -4,10 +4,12 @@ import api from "./client";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 type Props = {
   category?: string;
+  postType?: string;
   limit: number;
   search?: string;
   pageParam?: number;
-  sort?: string; // "desc" or "asc"
+  sortBy?: string;
+  order?: "asc" | "desc";
 };
 export type PostProps = {
   title: string;
@@ -21,17 +23,24 @@ export type PostProps = {
 export type CreatePostProps = FormValues & { userId: string };
 export const fetchPosts = async ({
   category = "",
+  postType,
   limit = 8,
   search = "",
   pageParam = 1,
-  // sort,
+  sortBy,
+  order,
 }: Props) => {
-  console.log(search);
-  console.log(pageParam);
-  console.log(category);
-  const { data } = await api.get(
-    `/api/posts?category=${category}&limit=${limit}&search=${search}&page=${pageParam}`,
-  );
+  const params = new URLSearchParams({
+    category,
+    limit: String(limit),
+    search,
+    page: String(pageParam),
+  });
+  if (postType) params.set("postType", postType);
+  if (sortBy) params.set("sortBy", sortBy);
+  if (order) params.set("order", order);
+
+  const { data } = await api.get(`/api/posts?${params.toString()}`);
   return data;
 };
 

@@ -5,9 +5,10 @@ import {
   count,
   desc,
   eq,
-  gte,
   ilike,
+  lt,
   or,
+  sql,
 } from "drizzle-orm";
 import { db } from "../db/index.ts";
 import { posts, users, embeddingJobs, postTypeEnum } from "../db/schema.ts";
@@ -158,6 +159,18 @@ export const getPosts = async (req: any, res: any) => {
   if (req.query.category) {
     filters.push(arrayContains(posts.categories, [String(req.query.category)]));
   }
+  if (req.query.postType) {
+    const requestedPostType = String(req.query.postType);
+    const postType = postTypeEnum.enumValues.find(
+      (value) => value === requestedPostType,
+    );
+    if (!postType) {
+      return res.status(400).json({
+        message: `postType must be one of: ${postTypeEnum.enumValues.join(", ")}`,
+      });
+    }
+    filters.push(eq(posts.postType, postType));
+  }
   if (req.query.search) {
     const searchTerm = `%${String(req.query.search).replace(/[\\%_]/g, "\\$&")}%`;
     filters.push(
@@ -176,6 +189,8 @@ export const getPosts = async (req: any, res: any) => {
   };
   const sortColumn = sortColumns[req.query.sortBy] || posts.title;
   const sortDirection = req.query.order === "desc" ? desc : asc;
+  const sortOrder =
+    req.query.sortBy === "random" ? sql`random()` : sortDirection(sortColumn);
   const where = filters.length ? and(...filters) : undefined;
 
   try {
@@ -185,7 +200,7 @@ export const getPosts = async (req: any, res: any) => {
         .from(posts)
         .innerJoin(users, eq(posts.userId, users.id))
         .where(where)
-        .orderBy(sortDirection(sortColumn))
+        .orderBy(sortOrder)
         .limit(limit)
         .offset((page - 1) * limit),
       db.select({ total: count() }).from(posts).where(where),
@@ -425,12 +440,9 @@ export const getInCaseMissedPosts = async (req: any, res: any) => {
     );
     const offset = (page - 1) * limit;
 
-    // 2. Calculer la date d'il y a 3 jours
-    const threeDaysAgo = new Date();
-    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-
-    // 3. Clause WHERE commune pour le filtre des 3 derniers jours
-    const whereCondition = gte(posts.createdAt, threeDaysAgo);
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    const whereCondition = lt(posts.createdAt, startOfToday);
 
     // 4. Exécuter en parallèle la requête des posts paginés et le comptage total
     const [result, [countResult]] = await Promise.all([

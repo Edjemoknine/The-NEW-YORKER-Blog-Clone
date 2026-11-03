@@ -8,7 +8,7 @@ const InCaseMissed = () => {
   const navigate = useNavigate(); // Or router.push if using Next.js
 
   const { data, isLoading } = useQuery({
-    queryKey: ["missed-posts-preview"],
+    queryKey: ["missed-posts-preview", "before-today"],
     queryFn: () => fetchMissedPosts({ limit: 4 }),
     staleTime: 1000 * 60 * 10,
   });
@@ -46,13 +46,13 @@ const InCaseMissed = () => {
             In Case You Missed It
           </h2>
           <p className="text-sm text-muted-foreground">
-            Catch up on top stories from the last three days.
+            Catch up on stories published before today.
           </p>
         </div>
 
         {/* Link redirecting to the full paginated archive page */}
         <button
-          onClick={() => navigate("/missed-posts")}
+          onClick={() => navigate("/missed")}
           className="text-sm font-semibold hover:text-sky-500 transition-colors underline underline-offset-4"
         >
           View All &rarr;
