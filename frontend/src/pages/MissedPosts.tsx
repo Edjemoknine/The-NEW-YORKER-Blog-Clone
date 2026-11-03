@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { fetchMissedPosts } from "@/api/handlers/posts";
-import { EditorialPostCard } from "@/components/utils/PostCard";
+import { NewsCard } from "@/components/utils/NewsCard";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -45,7 +45,7 @@ const MissedPostsPage = () => {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {posts.map((post: any) => (
-              <EditorialPostCard key={post.id} post={post} />
+              <NewsCard key={post.id} post={post} />
             ))}
           </div>
 

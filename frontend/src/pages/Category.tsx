@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { fetchPosts } from "@/api/handlers/posts";
 
 import { useCallback, useEffect, useState } from "react";
-import { EditorialPostCard } from "@/components/utils/PostCard";
+import { NewsCard } from "@/components/utils/NewsCard";
 
 const Category = () => {
   const { title } = useParams();
@@ -53,7 +53,7 @@ const Category = () => {
       <Sponsor />
       <div className="grid sm:grid-cols-2 md:grid-cols-3 min-h-96 my-6 lg:grid-cols-4 gap-6 divide-x2 divide-gray-500">
         {posts?.map((item, index: number) => (
-          <EditorialPostCard post={item} key={index} />
+          <NewsCard post={item} key={index} />
         ))}
       </div>
       {posts?.length == 0 && (
