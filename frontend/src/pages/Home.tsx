@@ -24,19 +24,13 @@ const Home = () => {
       ) : (
         categoryList
           ?.slice(0, 4)
-          .map((category: { id: string; name: string }) => (
+          .map((category: { id: string; name: string }, index: number) => (
             <div key={category.id}>
               <DynamicCategoryRow name={category.name} />
 
               <>
                 <Sponsor />
-                <MagazineView
-                  image="https://media.newyorker.com/photos/663e84418453580e8d8f6e21/2:2/w_960,c_limit/TNY_Seuss_FINAL4.jpg"
-                  author="By Hanif Abduraqib"
-                  subtitle="The New Yorker Interview"
-                  title="diane seuss reckons with what poetry can do"
-                  content="The poet discusses her latest collection, 'Modern Poetry' and what her writing practice has to do with grief, romance, and control."
-                />
+                <MagazineView index={index} />
               </>
             </div>
           ))
