@@ -14,7 +14,7 @@ interface PostCardProps {
   onClick?: () => void;
 }
 
-export function EditorialPostCard({ post, onClick }: PostCardProps) {
+export function NewsCard({ post, onClick }: PostCardProps) {
   console.log(post);
 
   return (

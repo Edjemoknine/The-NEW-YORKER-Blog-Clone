@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/components/ui/use-toast";
-import { addCategory } from "../categories";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCategories } from "@/api/categories"; // adjust path as needed
 
 export const useAddCategory = () => {
   const queryClient = useQueryClient();
@@ -31,6 +29,7 @@ export const useCategories = () => {
 };
 import { fetchPosts } from "@/api/handlers/posts";
 import api from "../handlers/client";
+import { addCategory, fetchCategories } from "../handlers/categories";
 
 export const useCategoryPosts = (category: string, limit = 4) => {
   return useQuery({

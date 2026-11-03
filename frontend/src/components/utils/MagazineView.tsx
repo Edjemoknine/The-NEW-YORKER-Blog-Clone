@@ -1,4 +1,10 @@
-const View = ({ image, title, author, content, subtitle }: {
+const MagazineView = ({
+  image,
+  title,
+  author,
+  content,
+  subtitle,
+}: {
   image: string;
   title: string;
   author: string;
@@ -20,4 +26,4 @@ const View = ({ image, title, author, content, subtitle }: {
   );
 };
 
-export default View;
+export default MagazineView;

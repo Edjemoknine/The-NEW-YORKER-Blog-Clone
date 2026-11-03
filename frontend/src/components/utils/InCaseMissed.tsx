@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom"; // or next/router / next/navigation depending on your setup
-import { EditorialPostCard } from "./PostCard";
+import { EditorialPostCard } from "./NewsCard";
 import { fetchMissedPosts } from "@/api/handlers/posts";
 
 const InCaseMissed = () => {

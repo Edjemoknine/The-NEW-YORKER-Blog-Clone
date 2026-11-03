@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import SearchForm from "@/components/shared/SearchForm";
+import SearchForm from "@/components/forms/SearchForm";
 import SearchCard from "../components/shared/SearchCard";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPosts } from "@/api/handlers/posts";
