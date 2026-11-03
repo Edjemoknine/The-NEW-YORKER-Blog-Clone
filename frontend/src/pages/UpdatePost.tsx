@@ -1,4 +1,4 @@
-import { PostForm } from "@/components/shared/PostForm";
+import { PostForm } from "@/components/forms/PostForm";
 
 const UpdatePost = () => {
   return (

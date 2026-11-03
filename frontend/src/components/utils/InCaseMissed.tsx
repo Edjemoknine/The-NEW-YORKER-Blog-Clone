@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom"; // or next/router / next/navigation depending on your setup
-import { EditorialPostCard } from "./NewsCard";
+import { NewsCard } from "./NewsCard";
 import { fetchMissedPosts } from "@/api/handlers/posts";
 
 const InCaseMissed = () => {
@@ -61,7 +61,7 @@ const InCaseMissed = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {posts.map((post: any) => (
-          <EditorialPostCard key={post.id} post={post} />
+          <NewsCard key={post.id} post={post} />
         ))}
       </div>
     </section>

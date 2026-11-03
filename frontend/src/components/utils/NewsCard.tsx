@@ -7,6 +7,7 @@ interface PostCardProps {
     title: string;
     desc: string;
     image: string;
+    postType?: string;
     categories: string[];
     username?: { name: string };
     createdAt?: string;
@@ -36,7 +37,7 @@ export function NewsCard({ post, onClick }: PostCardProps) {
         <div className="flex flex-col flex-grow">
           {/* Overline Kicker */}
           <div className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-red-600 mb-2">
-            {post.categories?.[0] || "Culture"}
+            {post.postType || post.categories?.[0] || "Culture"}
           </div>
 
           {/* Headline */}

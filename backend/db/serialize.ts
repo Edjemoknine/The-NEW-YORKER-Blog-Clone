@@ -16,6 +16,7 @@ export const postWithAuthor = (post, author) => ({
   date: post.date,
   username: author ? publicUser(author) : post.userId,
   image: post.image,
+  postType: post.postType,
   categories: post.categories,
   createdAt: post.createdAt,
   updatedAt: post.updatedAt,

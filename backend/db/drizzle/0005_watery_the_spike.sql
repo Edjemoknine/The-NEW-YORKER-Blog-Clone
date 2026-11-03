@@ -1,0 +1,2 @@
+CREATE TYPE "public"."post_type" AS ENUM('News', 'Books & Culture', 'Fiction & Poetry', 'Humor & Cartoons', 'Magazine');--> statement-breakpoint
+ALTER TABLE "posts" ADD COLUMN "post_type" "post_type" DEFAULT 'News' NOT NULL;

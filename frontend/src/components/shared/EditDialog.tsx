@@ -5,7 +5,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import { PostForm } from "./PostForm";
+import { PostForm } from "../forms/PostForm";
 import { Button } from "../ui/button";
 
 export function EditPostDialog({ open, setOpen, post }: { open: boolean; setOpen: (open: boolean) => void; post: any }) {

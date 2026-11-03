@@ -17,12 +17,26 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import { PlusCircle } from "lucide-react";
-import { SelectCategory } from "./CategorySelect";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useCreatePost, useUpdatePost } from "@/api/hooks/usePosts";
 import { handleImage } from "@/lib/cloudinaryUpload";
+import { SelectCategory } from "../shared/CategorySelect";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
+const POST_TYPES = [
+  "News",
+  "Books & Culture",
+  "Fiction & Poetry",
+  "Humor & Cartoons",
+  "Magazine",
+] as const;
 const FormSchema = z.object({
   title: z.string().min(2, {
     message: "Title must be at least 2 characters.",
@@ -32,6 +46,9 @@ const FormSchema = z.object({
   }),
   content: z.string().min(2, {
     message: "Content must be at least 2 characters.",
+  }),
+  postType: z.enum(POST_TYPES, {
+    errorMap: () => ({ message: "Select a post type." }),
   }),
   categories: z.array(z.string().min(1)).min(1, {
     message: "Select at least one category.",
@@ -61,6 +78,7 @@ export function PostForm({
       title: post?.title ?? "",
       desc: post?.desc ?? "",
       content: post?.content ?? "",
+      postType: post?.postType ?? "News",
       categories: Array.isArray(post?.categories)
         ? post.categories
         : post?.categories
@@ -189,6 +207,31 @@ export function PostForm({
                   <Textarea placeholder="content" {...field} />
                 </FormControl>
 
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="postType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Post type</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select post type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {POST_TYPES.map((postType) => (
+                      <SelectItem key={postType} value={postType}>
+                        {postType}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

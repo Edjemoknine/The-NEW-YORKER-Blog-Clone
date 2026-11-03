@@ -10,7 +10,7 @@ import {
   or,
 } from "drizzle-orm";
 import { db } from "../db/index.ts";
-import { posts, users, embeddingJobs } from "../db/schema.ts";
+import { posts, users, embeddingJobs, postTypeEnum } from "../db/schema.ts";
 import { postWithAuthor } from "../db/serialize.ts";
 import { qstash } from "../lib/qstash.ts";
 
@@ -25,9 +25,22 @@ const getJoinedPost = async (id: string) => {
 };
 
 const EMBEDDING_MODEL = "Xenova/paraphrase-multilingual-MiniLM-L12-v2";
+const POST_TYPE_VALUES = new Set<string>(postTypeEnum.enumValues);
+
+const isPostType = (
+  value: unknown,
+): value is (typeof postTypeEnum.enumValues)[number] =>
+  typeof value === "string" && POST_TYPE_VALUES.has(value);
+
+const isNonEmptyStringArray = (value: unknown): value is string[] =>
+  Array.isArray(value) &&
+  value.length > 0 &&
+  value.every(
+    (item: unknown) => typeof item === "string" && item.trim().length > 0,
+  );
 
 export const createPost = async (req: any, res: any) => {
-  const { title, desc, content, categories, image } = req.body;
+  const { title, desc, content, categories, image, postType } = req.body;
   const userId = req.user?.id;
   console.log({ body: req.body });
 
@@ -37,14 +50,13 @@ export const createPost = async (req: any, res: any) => {
     });
   }
 
-  if (
-    !Array.isArray(categories) ||
-    categories.length === 0 ||
-    !categories.every(
-      (category: unknown) =>
-        typeof category === "string" && category.trim().length > 0,
-    )
-  ) {
+  if (!isPostType(postType)) {
+    return res.status(400).json({
+      message: `postType must be one of: ${postTypeEnum.enumValues.join(", ")}`,
+    });
+  }
+
+  if (!isNonEmptyStringArray(categories)) {
     return res.status(400).json({
       message: "categories must be a non-empty array of strings",
     });
@@ -64,6 +76,7 @@ export const createPost = async (req: any, res: any) => {
           content,
           userId,
           image: image || "",
+          postType,
           categories: normalizedCategories,
           embedding: null,
           embeddingModel: EMBEDDING_MODEL,
@@ -230,34 +243,31 @@ export const updatePost = async (req: any, res: any) => {
     content,
     categories: submittedCategories,
     image,
+    postType,
   } = req.body;
 
   const postId = req.params.id;
   const embeddingModel = EMBEDDING_MODEL;
 
-  if (submittedCategories !== undefined) {
-    if (
-      !Array.isArray(submittedCategories) ||
-      submittedCategories.length === 0 ||
-      !submittedCategories.every(
-        (category: unknown) =>
-          typeof category === "string" && category.trim().length > 0,
-      )
-    ) {
-      return res.status(400).json({
-        message: "categories must be a non-empty array of strings",
-      });
-    }
+  if (postType !== undefined && !isPostType(postType)) {
+    return res.status(400).json({
+      message: `postType must be one of: ${postTypeEnum.enumValues.join(", ")}`,
+    });
   }
 
-  const normalizedCategories: string[] | undefined =
-    submittedCategories === undefined
-      ? undefined
-      : [
-          ...new Set(
-            submittedCategories.map((category: string) => category.trim()),
-          ),
-        ];
+  const validSubmittedCategories = isNonEmptyStringArray(submittedCategories)
+    ? submittedCategories
+    : undefined;
+
+  if (submittedCategories !== undefined && !validSubmittedCategories) {
+    return res.status(400).json({
+      message: "categories must be a non-empty array of strings",
+    });
+  }
+
+  const normalizedCategories = validSubmittedCategories
+    ? [...new Set(validSubmittedCategories.map((category) => category.trim()))]
+    : undefined;
 
   try {
     const result = await db.transaction(async (tx) => {
@@ -279,6 +289,7 @@ export const updatePost = async (req: any, res: any) => {
       if (desc !== undefined) values.desc = desc;
       if (content !== undefined) values.content = content;
       if (image !== undefined) values.image = image;
+      if (postType !== undefined) values.postType = postType;
 
       if (normalizedCategories !== undefined) {
         values.categories = normalizedCategories;
@@ -295,6 +306,7 @@ export const updatePost = async (req: any, res: any) => {
         (title !== undefined && title !== existing.title) ||
         (desc !== undefined && desc !== existing.desc) ||
         (content !== undefined && content !== existing.content) ||
+        (postType !== undefined && postType !== existing.postType) ||
         categoriesChanged;
 
       if (embeddingChanged) {
@@ -434,7 +446,6 @@ export const getInCaseMissedPosts = async (req: any, res: any) => {
     ]);
 
     const totalPosts = Number(countResult?.total || 0);
-
     return res.json({
       posts: result.map(({ post, author }) => postWithAuthor(post, author)),
       currentPage: page,

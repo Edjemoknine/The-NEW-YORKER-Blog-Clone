@@ -53,6 +53,13 @@ export const categories = pgTable("categories", {
     .notNull()
     .defaultNow(),
 });
+export const postTypeEnum = pgEnum("post_type", [
+  "News",
+  "Books & Culture",
+  "Fiction & Poetry",
+  "Humor & Cartoons",
+  "Magazine",
+]);
 export const posts = pgTable(
   "posts",
   {
@@ -73,6 +80,8 @@ export const posts = pgTable(
       }),
 
     image: text("image").notNull().default(""),
+
+    postType: postTypeEnum("post_type").notNull().default("News"),
 
     categories: text("categories")
       .array()

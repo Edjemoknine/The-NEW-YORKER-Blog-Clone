@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { PostForm } from "@/components/shared/PostForm";
+import { PostForm } from "@/components/forms/PostForm";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import {

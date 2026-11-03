@@ -96,6 +96,7 @@ export async function processEmbeddingJob(jobId: string) {
     const embeddingText = [
       `Title: ${post.title}`,
       `Description: ${post.desc}`,
+      `Post type: ${post.postType}`,
       `Categories: ${post.categories.join(", ")}`,
       `Content: ${post.content}`,
     ].join("\n\n");

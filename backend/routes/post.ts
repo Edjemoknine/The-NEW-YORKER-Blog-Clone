@@ -10,8 +10,8 @@ import {
 } from "../controller/post.controller.ts";
 import { verifytoken } from "../middleware/verify.ts";
 
+postRoute.get("/missed", getInCaseMissedPosts);
 postRoute.get("/", getPosts);
-postRoute.get("/posts/missed", getInCaseMissedPosts);
 postRoute.get("/:id", getPost);
 postRoute.post("/", verifytoken, createPost);
 postRoute.put("/:id", verifytoken, updatePost);
