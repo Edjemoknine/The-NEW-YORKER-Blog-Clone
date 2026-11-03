@@ -33,8 +33,8 @@ export const useUpdatePost = () => {
 
   return useMutation({
     mutationFn: async ({
-      data,
       postId,
+      ...data
     }: CreatePostProps & { postId: string }) => {
       return await updatePost(data, postId);
     },

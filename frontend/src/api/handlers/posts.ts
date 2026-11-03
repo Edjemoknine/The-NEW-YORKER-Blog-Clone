@@ -1,4 +1,4 @@
-import { FormValues } from "@/components/shared/PostForm";
+import { FormValues } from "@/components/forms/PostForm";
 import api from "./client";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -13,6 +13,7 @@ export type PostProps = {
   title: string;
   description: string;
   content: string;
+  postType: FormValues["postType"];
   categories: string[];
   ImG: string;
   userId: string;
