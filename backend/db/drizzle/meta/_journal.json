@@ -43,6 +43,13 @@
       "when": 1793697602036,
       "tag": "0005_watery_the_spike",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793786513707,
+      "tag": "0006_abandoned_corsair",
+      "breakpoints": true
     }
   ]
 }

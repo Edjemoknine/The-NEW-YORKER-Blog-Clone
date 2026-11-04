@@ -1,5 +1,24 @@
 import api from "./client";
 
+type UserEvent =
+  | {
+      eventType: "post_view" | "recommendation_click" | "bookmark";
+      postId: string;
+      metadata?: Record<string, unknown>;
+    }
+  | {
+      eventType: "search";
+      searchQuery: string;
+    };
+
+export const trackEvent = async (event: UserEvent) => {
+  try {
+    await api.post("/api/events", event);
+  } catch (error) {
+    console.error("Failed to track user event:", error);
+  }
+};
+
 export const fetchRecommendedPosts = async (postId: string | number) => {
   const response = await api.get(`/api/posts/${postId}/recommendations`, {
     params: { limit: 4 },

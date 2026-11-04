@@ -77,10 +77,14 @@ export const useSavePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ userId, postId }) => {
-      console.log({ postId });
-
-      return await savePost(userId, postId);
+    mutationFn: async ({
+      userId,
+      postId,
+    }: {
+      userId: string;
+      postId: string;
+    }) => {
+      return savePost(userId, postId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["savePost"] });

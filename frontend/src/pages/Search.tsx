@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import SearchForm from "@/components/forms/SearchForm";
 import SearchCard from "../components/shared/SearchCard";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPosts } from "@/api/handlers/posts";
 import { useEffect, useState } from "react";
+import { trackEvent } from "@/api/handlers/recommendations";
 
 const Search = () => {
   const [search, setSearch] = useState("");
@@ -14,6 +14,12 @@ const Search = () => {
     const timeout = setTimeout(() => setDebouncedSearch(search), 400);
     return () => clearTimeout(timeout);
   }, [search]);
+
+  useEffect(() => {
+    if (debouncedSearch.trim()) {
+      void trackEvent({ eventType: "search", searchQuery: debouncedSearch });
+    }
+  }, [debouncedSearch]);
 
   const { data } = useQuery({
     queryKey: ["serachPosts", debouncedSearch],
