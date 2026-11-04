@@ -10,6 +10,19 @@ export const generateRefreshToken = (user) =>
     expiresIn: "7d",
   });
 
+export const getUserIdFromToken = (token: string | undefined) => {
+  if (!token) return null;
+
+  try {
+    const user = jwt.verify(token, "mySecretKey");
+    return typeof user === "object" && user !== null && typeof user.id === "string"
+      ? user.id
+      : null;
+  } catch {
+    return null;
+  }
+};
+
 export const verifytoken = (req, res, next) => {
   const cookieToken = req.cookies?.accessToken;
   if (!cookieToken) {

@@ -10,6 +10,7 @@ import {
   vector,
   uniqueIndex,
   pgEnum,
+  json,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -126,25 +127,33 @@ export const posts = pgTable(
 );
 
 export const recommendationEvents = pgTable(
-  "recommendation_events",
+  "user_events",
   {
     id: uuid("id").defaultRandom().primaryKey(),
+
+    // Null for anonymous visitors.
     userId: uuid("user_id").references(() => users.id, {
       onDelete: "cascade",
     }),
-    visitorId: varchar("visitor_id", {
-      length: 128,
-    }),
+
+    // Stable anonymous visitor identifier.
+    visitorId: uuid("visitor_id"),
+
+    // The post associated with this event, if applicable.
     postId: uuid("post_id").references(() => posts.id, {
       onDelete: "cascade",
     }),
+
     eventType: varchar("event_type", {
-      length: 40,
+      length: 50,
     }).notNull(),
-    query: varchar("query", {
-      length: 200,
-    }),
-    durationSeconds: integer("duration_seconds").notNull().default(0),
+
+    // Used for search events.
+    searchQuery: text("search_query"),
+
+    // Optional extra information.
+    metadata: json("metadata"),
+
     createdAt: timestamp("created_at", {
       withTimezone: true,
     })
@@ -152,20 +161,11 @@ export const recommendationEvents = pgTable(
       .defaultNow(),
   },
   (table) => [
-    index("recommendation_events_user_created_idx").on(
-      table.userId,
-      table.createdAt,
-    ),
-
-    index("recommendation_events_visitor_created_idx").on(
-      table.visitorId,
-      table.createdAt,
-    ),
-
-    index("recommendation_events_post_type_idx").on(
-      table.postId,
-      table.eventType,
-    ),
+    index("user_events_user_id_idx").on(table.userId),
+    index("user_events_visitor_id_idx").on(table.visitorId),
+    index("user_events_post_id_idx").on(table.postId),
+    index("user_events_created_at_idx").on(table.createdAt),
+    index("user_events_type_created_idx").on(table.eventType, table.createdAt),
   ],
 );
 

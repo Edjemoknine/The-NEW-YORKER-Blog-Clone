@@ -1,7 +1,6 @@
 import { FormValues } from "@/components/forms/PostForm";
 import api from "./client";
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 type Props = {
   category?: string;
   postType?: string;
@@ -66,15 +65,7 @@ export const deletePost = async (id: string) => {
   }
 };
 export const savePost = async (userId: string, postId: string) => {
-  console.log({ userId, postId });
-
-  try {
-    await api.put(`/api/users/${userId}`, {
-      postId: postId!,
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  await api.put(`/api/users/${userId}`, { postId });
 };
 
 export const fetchMissedPosts = async ({ page = 1, limit = 4 }) => {

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { NewsCard } from "./NewsCard";
+import { trackEvent } from "@/api/handlers/recommendations";
 
 interface RecommendationsProps {
   recommendations?: {
@@ -49,7 +50,16 @@ const Recommendations = ({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {posts.map((post: any) => (
-          <NewsCard key={post.id} post={post} />
+          <NewsCard
+            key={post.id}
+            post={post}
+            onClick={() =>
+              void trackEvent({
+                eventType: "recommendation_click",
+                postId: post.id ?? post._id,
+              })
+            }
+          />
         ))}
       </div>
     </section>

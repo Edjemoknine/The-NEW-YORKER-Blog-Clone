@@ -4,13 +4,14 @@ import { fetchPost, fetchPosts } from "@/api/handlers/posts";
 import { Bookmark, Edit, Trash } from "lucide-react";
 import { useSelector } from "react-redux";
 import { AlertDialogDemo } from "@/components/shared/AlertDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EditPostDialog } from "@/components/shared/EditDialog";
 import { cn } from "@/lib/utils";
 import { userData } from "@/api/handlers/auth";
 import { useSavePost } from "@/api/hooks/usePosts";
 import { useRecommendations } from "@/api/hooks/useRecommendation";
 import Recommendations from "@/components/utils/Recommendations";
+import { trackEvent } from "@/api/handlers/recommendations";
 
 const BlogDetails = () => {
   const { id: postId } = useParams();
@@ -34,6 +35,21 @@ const BlogDetails = () => {
   });
   const { data: recommendations, isLoading } = useRecommendations(postId!);
   const { mutateAsync: savePost } = useSavePost();
+  const hasDetails = Boolean(details);
+
+  useEffect(() => {
+    if (!hasDetails || !postId) return;
+
+    const startedAt = Date.now();
+    return () => {
+      const duration = Math.max(1, Math.ceil((Date.now() - startedAt) / 1000));
+      void trackEvent({
+        eventType: "post_view",
+        postId,
+        metadata: { duration },
+      });
+    };
+  }, [hasDetails, postId]);
 
   const { data: profile } = useQuery({
     queryKey: ["userProfile", userId],
@@ -72,7 +88,16 @@ const BlogDetails = () => {
             fill={isSaved ? "blue" : "none"}
             size={50}
             strokeWidth={1}
-            onClick={async () => await savePost({ userId, postId })}
+            onClick={async () => {
+              try {
+                await savePost({ userId, postId: postId! });
+              } catch {
+                return;
+              }
+              if (!isSaved) {
+                void trackEvent({ eventType: "bookmark", postId: postId! });
+              }
+            }}
             className={cn(
               "cursor-pointer text-7xl   hover:text-sky-500 p-1.5 absolute md:top-1/3 md:left-3 right-3 top-2  border rounded-lg",
             )}

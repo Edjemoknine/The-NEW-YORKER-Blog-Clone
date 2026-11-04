@@ -8,6 +8,7 @@ import userRoute from "./routes/user.ts";
 import catRoute from "./routes/category.ts";
 import postRoute from "./routes/post.ts";
 import recommendationRoute from "./routes/recommendation.route.ts";
+import eventRoute from "./routes/event.ts";
 
 import { embedPostJob } from "./controller/embedding-job.controller.ts";
 import { dispatchPendingEmbeddingJobs } from "./controller/embedding-dispatcher.controller.ts";
@@ -49,6 +50,7 @@ app.use("/api/users", userRoute);
 app.use("/api/posts", recommendationRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/categories", catRoute);
+app.use("/api/events", eventRoute);
 
 // QStash worker
 app.post("/api/jobs/embed-post", embedPostJob);
