@@ -2,13 +2,14 @@ import api from "./client";
 
 type UserEvent =
   | {
-      eventType: "post_view" | "recommendation_click" | "bookmark";
+      eventType: "post_view";
       postId: string;
       metadata?: Record<string, unknown>;
     }
   | {
       eventType: "search";
       searchQuery: string;
+      postId: string;
     };
 
 export const trackEvent = async (event: UserEvent) => {
