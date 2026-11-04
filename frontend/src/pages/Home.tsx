@@ -6,6 +6,7 @@ import InCaseMissed from "@/components/utils/InCaseMissed";
 import { useCategoriesList, useCategoryPosts } from "@/api/hooks/useCategories";
 import MagazineView from "@/components/utils/MagazineView";
 import { useForYouPosts } from "@/api/hooks/useRecommendation";
+import { useInView } from "react-intersection-observer";
 
 const Home = () => {
   const { data: categoryList, isLoading: categoriesLoading } =
@@ -18,9 +19,9 @@ const Home = () => {
       <Grid
         data={forYouPosts}
         isLoading={forYouLoading}
-        HeadingTitle={"For You"}
-        HeadingSubTitle={"Recommended for you"}
-        type={"News"}
+        HeadingTitle="For You"
+        HeadingSubTitle="Recommended for you"
+        type="News"
       />
 
       {categoriesLoading ? (
@@ -50,16 +51,29 @@ const Home = () => {
 export default Home;
 
 const DynamicCategoryRow = ({ name }: { name: string }) => {
-  const { data, isLoading } = useCategoryPosts(name, 4);
+  const { ref, inView } = useInView({
+    rootMargin: "600px 0px",
+    triggerOnce: true,
+  });
+  const { data, isLoading } = useCategoryPosts(name, 4, inView);
 
-  if (!isLoading && (!data?.posts || data.posts.length === 0)) return null;
+  if (
+    inView &&
+    !isLoading &&
+    (!data?.posts || data.posts.length === 0)
+  ) {
+    return null;
+  }
 
   return (
-    <Grid
-      data={data}
-      HeadingTitle={name}
-      HeadingSubTitle={`Latest posts and insights in ${name}`}
-      type={"category"}
-    />
+    <div ref={ref}>
+      <Grid
+        data={data}
+        isLoading={!inView || isLoading}
+        HeadingTitle={name}
+        HeadingSubTitle={`Latest posts and insights in ${name}`}
+        type="category"
+      />
+    </div>
   );
 };

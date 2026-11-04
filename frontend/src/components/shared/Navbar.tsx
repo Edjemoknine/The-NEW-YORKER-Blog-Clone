@@ -49,7 +49,7 @@ const Navbar = () => {
       >
         <Link to={"/"}>
           {" "}
-          <h1
+          <span
             className={cn(
               scrollDown
                 ? "text-[19px] first-letter:text-5xl leading-5 first-letter:-mt-1.5 text-black"
@@ -62,7 +62,7 @@ const Navbar = () => {
             News
             <br />
             exus
-          </h1>
+          </span>
         </Link>
         <Sidebar scrollDown={scrollDown} pathname={pathname} />
       </div>

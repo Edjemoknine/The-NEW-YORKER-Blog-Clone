@@ -21,17 +21,29 @@ const Grid = ({
 }: Props) => {
   if (isLoading) {
     return (
-      <div className="max-w-[90rem] mx-auto px-4 py-12 md:px-6">
-        <div className="h-6 w-48 bg-muted animate-pulse rounded mb-6" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <section className="max-w-[90rem] mx-auto px-4 pb-10 md:px-6">
+        <Heading
+          image={image}
+          title={HeadingTitle}
+          paragraph={HeadingSubTitle}
+        />
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 my-6 lg:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
             <div
               key={i}
-              className="h-64 w-[20rem] bg-muted/50 animate-pulse rounded-xl "
-            />
+              className="animate-pulse"
+            >
+              <div className="aspect-[16/10] rounded-sm bg-muted/50" />
+              <div className="mt-4 h-3 w-1/4 rounded bg-muted" />
+              <div className="mt-3 h-5 w-full rounded bg-muted" />
+              <div className="mt-2 h-5 w-4/5 rounded bg-muted" />
+              <div className="mt-3 h-4 w-full rounded bg-muted/70" />
+              <div className="mt-2 h-4 w-3/4 rounded bg-muted/70" />
+              <div className="mt-5 h-8 border-t border-border/20" />
+            </div>
           ))}
         </div>
-      </div>
+      </section>
     );
   }
   return (
