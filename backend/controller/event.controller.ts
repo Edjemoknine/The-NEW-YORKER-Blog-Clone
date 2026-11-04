@@ -5,10 +5,7 @@ import { db } from "../db/index.ts";
 import { posts, recommendationEvents } from "../db/schema.ts";
 import { getUserIdFromToken } from "../middleware/verify.ts";
 
-const eventTypes = [
-  "post_view",
-  "search",
-] as const;
+const eventTypes = ["post_view", "search"] as const;
 
 const uuidPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -19,7 +16,10 @@ export async function getEventPosts(req: Request, res: Response) {
     tokenUserId && uuidPattern.test(tokenUserId) ? tokenUserId : null;
   const visitorId = req.cookies?.visitorId;
 
-  if (!userId && (typeof visitorId !== "string" || !uuidPattern.test(visitorId))) {
+  if (
+    !userId &&
+    (typeof visitorId !== "string" || !uuidPattern.test(visitorId))
+  ) {
     return res.status(200).json({ data: [] });
   }
 
@@ -93,7 +93,9 @@ export async function createEvent(req: Request, res: Response) {
 
   if (
     metadata !== undefined &&
-    (typeof metadata !== "object" || metadata === null || Array.isArray(metadata))
+    (typeof metadata !== "object" ||
+      metadata === null ||
+      Array.isArray(metadata))
   ) {
     return res.status(400).json({ message: "Metadata must be an object" });
   }

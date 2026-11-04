@@ -5,17 +5,23 @@ import Grid from "@/components/utils/Grid";
 import InCaseMissed from "@/components/utils/InCaseMissed";
 import { useCategoriesList, useCategoryPosts } from "@/api/hooks/useCategories";
 import MagazineView from "@/components/utils/MagazineView";
+import { useForYouPosts } from "@/api/hooks/useRecommendation";
 
 const Home = () => {
-  // Fetch active categories dynamically from your database/API
   const { data: categoryList, isLoading: categoriesLoading } =
     useCategoriesList();
-  console.log(categoryList);
-
+  const { data: forYouPosts, isLoading: forYouLoading } = useForYouPosts(4);
   return (
     <div className="flex flex-col min-h-screen">
       <Hero />
       <Categories />
+      <Grid
+        data={forYouPosts}
+        isLoading={forYouLoading}
+        HeadingTitle={"For You"}
+        HeadingSubTitle={"Recommended for you"}
+        type={"News"}
+      />
 
       {categoriesLoading ? (
         <div className="py-12 text-center text-muted-foreground">

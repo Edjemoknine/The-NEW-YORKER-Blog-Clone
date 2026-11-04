@@ -46,7 +46,6 @@ const Category = () => {
     }
   }, [inView, hasMore, loading, fetchMorePosts]);
 
-  console.log(posts);
   return (
     <div className="pt-40  max-w-[90rem] mx-auto px-4 md:px-6 py-10">
       <h1 className="md:text-6xl  font-grotesk text-center mb-6 ">{title}</h1>

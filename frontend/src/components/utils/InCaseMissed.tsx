@@ -61,7 +61,7 @@ const InCaseMissed = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {posts.map((post: any) => (
-          <NewsCard key={post.id} post={post} />
+          <NewsCard key={post._id} post={post} />
         ))}
       </div>
     </section>
