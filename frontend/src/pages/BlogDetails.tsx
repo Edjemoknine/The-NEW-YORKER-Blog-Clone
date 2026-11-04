@@ -88,16 +88,7 @@ const BlogDetails = () => {
             fill={isSaved ? "blue" : "none"}
             size={50}
             strokeWidth={1}
-            onClick={async () => {
-              try {
-                await savePost({ userId, postId: postId! });
-              } catch {
-                return;
-              }
-              if (!isSaved) {
-                void trackEvent({ eventType: "bookmark", postId: postId! });
-              }
-            }}
+            onClick={async () => await savePost({ userId, postId: postId! })}
             className={cn(
               "cursor-pointer text-7xl   hover:text-sky-500 p-1.5 absolute md:top-1/3 md:left-3 right-3 top-2  border rounded-lg",
             )}
