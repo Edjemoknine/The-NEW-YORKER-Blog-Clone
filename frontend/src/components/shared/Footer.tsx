@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="p-4 sm:p-6 xl:p-8 bg-[#121212] w-full">
       <div className="flex items-center justify-between py-10">
         <Link to={"/"}>
-          <h1
+          <span
             className={
               "text-[19px] first-letter:text-5xl leading-5 first-letter:-mt-1.5 font-black duration-300   font-jerssy w-40 uppercase  first-letter:float-left text-white "
             }
@@ -14,7 +14,7 @@ const Footer = () => {
             News
             <br />
             exus
-          </h1>
+          </span>
         </Link>
         <div className="w-12 h-12 flex items-center justify-center cursor-pointer group bg-white rounded-full">
           <ArrowUp
@@ -27,7 +27,7 @@ const Footer = () => {
       <div className="grid md:grid-cols-2 text-sm items-en text-[#A2A2A2] font-medium  py-6">
         <div className="grid sm:grid-cols-2  items-end gap-6 border-t border-b border-neutral-700  py-6">
           <div>
-            <h3 className="text-white mb-3">SECTIONS</h3>
+            <h2 className="text-white mb-3">SECTIONS</h2>
             <ul className="space-y-2 *:w-fit *:border-b hover:*:border-b hover:*:border-[#A2A2A2]  *:border-transparent ">
               <li>
                 <Link to={"/"}>News</Link>
@@ -68,7 +68,7 @@ const Footer = () => {
         </div>
         <div className="grid sm:grid-cols-2 gap-6 border-t border-b  border-neutral-700  py-6">
           <div>
-            <h3 className="text-white mb-3">MORE</h3>
+            <h2 className="text-white mb-3">MORE</h2>
             <ul className="space-y-2 *:w-fit *:border-b hover:*:border-b hover:*:border-[#A2A2A2]  *:border-transparent ">
               <li>
                 <Link to={"/"}>Customer Care</Link>

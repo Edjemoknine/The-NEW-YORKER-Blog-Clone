@@ -1,18 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { fetchMissedPosts } from "@/api/handlers/posts";
 import { NewsCard } from "@/components/utils/NewsCard";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import type { ComponentProps } from "react";
 import { useState } from "react";
+
+type MissedPostsResponse = {
+  posts: ComponentProps<typeof NewsCard>["post"][];
+  totalPages: number;
+};
 
 const MissedPostsPage = () => {
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(8);
+  const limit = 8;
 
-  const { data, isLoading, isFetching } = useQuery({
+  const { data, isLoading, isFetching } = useQuery<MissedPostsResponse>({
     queryKey: ["missed-posts-paginated", "before-today", page],
     queryFn: () => fetchMissedPosts({ page, limit }),
-    keepPreviousData: true,
-  } as any);
+    placeholderData: keepPreviousData,
+  });
 
   const posts = data?.posts || [];
   const totalPages = data?.totalPages || 1;

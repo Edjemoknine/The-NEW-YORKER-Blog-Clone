@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { getOptimizedImageUrl } from "@/lib/optimizedImageUrl";
 
 interface PostCardProps {
   post: {
@@ -25,9 +26,11 @@ export function NewsCard({ post, onClick }: PostCardProps) {
         {/* Image Container with subtle zoom */}
         <div className="overflow-hidden rounded-sm bg-muted aspect-[16/10] mb-4">
           <img
-            src={post.image || "/placeholder.svg"}
+            src={getOptimizedImageUrl(post.image || "/placeholder.svg", 800)}
             alt={post.title}
             className="object-cover w-full h-full transition-transform duration-500 ease-out group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
           />
         </div>
 

@@ -67,9 +67,12 @@ const SheetContent = React.forwardRef<
       {...props}
     >
       {children}
-      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background   disabled:pointer-events-none data-[state=open]:bg-secondary">
-        {/* <Cross2Icon className="h-4 w-4" /> */}
+      <SheetPrimitive.Close
+        asChild
+        className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background disabled:pointer-events-none data-[state=open]:bg-secondary"
+      >
         <Button
+          type="button"
           size={"sm"}
           variant={"outline"}
           className="rounded-full bg-transparent"

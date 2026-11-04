@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
 import { fetchPosts } from "@/api/handlers/posts";
+import { getOptimizedImageUrl } from "@/lib/optimizedImageUrl";
 
 const getDayKey = (date: Date) =>
   `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
 const MagazineView = ({ index }: { index: number }) => {
   const [dayKey, setDayKey] = useState(() => getDayKey(new Date()));
+  const { ref, inView } = useInView({
+    rootMargin: "600px 0px",
+    triggerOnce: true,
+  });
 
   useEffect(() => {
     const now = new Date();
@@ -23,7 +29,7 @@ const MagazineView = ({ index }: { index: number }) => {
     return () => window.clearTimeout(timer);
   }, [dayKey]);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["posts", "magazine-view", dayKey],
     queryFn: () =>
       fetchPosts({
@@ -32,19 +38,39 @@ const MagazineView = ({ index }: { index: number }) => {
         sortBy: "random",
       }),
     staleTime: Infinity,
+    enabled: inView,
   });
   const post = data?.posts?.[index];
+  const sectionClass = "max-w-[90rem] h-[90vh] min-h-[36rem] my-16 mx-auto";
 
-  if (isLoading) {
+  if (!inView || isLoading) {
     return (
-      <div className="max-w-[90rem] h-[90vh] bg-muted my-16 mx-auto animate-pulse" />
+      <div
+        ref={ref}
+        className={`${sectionClass} bg-muted animate-pulse`}
+        aria-hidden="true"
+      />
     );
   }
 
-  if (!post) return null;
+  if (!post) {
+    return (
+      <section
+        ref={ref}
+        className={`${sectionClass} grid place-items-center bg-black text-white`}
+      >
+        {isError
+          ? "Unable to load magazine story."
+          : "No magazine story available."}
+      </section>
+    );
+  }
 
   return (
-    <div className="max-w-[90rem] h-[90vh] bg-black my-16 mx-auto grid md:grid-cols-2">
+    <div
+      ref={ref}
+      className={`${sectionClass} grid grid-rows-2 bg-black md:grid-rows-1 md:grid-cols-2`}
+    >
       <div className="flex flex-col gap-6 max-w-md mx-auto py-10 justify-center text-white text-center">
         <p className="font-grotesk">{post.postType}</p>
         <h3 className="text-4xl font-medium font-grotesk">{post.title}</h3>
@@ -55,9 +81,11 @@ const MagazineView = ({ index }: { index: number }) => {
       </div>
       <div className="overflow-hidden h-full w-full">
         <img
-          src={post.image || "/placeholder.svg"}
+          src={getOptimizedImageUrl(post.image || "/placeholder.svg", 1200)}
           alt={post.title}
           className="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
         />
       </div>
     </div>

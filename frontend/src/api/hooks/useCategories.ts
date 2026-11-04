@@ -25,28 +25,26 @@ export const useCategories = () => {
   return useQuery({
     queryKey: ["categories"],
     queryFn: fetchCategories,
+    staleTime: 1000 * 60 * 30,
   });
 };
 import { fetchPosts } from "@/api/handlers/posts";
-import api from "../handlers/client";
 import { addCategory, fetchCategories } from "../handlers/categories";
 
-export const useCategoryPosts = (category: string, limit = 4) => {
+export const useCategoryPosts = (
+  category: string,
+  limit = 4,
+  enabled = true,
+) => {
   return useQuery({
     queryKey: ["posts", "category", category, limit],
     queryFn: () => fetchPosts({ category, limit }),
     staleTime: 1000 * 60 * 5, // Cache data for 5 minutes to avoid redundant refetches
+    enabled,
   });
 };
 // hooks/useCategoriesList.ts
 
 export const useCategoriesList = () => {
-  return useQuery({
-    queryKey: ["categories-list"],
-    queryFn: async () => {
-      const { data } = await api.get("/api/categories");
-      return data; // expected to be an array of strings or category objects
-    },
-    staleTime: 1000 * 60 * 30, // Cache for 30 minutes
-  });
+  return useCategories();
 };

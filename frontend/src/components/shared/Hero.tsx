@@ -55,7 +55,7 @@ const data = [
 ];
 const Hero = () => {
   return (
-    <div className="w-full min-h-screen relative ">
+    <div className="relative h-[100svh] min-h-[36rem] w-full">
       <Slider data={data} />
     </div>
   );

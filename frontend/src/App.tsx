@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -5,17 +6,18 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import Root from "./router/index.tsx"; // Add type assertion
-import Home from "./pages/Home.tsx";
-import Search from "./pages/Search.tsx";
-import Category from "./pages/Category.tsx";
-import BlogDetails from "./pages/BlogDetails.tsx";
-import Profile from "./pages/Profile.tsx";
-import CreatePost from "./pages/CreatePost.tsx";
-import UpdatePost from "./pages/UpdatePost.tsx";
-import User from "./pages/User.tsx";
-import Authentication from "./pages/Authentication.tsx";
-import MissedPostsPage from "./pages/MissedPosts.tsx";
+import Root from "./router/index.tsx";
+
+const Home = lazy(() => import("./pages/Home.tsx"));
+const Search = lazy(() => import("./pages/Search.tsx"));
+const Category = lazy(() => import("./pages/Category.tsx"));
+const BlogDetails = lazy(() => import("./pages/BlogDetails.tsx"));
+const Profile = lazy(() => import("./pages/Profile.tsx"));
+const CreatePost = lazy(() => import("./pages/CreatePost.tsx"));
+const UpdatePost = lazy(() => import("./pages/UpdatePost.tsx"));
+const User = lazy(() => import("./pages/User.tsx"));
+const Authentication = lazy(() => import("./pages/Authentication.tsx"));
+const MissedPostsPage = lazy(() => import("./pages/MissedPosts.tsx"));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -34,7 +36,11 @@ const router = createBrowserRouter(
   ),
 );
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
 }
 
 export default App;
