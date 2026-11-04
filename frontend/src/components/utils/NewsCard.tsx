@@ -16,8 +16,6 @@ interface PostCardProps {
 }
 
 export function NewsCard({ post, onClick }: PostCardProps) {
-  console.log(post);
-
   return (
     <article
       onClick={onClick}
