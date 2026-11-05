@@ -1,6 +1,12 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 import { toast } from "@/components/ui/use-toast";
-import { useQuery } from "@tanstack/react-query";
+import { fetchPosts } from "@/api/handlers/posts";
+import {
+  addCategory,
+  deleteCategory,
+  fetchCategories,
+} from "../handlers/categories";
 
 export const useAddCategory = () => {
   const queryClient = useQueryClient();
@@ -16,7 +22,13 @@ export const useAddCategory = () => {
       });
     },
     onError: (error) => {
-      console.error(error);
+      const message = (error as AxiosError<{ message?: string }>).response?.data
+        ?.message;
+      toast({
+        title: "Could not create category",
+        description: message ?? "Please try again.",
+        variant: "destructive",
+      });
     },
   });
 };
@@ -27,9 +39,7 @@ export const useCategories = () => {
     queryFn: fetchCategories,
     staleTime: 1000 * 60 * 30,
   });
-};
-import { fetchPosts } from "@/api/handlers/posts";
-import { addCategory, fetchCategories } from "../handlers/categories";
+}
 
 export const useCategoryPosts = (
   category: string,
@@ -43,8 +53,32 @@ export const useCategoryPosts = (
     enabled,
   });
 };
-// hooks/useCategoriesList.ts
 
 export const useCategoriesList = () => {
   return useCategories();
+};
+
+export const useDeleteCategory = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      return await deleteCategory(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      toast({
+        title: "Category has been deleted successfully!",
+      });
+    },
+    onError: (error) => {
+      const message = (error as AxiosError<{ message?: string }>).response?.data
+        ?.message;
+      toast({
+        title: "Could not delete category",
+        description: message ?? "Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
 };

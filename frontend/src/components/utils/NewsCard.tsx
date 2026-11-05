@@ -3,8 +3,8 @@ import { getOptimizedImageUrl } from "@/lib/optimizedImageUrl";
 
 interface PostCardProps {
   post: {
-    id: string;
-    _id: string;
+    id?: string;
+    _id?: string;
     title: string;
     desc: string;
     image: string;

@@ -6,8 +6,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-import { Menu, Search } from "lucide-react";
+import { Menu, Search, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { Button } from "../ui/button";
@@ -24,13 +25,20 @@ export function Sidebar({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((store: any) => store.auth);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   const onLogout = () => {
     dispatch(logout() as any);
     dispatch(reset());
+    setOpen(false);
     navigate("/auth");
   };
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <div className="flex items-center gap-4">
         <Link
           to={"/search"}
@@ -48,6 +56,42 @@ export function Sidebar({
         >
           <Search size={14} aria-hidden="true" />
         </Link>
+        {user && (
+          <Link
+            to="/user"
+            aria-label="Open your profile"
+            className={cn(
+              scrollDown || pathname !== "/" ? "border-black" : "border-white",
+              "flex size-9 items-center justify-center overflow-hidden rounded-full border",
+            )}
+          >
+            {user.otherData?.avatar ? (
+              <img
+                src={user.otherData.avatar}
+                alt=""
+                className="size-full object-cover"
+              />
+            ) : user.otherData?.name ? (
+              <span
+                aria-hidden="true"
+                className={cn(
+                  scrollDown || pathname !== "/" ? "text-black" : "text-white",
+                  "text-sm font-semibold",
+                )}
+              >
+                {user.otherData.name.charAt(0).toUpperCase()}
+              </span>
+            ) : (
+              <UserRound
+                size={17}
+                aria-hidden="true"
+                className={
+                  scrollDown || pathname !== "/" ? "text-black" : "text-white"
+                }
+              />
+            )}
+          </Link>
+        )}
         <SheetTrigger asChild>
           <button
             type="button"
@@ -72,11 +116,19 @@ export function Sidebar({
         className="flex flex-col justify-between items-start bg-neutral-100"
       >
         <div className="grid gap-10 font-semibold pt-24 text-3xl">
-          <Link to="/">Home</Link>
-          <Link to="/contact">Contact</Link>
-          <Link to="/about">About</Link>
-          {user && <Link to="/user">Profile</Link>}
-          {!user && <Link to="/auth">Login</Link>}
+          <Link to="/" onClick={() => setOpen(false)}>Home</Link>
+          <Link to="/contact" onClick={() => setOpen(false)}>Contact</Link>
+          <Link to="/about" onClick={() => setOpen(false)}>About</Link>
+          {user && (
+            <Link to="/user" onClick={() => setOpen(false)}>
+              Profile
+            </Link>
+          )}
+          {!user && (
+            <Link to="/auth" onClick={() => setOpen(false)}>
+              Login
+            </Link>
+          )}
         </div>
         <SheetFooter>
           {user && (

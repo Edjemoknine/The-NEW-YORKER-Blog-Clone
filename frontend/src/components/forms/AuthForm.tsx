@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 import { AppDispatch } from "@/context/store";
 import { Input } from "../shared/InputUi";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export function SignupForm({
   isLogin,
@@ -19,7 +20,7 @@ export function SignupForm({
   setLogin: (value: boolean) => void;
 }) {
   const dispatch = useDispatch<AppDispatch>();
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
+  const { user, isError, isSuccess, message } = useSelector(
     (store: any) => store.auth,
   );
   const navigate = useNavigate();
@@ -29,6 +30,8 @@ export function SignupForm({
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -36,32 +39,32 @@ export function SignupForm({
 
   useEffect(() => {
     if (isError) {
-      // toast.error(message);
       console.log(message);
     }
     if (isSuccess || user) {
       navigate("/user");
     }
     dispatch(reset());
-  }, [user, isError, isLoading, message, dispatch, navigate, isSuccess]);
+  }, [user, isError, message, dispatch, navigate, isSuccess]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting || !data.password || (isLogin && !data.email)) return;
 
-    if (isLogin) {
-      if (data.password && data.email) {
-        dispatch(login(data) as any);
-        // Navigation will be handled by the useEffect hook
+    setIsSubmitting(true);
+    try {
+      if (isLogin) {
+        await dispatch(login(data));
+      } else {
+        const result = await dispatch(register(data));
+        if (register.fulfilled.match(result)) {
+          setLogin(true);
+        }
       }
-    } else {
-      if (data.password && data.email) {
-        dispatch(register(data) as any);
-      }
-
-      setLogin(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
-  if (isLoading) return <div className="">Loading...</div>;
   return (
     <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
@@ -100,21 +103,50 @@ export function SignupForm({
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            name="password"
-            placeholder="••••••••"
-            type="password"
-            onChange={handleChange}
-            value={data.password}
-          />
+          <div className="relative z-10 isolate">
+            <Input
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              type={showPassword ? "text" : "password"}
+              onChange={handleChange}
+              value={data.password}
+              className="pr-12"
+            />
+            <button
+              type="button"
+              onPointerDown={(event) => event.preventDefault()}
+              onClick={() => setShowPassword((visible) => !visible)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-controls="password"
+              aria-pressed={showPassword}
+              className="absolute right-3 top-1/2 z-20 -translate-y-1/2 pointer-events-auto text-neutral-500 hover:text-neutral-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              {showPassword ? (
+                <EyeOff size={18} aria-hidden="true" />
+              ) : (
+                <Eye size={18} aria-hidden="true" />
+              )}
+            </button>
+          </div>
         </LabelInputContainer>
 
         <button
+          disabled={isSubmitting}
+          aria-busy={isSubmitting}
           className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="submit"
         >
-          {isLogin ? "Sign In" : "Sign Up "} &rarr;
+          {isSubmitting && (
+            <Loader2 className="mr-2 inline animate-spin" size={16} aria-hidden="true" />
+          )}
+          {isSubmitting
+            ? isLogin
+              ? "Signing in..."
+              : "Creating account..."
+            : isLogin
+              ? "Sign In →"
+              : "Sign Up →"}
           <BottomGradient />
         </button>
 

@@ -1,18 +1,21 @@
 import api from "./client";
 
+export type Category = {
+  id: string;
+  name: string;
+};
+
 export const addCategory = async (category: string) => {
-  try {
-    return await api.post("/api/categories", { category });
-  } catch (error) {
-    console.log(error);
-  }
+  const { data } = await api.post<Category>("/api/categories", { category });
+  return data;
 };
 
 export const fetchCategories = async () => {
-  try {
-    const response = await api.get("/api/categories");
-    return response.data;
-  } catch (error) {
-    console.error("Failed to fetch categories:", error);
-  }
+  const { data } = await api.get<Category[]>("/api/categories");
+  return data;
+};
+
+export const deleteCategory = async (id: string) => {
+  const { data } = await api.delete(`/api/categories/${id}`);
+  return data;
 };
