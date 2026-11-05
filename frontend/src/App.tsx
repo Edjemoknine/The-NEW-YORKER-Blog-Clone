@@ -8,6 +8,7 @@ import {
 
 import Root from "./router/index.tsx";
 import RequireAuth from "./router/RequireAuth";
+import { RouteErrorFallback } from "@/components/shared/ErrorBoundary";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Search = lazy(() => import("./pages/Search.tsx"));
@@ -22,7 +23,11 @@ const MissedPostsPage = lazy(() => import("./pages/MissedPosts.tsx"));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Root />}>
+    <Route
+      path="/"
+      element={<Root />}
+      errorElement={<RouteErrorFallback />}
+    >
       <Route index element={<Home />} />
       <Route path="/search" element={<Search />} />
       <Route path="/blog/:id" element={<BlogDetails />} />
