@@ -13,13 +13,11 @@ import eventRoute from "./routes/event.ts";
 import { embedPostJob } from "./controller/embedding-job.controller.ts";
 import { dispatchPendingEmbeddingJobs } from "./controller/embedding-dispatcher.controller.ts";
 
-// Register alongside your existing job endpoint.
-
 const app = express();
 
+const isProduction = process.env.NODE_ENV === "production";
 const allowedOrigins = [
-  "http://localhost:5173",
-  process.env.FRONTEND_URL,
+  isProduction ? process.env.FRONTEND_URL : process.env.FRONTEND_URL_DEV,
 ].filter((origin): origin is string => Boolean(origin));
 
 app.use(

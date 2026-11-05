@@ -12,17 +12,21 @@ const Home = () => {
   const { data: categoryList, isLoading: categoriesLoading } =
     useCategoriesList();
   const { data: forYouPosts, isLoading: forYouLoading } = useForYouPosts(4);
+  const authenticated = false;
+
   return (
     <div className="flex flex-col min-h-screen">
       <Hero />
       <Categories />
-      <Grid
-        data={forYouPosts}
-        isLoading={forYouLoading}
-        HeadingTitle="For You"
-        HeadingSubTitle="Recommended for you"
-        type="News"
-      />
+      {authenticated && (
+        <Grid
+          data={forYouPosts}
+          isLoading={forYouLoading}
+          HeadingTitle="For You"
+          HeadingSubTitle="Recommended for you"
+          type="News"
+        />
+      )}
 
       {categoriesLoading ? (
         <div className="py-12 text-center text-muted-foreground">
@@ -57,11 +61,7 @@ const DynamicCategoryRow = ({ name }: { name: string }) => {
   });
   const { data, isLoading } = useCategoryPosts(name, 4, inView);
 
-  if (
-    inView &&
-    !isLoading &&
-    (!data?.posts || data.posts.length === 0)
-  ) {
+  if (inView && !isLoading && (!data?.posts || data.posts.length === 0)) {
     return null;
   }
 

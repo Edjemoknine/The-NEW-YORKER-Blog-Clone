@@ -14,8 +14,13 @@ import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, reset } from "@/context/authSlice";
 
-
-export function Sidebar({ scrollDown, pathname }: { scrollDown: boolean; pathname: string }) {
+export function Sidebar({
+  scrollDown,
+  pathname,
+}: {
+  scrollDown: boolean;
+  pathname: string;
+}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((store: any) => store.auth);
@@ -38,7 +43,7 @@ export function Sidebar({ scrollDown, pathname }: { scrollDown: boolean; pathnam
                     ? "text-white border-white"
                     : "text-black border-black"
                 }`,
-            "min-h-11 min-w-11 rounded-full uppercase justify-center bg-transparent flex items-center border p-2 text-sm",
+            "min-h-8 min-w-8 rounded-full uppercase justify-center bg-transparent flex items-center border p-2 text-sm",
           )}
         >
           <Search size={14} aria-hidden="true" />
@@ -54,7 +59,7 @@ export function Sidebar({ scrollDown, pathname }: { scrollDown: boolean; pathnam
                       ? "text-white border-white"
                       : "text-black border-black"
                   }`,
-              "min-h-11 rounded-full uppercase bg-transparent flex items-center border px-3 py-1 text-sm",
+              "min-h-8 rounded-full uppercase bg-transparent flex items-center border px-3 py-1 text-sm",
             )}
           >
             menu

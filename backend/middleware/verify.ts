@@ -15,7 +15,9 @@ export const getUserIdFromToken = (token: string | undefined) => {
 
   try {
     const user = jwt.verify(token, "mySecretKey");
-    return typeof user === "object" && user !== null && typeof user.id === "string"
+    return typeof user === "object" &&
+      user !== null &&
+      typeof user.id === "string"
       ? user.id
       : null;
   } catch {

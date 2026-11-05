@@ -44,24 +44,27 @@ const Navbar = () => {
           scrollDown
             ? ` bg-white shadow-md`
             : ` ${pathname === "/" ? "bg-transparent" : "bg-white"}`,
-          hideScroll ? "-top-full" : "top-0 "
+          hideScroll ? "-top-full" : "top-0 ",
         )}
       >
-        <Link to={"/"}>
-          {" "}
+        <Link to={"/"} aria-label="News Nexus">
           <span
             className={cn(
               scrollDown
-                ? "text-[19px] first-letter:text-5xl leading-5 first-letter:-mt-1.5 text-black"
-                : `first-letter:text-6xl text-2xl leading-6 first-letter:-mt-2 ${
+                ? "text-[19px] text-2xl text-black"
+                : `text-2xl  ${
                     pathname === "/" ? "text-white" : "text-black"
                   } `,
-              "font-black duration-300   font-jerssy w-40 uppercase  first-letter:float-left  "
+              "flex items-center font-black duration-300 font-jerssy w-40 uppercase",
             )}
           >
-            News
-            <br />
-            exus
+            <span aria-hidden="true" className="leading-none text-5xl">
+              N
+            </span>
+            <span aria-hidden="true" className="flex flex-col leading-[0.8]">
+              <span>ews</span>
+              <span>exus</span>
+            </span>
           </span>
         </Link>
         <Sidebar scrollDown={scrollDown} pathname={pathname} />
