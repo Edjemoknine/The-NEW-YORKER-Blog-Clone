@@ -29,10 +29,7 @@ const Grid = ({
         />
         <div className="grid sm:grid-cols-2 md:grid-cols-3 my-6 lg:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
-            <div
-              key={i}
-              className="animate-pulse"
-            >
+            <div key={i} className="animate-pulse">
               <div className="aspect-[16/10] rounded-sm bg-muted/50" />
               <div className="mt-4 h-3 w-1/4 rounded bg-muted" />
               <div className="mt-3 h-5 w-full rounded bg-muted" />

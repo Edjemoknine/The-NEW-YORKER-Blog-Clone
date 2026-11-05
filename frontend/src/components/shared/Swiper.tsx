@@ -47,7 +47,7 @@ const Slider = ({ data }: BlogProps) => {
             fetchPriority={index === 0 ? "high" : "auto"}
             decoding="async"
           />
-          <div className="px-4 sm:px-6 xl:px-8 relative pb-28 w-full  z-20 flex justify-between items-center text-white font-grotesk">
+          <div className="absolute inset-x-0 bottom-0 px-4 sm:px-6 xl:px-8 pb-28 w-full z-20 flex justify-between items-end text-white font-grotesk">
             <div>
               <p className="text-white mb-3 uppercase text-xs font-grotesk">
                 {item.category}
