@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { Toaster } from "@/components/ui/toaster";
-// import AuthProvider from "./context/AuthContext.tsx";
 import { Provider } from "react-redux";
 import store from "./context/store.ts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -22,5 +21,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </QueryClientProvider>
 
     <Toaster />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

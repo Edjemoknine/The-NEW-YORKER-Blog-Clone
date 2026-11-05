@@ -11,10 +11,15 @@ export const useRecommendations = (postId: string) => {
   });
 };
 
-export const useForYouPosts = (limit: number, page?: number) => {
+export const useForYouPosts = (
+  limit: number,
+  page?: number,
+  enabled = true,
+) => {
   return useQuery({
     queryKey: ["for-you", limit, page],
-    queryFn: () => fetchForYouPosts({ limit, page: page || 1 }),
+    queryFn: () => fetchForYouPosts({ limit: 4, page: page || 1 }),
     staleTime: 1000 * 60 * 5,
+    enabled,
   });
 };
