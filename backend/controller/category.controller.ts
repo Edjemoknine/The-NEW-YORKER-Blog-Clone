@@ -1,6 +1,6 @@
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import { db } from "../db/index.ts";
-import { categories } from "../db/schema.ts";
+import { categories, posts } from "../db/schema.ts";
 
 export const createCategory = async (req: any, res: any) => {
   const { category } = req.body;
@@ -74,10 +74,31 @@ export const deleteCategory = async (req: any, res: any) => {
   try {
     const [deletedCategory] = await db
       .delete(categories)
-      .where(eq(categories.id, id))
+      .where(
+        and(
+          eq(categories.id, id),
+          sql`NOT EXISTS (
+            SELECT 1
+            FROM ${posts}
+            WHERE ${categories.name} = ANY(${posts.categories})
+          )`,
+        ),
+      )
       .returning({ id: categories.id });
 
     if (!deletedCategory) {
+      const [existingCategory] = await db
+        .select({ id: categories.id })
+        .from(categories)
+        .where(eq(categories.id, id))
+        .limit(1);
+
+      if (existingCategory) {
+        return res.status(409).json({
+          message: "Cannot delete a category that is used by posts",
+        });
+      }
+
       return res.status(404).json({
         message: "Category not found",
       });

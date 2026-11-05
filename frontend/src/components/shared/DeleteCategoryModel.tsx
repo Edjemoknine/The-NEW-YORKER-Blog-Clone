@@ -33,8 +33,8 @@ const DeleteCategoryModel = ({
       <AlertDialogHeader>
         <AlertDialogTitle>Delete category?</AlertDialogTitle>
         <AlertDialogDescription>
-          Delete “{category?.name}” from the category list? Existing posts will
-          keep this category.
+          A category can only be deleted when no posts use it. Remove it from
+          all related posts before trying again.
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
