@@ -51,7 +51,7 @@ export function Sidebar({
                     ? "text-white border-white"
                     : "text-black border-black"
                 }`,
-            "min-h-8 min-w-8 rounded-full uppercase justify-center bg-transparent flex items-center border p-2 text-sm",
+            "min-h-9 min-w-9 rounded-full uppercase justify-center bg-transparent flex items-center border p-2 text-sm",
           )}
         >
           <Search size={14} aria-hidden="true" />
@@ -103,7 +103,7 @@ export function Sidebar({
                       ? "text-white border-white"
                       : "text-black border-black"
                   }`,
-              "min-h-8 rounded-full uppercase bg-transparent flex items-center border px-3 py-1 text-sm",
+              "min-h-9 rounded-full uppercase bg-transparent flex items-center border px-3 py-1 text-sm",
             )}
           >
             menu
@@ -116,9 +116,15 @@ export function Sidebar({
         className="flex flex-col justify-between items-start bg-neutral-100"
       >
         <div className="grid gap-10 font-semibold pt-24 text-3xl">
-          <Link to="/" onClick={() => setOpen(false)}>Home</Link>
-          <Link to="/contact" onClick={() => setOpen(false)}>Contact</Link>
-          <Link to="/about" onClick={() => setOpen(false)}>About</Link>
+          <Link to="/" onClick={() => setOpen(false)}>
+            Home
+          </Link>
+          <Link to="/contact" onClick={() => setOpen(false)}>
+            Contact
+          </Link>
+          <Link to="/about" onClick={() => setOpen(false)}>
+            About
+          </Link>
           {user && (
             <Link to="/user" onClick={() => setOpen(false)}>
               Profile

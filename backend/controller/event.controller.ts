@@ -11,6 +11,8 @@ const uuidPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function getEventPosts(req: Request, res: Response) {
+  const parsedLimit = Number.parseInt(String(req.query.limit), 10);
+  const limit = Math.min(100, Math.max(1, parsedLimit || 8));
   const tokenUserId = getUserIdFromToken(req.cookies?.accessToken);
   const userId =
     tokenUserId && uuidPattern.test(tokenUserId) ? tokenUserId : null;
@@ -67,7 +69,9 @@ export async function getEventPosts(req: Request, res: Response) {
       }
     }
 
-    return res.status(200).json({ data: Array.from(postsById.values()) });
+    return res
+      .status(200)
+      .json({ data: Array.from(postsById.values()).slice(0, limit) });
   } catch (error) {
     console.error("Failed to fetch event posts:", error);
     return res.status(500).json({ message: "Failed to fetch event posts" });

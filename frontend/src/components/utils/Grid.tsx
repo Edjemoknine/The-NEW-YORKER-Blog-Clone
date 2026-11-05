@@ -10,6 +10,7 @@ type Props = {
   HeadingSubTitle: string;
   image?: string;
   isLoading?: boolean;
+  showHeading?: boolean;
 };
 const Grid = ({
   type,
@@ -18,15 +19,18 @@ const Grid = ({
   HeadingSubTitle,
   image,
   isLoading,
+  showHeading = true,
 }: Props) => {
   if (isLoading) {
     return (
       <section className="max-w-[90rem] mx-auto px-4 pb-10 md:px-6">
-        <Heading
-          image={image}
-          title={HeadingTitle}
-          paragraph={HeadingSubTitle}
-        />
+        {showHeading && (
+          <Heading
+            image={image}
+            title={HeadingTitle}
+            paragraph={HeadingSubTitle}
+          />
+        )}
         <div className="grid sm:grid-cols-2 md:grid-cols-3 my-6 lg:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="animate-pulse">
@@ -45,7 +49,13 @@ const Grid = ({
   }
   return (
     <div className="max-w-[90rem] mx-auto px-4 pb-10 md:px-6">
-      <Heading image={image} title={HeadingTitle} paragraph={HeadingSubTitle} />
+      {showHeading && (
+        <Heading
+          image={image}
+          title={HeadingTitle}
+          paragraph={HeadingSubTitle}
+        />
+      )}
       <div className="grid sm:grid-cols-2 md:grid-cols-3 my-6 lg:grid-cols-4 gap-6 divide-x2 divide-gray-500">
         {data?.posts?.map((item: any, index: number) => {
           return type === "game" ? (

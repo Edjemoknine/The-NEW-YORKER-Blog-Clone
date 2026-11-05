@@ -58,7 +58,10 @@ const Navbar = () => {
               "flex items-center font-black duration-300 font-jerssy w-40 uppercase",
             )}
           >
-            <span aria-hidden="true" className="leading-none text-5xl">
+            <span
+              aria-hidden="true"
+              className=" text-[50px] leading-8 mb-[2px]"
+            >
               N
             </span>
             <span aria-hidden="true" className="flex flex-col leading-[0.8]">

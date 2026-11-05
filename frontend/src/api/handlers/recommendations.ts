@@ -25,7 +25,7 @@ export const fetchForYouPosts = async (params: {
   page: number;
 }) => {
   const response = await api.get(`/api/events`, {
-    params: { ...params, limit: 4, page: 1 },
+    params,
   });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result = response.data.data.map((item: any) => item.post);

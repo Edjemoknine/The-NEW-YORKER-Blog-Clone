@@ -7,18 +7,21 @@ import { useCategoriesList, useCategoryPosts } from "@/api/hooks/useCategories";
 import MagazineView from "@/components/utils/MagazineView";
 import { useForYouPosts } from "@/api/hooks/useRecommendation";
 import { useInView } from "react-intersection-observer";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/context/store";
 
 const Home = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
   const { data: categoryList, isLoading: categoriesLoading } =
     useCategoriesList();
+
   const { data: forYouPosts, isLoading: forYouLoading } = useForYouPosts(4);
-  const authenticated = false;
 
   return (
     <div className="flex flex-col min-h-screen">
       <Hero />
       <Categories />
-      {authenticated && (
+      {user && (
         <Grid
           data={forYouPosts}
           isLoading={forYouLoading}
