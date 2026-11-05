@@ -2,6 +2,7 @@ import { useCategories } from "@/api/hooks/useCategories";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import type { Category } from "@/api/handlers/categories";
 
 const Categories = () => {
   const [hideScroll, setHideScroll] = useState(false);
@@ -22,11 +23,6 @@ const Categories = () => {
       window.removeEventListener("scroll", hideNavbar);
     };
   });
-  type Props = {
-    name: string;
-    id: number;
-  };
-
   return (
     <div
       className={cn(
@@ -34,7 +30,7 @@ const Categories = () => {
         hideScroll ? "-top-full" : "top-24",
       )}
     >
-      {categories?.map((item: Props) => (
+      {categories?.map((item: Category) => (
         <Link
           to={`/category/${item.name}`}
           key={item.name}

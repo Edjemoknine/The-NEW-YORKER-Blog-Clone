@@ -59,9 +59,13 @@ export const getCategories = async (_req: any, res: any) => {
 };
 
 export const deleteCategory = async (req: any, res: any) => {
-  const id = Number(req.params.id);
-
-  if (!Number.isSafeInteger(id) || id < 1) {
+  const id = req.params.id;
+  if (
+    typeof id !== "string" ||
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      id,
+    )
+  ) {
     return res.status(400).json({
       message: "Invalid category id",
     });

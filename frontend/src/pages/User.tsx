@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   PenLine,
   Plus,
+  Tags,
   UserRound,
   X,
 } from "lucide-react";
@@ -36,8 +37,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { handleImage } from "@/lib/cloudinaryUpload";
+import CategoryManager from "@/components/shared/CategoryManager";
 
-type Section = "overview" | "posts" | "saved" | "create";
+type Section = "overview" | "posts" | "saved" | "categories" | "create";
 
 const profileSections: {
   id: Section;
@@ -47,6 +49,7 @@ const profileSections: {
   { id: "overview", label: "Account overview", icon: UserRound },
   { id: "posts", label: "Your posts", icon: FileText },
   { id: "saved", label: "Saved posts", icon: Bookmark },
+  { id: "categories", label: "Categories", icon: Tags },
   { id: "create", label: "Create a post", icon: Plus },
 ];
 
@@ -300,6 +303,19 @@ function SectionContent({
             }
           />
         )}
+      </>
+    );
+  }
+
+  if (section === "categories") {
+    return (
+      <>
+        <SectionHeading
+          eyebrow="Explore and organize"
+          title="Categories"
+          description="Create categories and browse the posts filed under each one."
+        />
+        <CategoryManager />
       </>
     );
   }

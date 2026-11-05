@@ -13,8 +13,8 @@ const Login = ({
       className={cn(
         "w-screen h-full flex justify-center items-center",
         !isLogin
-          ? "translate-x-1/3 opacity-0 transition duration-1000"
-          : "-translate-x-0 opacity-1 transition duration-1000",
+          ? "pointer-events-none translate-x-1/3 opacity-0 transition duration-1000"
+          : "relative z-10 -translate-x-0 opacity-100 transition duration-1000",
       )}
     >
       <SignupForm isLogin={isLogin} setLogin={setIsLogin} />
