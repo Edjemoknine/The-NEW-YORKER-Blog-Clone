@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import Root from "./router/index.tsx";
+import RequireAuth from "./router/RequireAuth";
 
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Search = lazy(() => import("./pages/Search.tsx"));
@@ -27,10 +28,31 @@ const router = createBrowserRouter(
       <Route path="/blog/:id" element={<BlogDetails />} />
       <Route path="/category/:title" element={<Category />} />
       <Route path="/profile/:name" element={<Profile />} />
-      <Route path="/update/:id" element={<UpdatePost />} />
-      <Route path="/create" element={<CreatePost />} />
+      <Route
+        path="/update/:id"
+        element={
+          <RequireAuth>
+            <UpdatePost />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/create"
+        element={
+          <RequireAuth>
+            <CreatePost />
+          </RequireAuth>
+        }
+      />
       <Route path="/missed" element={<MissedPostsPage />} />
-      <Route path="/user" element={<User />} />
+      <Route
+        path="/user"
+        element={
+          <RequireAuth>
+            <User />
+          </RequireAuth>
+        }
+      />
       <Route path="/auth" element={<Authentication />} />
     </Route>,
   ),

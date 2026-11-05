@@ -7,4 +7,57 @@ const api = axios.create({
   withCredentials: true,
 });
 
+declare module "axios" {
+  interface AxiosRequestConfig {
+    _retry?: boolean;
+  }
+}
+
+let refreshRequest: Promise<void> | null = null;
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const request = error.config;
+    const requestUrl = request?.url ?? "";
+    const isAuthRequest =
+      requestUrl.includes("/api/auth/login") ||
+      requestUrl.includes("/api/auth/refresh") ||
+      requestUrl.includes("/api/auth/logout");
+
+    if (
+      error.response?.status !== 401 ||
+      !request ||
+      request._retry ||
+      isAuthRequest
+    ) {
+      return Promise.reject(error);
+    }
+
+    request._retry = true;
+
+    try {
+      refreshRequest ??= api
+        .post("/api/auth/refresh")
+        .then(() => undefined)
+        .finally(() => {
+          refreshRequest = null;
+        });
+      await refreshRequest;
+      return api(request);
+    } catch (refreshError) {
+      if (
+        axios.isAxiosError(refreshError) &&
+        refreshError.response?.status === 401
+      ) {
+        localStorage.removeItem("user");
+        if (window.location.pathname !== "/auth") {
+          window.location.assign("/auth");
+        }
+      }
+      return Promise.reject(refreshError);
+    }
+  },
+);
+
 export default api;
