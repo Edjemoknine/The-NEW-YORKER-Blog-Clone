@@ -1,4 +1,4 @@
-import "dotenv/config";
+/* import "dotenv/config";
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -71,3 +71,8 @@ const port = Number(process.env.PORT) || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+ */
+
+import app from "./app.ts";
+
+export default app;
