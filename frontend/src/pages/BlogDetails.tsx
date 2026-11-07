@@ -76,7 +76,7 @@ const BlogDetails = () => {
               {details?.desc}
             </p>
             <Link
-              to={`/profile/${details?.username.id}`}
+              to={`/profile/${details?.username._id}`}
               className="max-w-md   hover:border-neutral-700 border-b border-transparent font-semibold text-neutral-800"
             >
               By @{details?.username?.name}
