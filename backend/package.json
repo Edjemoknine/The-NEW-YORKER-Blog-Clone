@@ -16,6 +16,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@huggingface/inference": "^4.13.32",
     "@huggingface/transformers": "^4.3.1",
     "@neondatabase/serverless": "^1.2.0",
     "@upstash/qstash": "^2.12.1",

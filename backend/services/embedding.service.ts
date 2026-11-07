@@ -1,39 +1,33 @@
-import {
-  pipeline,
-  type FeatureExtractionPipeline,
-} from "@huggingface/transformers";
+import { InferenceClient } from "@huggingface/inference";
 
-const MODEL = "Xenova/paraphrase-multilingual-MiniLM-L12-v2";
-
-let extractorPromise: Promise<FeatureExtractionPipeline> | undefined;
-
-async function getExtractor(): Promise<FeatureExtractionPipeline> {
-  if (!extractorPromise) {
-    extractorPromise = pipeline("feature-extraction", MODEL);
-  }
-
-  return extractorPromise;
-}
+/* const MODEL = "perplexity-ai/pplx-embed-v2-late-0.6b";
+ */
+const MODEL = "intfloat/multilingual-e5-small";
+const hf = new InferenceClient(process.env.HF_TOKEN);
 
 export async function generateEmbedding(text: string): Promise<number[]> {
-  const normalizedText = text.trim();
+  const input = text.trim();
 
-  if (!normalizedText) {
+  if (!input) {
     throw new Error("Cannot generate an embedding for empty text");
   }
 
-  const extractor = await getExtractor();
-
-  const output = await extractor(normalizedText, {
-    pooling: "mean",
-    normalize: true,
+  const output = await hf.featureExtraction({
+    model: MODEL,
+    inputs: input,
   });
+  const embedding =
+    output.length === 1 && Array.isArray(output[0]) ? output[0] : output;
 
-  const embedding = Array.from(output.data);
-
-  if (embedding.length !== 384) {
-    throw new Error(`Expected 384 dimensions, received ${embedding.length}`);
+  if (
+    embedding.length !== 384 ||
+    !embedding.every((value): value is number => typeof value === "number")
+  ) {
+    throw new Error(
+      "Hugging Face Inference did not return a 384-dimensional embedding",
+    );
   }
 
-  return embedding;
+  const magnitude = Math.hypot(...embedding);
+  return embedding.map((value) => value / magnitude);
 }
