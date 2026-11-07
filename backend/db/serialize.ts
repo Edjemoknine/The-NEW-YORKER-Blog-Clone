@@ -1,4 +1,10 @@
-export const publicUser = (user) => ({
+import type { InferSelectModel } from "drizzle-orm";
+import { users, posts, categories } from "./schema.js";
+
+type User = InferSelectModel<typeof users>;
+type Post = InferSelectModel<typeof posts>;
+type Category = InferSelectModel<typeof categories>;
+export const publicUser = (user: User) => ({
   _id: user.id,
   name: user.name,
   email: user.email,
@@ -8,7 +14,7 @@ export const publicUser = (user) => ({
   updatedAt: user.updatedAt,
 });
 
-export const postWithAuthor = (post, author) => ({
+export const postWithAuthor = (post: Post, author: User | null) => ({
   _id: post.id,
   title: post.title,
   desc: post.desc,
@@ -22,7 +28,7 @@ export const postWithAuthor = (post, author) => ({
   updatedAt: post.updatedAt,
 });
 
-export const publicCategory = (category) => ({
+export const publicCategory = (category: Category) => ({
   _id: category.id,
   name: category.name,
   createdAt: category.createdAt,
