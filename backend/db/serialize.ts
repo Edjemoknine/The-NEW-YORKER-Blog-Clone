@@ -1,5 +1,5 @@
 import type { InferSelectModel } from "drizzle-orm";
-import { users, posts, categories } from "./schema.js";
+import { users, posts, categories } from "./schema.ts";
 
 type User = InferSelectModel<typeof users>;
 type Post = InferSelectModel<typeof posts>;
