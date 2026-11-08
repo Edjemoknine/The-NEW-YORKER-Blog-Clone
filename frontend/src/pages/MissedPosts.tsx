@@ -25,7 +25,7 @@ const MissedPostsPage = () => {
   const totalPages = data?.totalPages || 1;
 
   return (
-    <main className="max-w-[90rem] mx-auto px-4 py-12 md:px-6 min-h-screen">
+    <main className="max-w-[90rem] mx-auto px-4 pt-40 md:px-6 min-h-screen">
       <div className="mb-8 border-b pb-4">
         <h1 className="font-serif text-3xl font-bold tracking-tight mb-2">
           All Earlier Stories
