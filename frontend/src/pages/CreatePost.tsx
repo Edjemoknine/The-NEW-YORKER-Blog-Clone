@@ -2,9 +2,16 @@ import { PostForm } from "@/components/forms/PostForm";
 
 const CreatePost = () => {
   return (
-    <div className="  pt-40  max-w-[90rem] mx-auto px-4 md:px-6 py-10">
+    <main className="page-shell">
+      <header className="page-header">
+        <p className="page-kicker">Contribute</p>
+        <h1 className="page-title">Create a story</h1>
+        <p className="page-description">
+          Share your reporting, ideas, and perspective with readers.
+        </p>
+      </header>
       <PostForm />
-    </div>
+    </main>
   );
 };
 

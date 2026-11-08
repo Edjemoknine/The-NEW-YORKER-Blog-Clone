@@ -68,8 +68,11 @@ const Category = () => {
   }, [inView, hasMore, loading, hasLoaded, fetchMorePosts]);
 
   return (
-    <div className="pt-40  max-w-[90rem] mx-auto px-4 md:px-6 py-10">
-      <h1 className="md:text-6xl  font-grotesk text-center mb-6 ">{title}</h1>
+    <main className="page-shell">
+      <header className="page-header text-center">
+        <p className="page-kicker">Section</p>
+        <h1 className="page-title">{title}</h1>
+      </header>
       <Sponsor />
       {posts.length === 0 && !hasLoaded ? (
         <CategoryPageSkeleton />
@@ -81,13 +84,13 @@ const Category = () => {
         </div>
       )}
       {hasLoaded && posts.length === 0 && !error && (
-        <div className="text-xl font-grotesk text-center w-full">
+        <div className="w-full text-center font-editorial text-xl">
           No Posts related to this category
         </div>
       )}
       {error && <p>Error: {error}</p>}
       <div ref={ref} />
-    </div>
+    </main>
   );
 };
 

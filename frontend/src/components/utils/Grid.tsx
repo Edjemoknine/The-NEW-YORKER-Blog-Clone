@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Heading from "./Heading";
 import { NewsCard } from "./NewsCard";
 import GridSkeleton from "@/components/skeletons/GridSkeleton";
@@ -48,7 +47,7 @@ const Grid = ({
         })}
       </div>
       {data?.posts?.length === 0 ? (
-        <div className="text-xl font-grotesk text-center w-full">
+        <div className="w-full text-center font-editorial text-xl">
           No Posts related to this category
         </div>
       ) : null}

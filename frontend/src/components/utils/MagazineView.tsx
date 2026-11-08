@@ -51,7 +51,7 @@ const MagazineView = ({ index }: { index: number }) => {
     return (
       <section
         ref={ref}
-        className="max-w-[90rem] h-[90vh] min-h-[36rem] my-16 mx-auto grid place-items-center bg-black text-white"
+        className="mx-auto my-16 grid h-[90vh] min-h-[36rem] max-w-[90rem] place-items-center bg-foreground text-background"
       >
         {isError
           ? "Unable to load magazine story."
@@ -63,16 +63,20 @@ const MagazineView = ({ index }: { index: number }) => {
   return (
     <div
       ref={ref}
-      className="max-w-[90rem] h-[90vh] min-h-[36rem] my-16 mx-auto grid grid-rows-2 bg-black text-white no-underline md:grid-rows-1 md:grid-cols-2"
+      className="mx-auto my-16 grid h-[90vh] min-h-[36rem] max-w-[90rem] grid-rows-2 bg-foreground text-background no-underline md:grid-cols-2 md:grid-rows-1"
     >
-      <div className="flex flex-col gap-6 max-w-md mx-auto py-10 justify-center text-white text-center">
-        <p className="font-grotesk">{post.postType}</p>
+      <div className="mx-auto flex max-w-md flex-col justify-center gap-6 px-6 py-10 text-center text-background">
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-background/65">
+          {post.postType}
+        </p>
         <Link to={`/blog/${post.id ?? post._id}`}>
-          <h3 className="text-4xl font-medium font-grotesk">{post.title}</h3>
+          <h3 className="font-editorial text-4xl font-medium leading-tight tracking-tight hover:underline">
+            {post.title}
+          </h3>
         </Link>
-        <p className="line-clamp-5">{post.desc}</p>
+        <p className="line-clamp-5 leading-7 text-background/75">{post.desc}</p>
         <Link to={`/profile/${post.username._id}`}>
-          <span className="font-medium">
+          <span className="border-b border-background/40 pb-1 text-sm font-semibold">
             By {post.username?.name ?? "Staff Writer"}
           </span>
         </Link>

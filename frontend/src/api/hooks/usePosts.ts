@@ -38,9 +38,10 @@ export const useUpdatePost = () => {
     }: CreatePostProps & { postId: string }) => {
       return await updatePost(data, postId);
     },
-    onSuccess: () => {
+    onSuccess: (_response, { postId }) => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+      queryClient.invalidateQueries({ queryKey: ["details", postId] });
 
       toast({
         title: "Post has been updated successfully!",

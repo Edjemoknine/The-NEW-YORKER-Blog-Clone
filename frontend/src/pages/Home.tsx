@@ -18,7 +18,7 @@ const Home = () => {
 
   const { data: forYouPosts, isLoading: forYouLoading } = useForYouPosts(4);
   return (
-    <div className="flex flex-col min-h-screen">
+    <main className="min-h-screen bg-background">
       <Hero />
       <Categories />
       {user && (forYouLoading || (forYouPosts?.posts?.length ?? 0) > 0) && (
@@ -48,7 +48,7 @@ const Home = () => {
       )}
 
       <InCaseMissed />
-    </div>
+    </main>
   );
 };
 
@@ -66,13 +66,13 @@ const DynamicCategoryRow = ({ name }: { name: string }) => {
   }
 
   return (
-    <div ref={ref}>
+    <section ref={ref} className="mx-auto w-full max-w-[90rem]">
       <Grid
         data={data}
         isLoading={!inView || isLoading}
         HeadingTitle={name}
         HeadingSubTitle={`Latest posts and insights in ${name}`}
       />
-    </div>
+    </section>
   );
 };

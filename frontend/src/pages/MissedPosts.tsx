@@ -20,15 +20,14 @@ const MissedPostsPage = () => {
   const totalPages = data?.totalPages || 1;
 
   return (
-    <main className="max-w-[90rem] mx-auto px-4 pb-12 pt-40 md:px-6 min-h-screen">
-      <div className="mb-8 border-b pb-4">
-        <h1 className="font-serif text-3xl font-bold tracking-tight mb-2">
-          All Earlier Stories
-        </h1>
-        <p className="text-muted-foreground text-sm">
+    <main className="page-shell">
+      <header className="page-header">
+        <p className="page-kicker">From the archive</p>
+        <h1 className="page-title">All Earlier Stories</h1>
+        <p className="page-description">
           Browse stories published before today.
         </p>
-      </div>
+      </header>
 
       {isLoading ? (
         <MissedPostsSkeleton />

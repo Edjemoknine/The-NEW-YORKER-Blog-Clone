@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom"; // or next/router / next/navigation depending on your setup
 import Grid from "./Grid";
@@ -22,10 +21,10 @@ const InCaseMissed = () => {
   const posts = data?.posts || [];
 
   return (
-    <section ref={ref} className="px-4 py-12 md:px-6 my-12">
+    <section ref={ref} className="mx-auto my-12 max-w-[90rem] px-4 py-12 md:px-6">
       <div className="mb-6 flex items-end justify-between">
         <div>
-          <h2 className="font-serif text-2xl font-bold tracking-tight">
+          <h2 className="font-editorial text-2xl font-semibold tracking-tight">
             In Case You Missed It
           </h2>
           <p className="text-sm text-muted-foreground">
@@ -36,7 +35,7 @@ const InCaseMissed = () => {
         {/* Link redirecting to the full paginated archive page */}
         <button
           onClick={() => navigate("/missed")}
-          className="text-sm font-semibold hover:text-sky-500 transition-colors underline underline-offset-4"
+          className="text-sm font-semibold text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
         >
           View All &rarr;
         </button>

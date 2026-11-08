@@ -18,7 +18,7 @@ const Hero = () => {
   const posts = data?.posts ?? [];
 
   return (
-    <div className="relative h-[100svh] min-h-[36rem] w-full bg-[#211b1b]">
+    <div className="relative h-[100svh] min-h-[36rem] w-full bg-foreground">
       {isLoading ? (
         <div className="absolute inset-0 grid place-items-center text-white">
           Loading magazine stories...

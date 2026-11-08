@@ -54,22 +54,24 @@ const Search = () => {
   }, [data, debouncedSearch, isSuccess]);
 
   return (
-    <div className="px-4 md:px-6">
-      <div className="pt-40 py-10">
-        <h1 className="xl:text-6xl sm:text-4xl text-3xl  font-grotesk text-center mb-6 ">
-          Search stories from News Nexus
-        </h1>
-        <div className="border-t border-b py-10">
+    <main className="page-shell">
+      <header className="page-header text-center">
+        <p className="page-kicker">Explore the archive</p>
+        <h1 className="page-title">Search stories from News Nexus</h1>
+        <p className="page-description mx-auto">
+          Find reporting, culture, fiction, and ideas from across the magazine.
+        </p>
+        <div className="mt-8 border-y border-border py-8">
           <SearchForm term={search} setTerm={setSearch} />
         </div>
-      </div>
+      </header>
 
-      <div className="flex-col flex gap-3 px-8">
+      <div className="mx-auto flex max-w-5xl flex-col gap-3">
         {data?.posts?.map((item: any) => (
           <SearchCard item={item} key={item._id ?? item.id} />
         ))}
       </div>
-    </div>
+    </main>
   );
 };
 

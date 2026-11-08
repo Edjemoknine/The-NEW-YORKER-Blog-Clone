@@ -66,11 +66,11 @@ export function SignupForm({
     }
   };
   return (
-    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
-      <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
+    <div className="editorial-surface mx-auto w-full max-w-md p-4 shadow-sm md:p-8">
+      <h2 className="font-editorial text-2xl font-semibold text-foreground">
         {isLogin ? "Sign In" : "Sign Up "}
       </h2>
-      <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
+      <p className="mt-2 max-w-sm text-sm text-muted-foreground">
         {isLogin ? "Welcome again to News Nexus" : "Welcome to News Nexus"}
       </p>
 
@@ -120,7 +120,7 @@ export function SignupForm({
               aria-label={showPassword ? "Hide password" : "Show password"}
               aria-controls="password"
               aria-pressed={showPassword}
-              className="absolute right-3 top-1/2 z-20 -translate-y-1/2 pointer-events-auto text-neutral-500 hover:text-neutral-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="pointer-events-auto absolute right-3 top-1/2 z-20 -translate-y-1/2 text-muted-foreground hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               {showPassword ? (
                 <EyeOff size={18} aria-hidden="true" />
@@ -134,7 +134,7 @@ export function SignupForm({
         <button
           disabled={isSubmitting}
           aria-busy={isSubmitting}
-          className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+          className="relative block h-10 w-full rounded-sm bg-primary font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
           type="submit"
         >
           {isSubmitting && (
@@ -147,23 +147,13 @@ export function SignupForm({
             : isLogin
               ? "Sign In →"
               : "Sign Up →"}
-          <BottomGradient />
         </button>
 
-        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
+        <div className="my-8 h-px w-full bg-border" />
       </form>
     </div>
   );
 }
-
-const BottomGradient = () => {
-  return (
-    <>
-      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-      <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-    </>
-  );
-};
 
 const LabelInputContainer = ({
   children,

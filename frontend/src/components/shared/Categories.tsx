@@ -26,7 +26,7 @@ const Categories = () => {
   return (
     <div
       className={cn(
-        "items-center bg-white font-grotesk border-t duration-500 transition-all gap-4 text-sm leading-3 z-50 py-6 pt-6 border-b border-neutral-300 sticky  left-0 w-full justify-center flex-wrap text-center md:flex hidden",
+        "sticky left-0 z-50 hidden w-full flex-wrap items-center justify-center gap-5 border-y border-border bg-background/95 py-5 pt-5 text-center text-xs font-semibold uppercase tracking-[0.12em] backdrop-blur transition-all duration-500 md:flex",
         hideScroll ? "-top-full" : "top-24",
       )}
     >
@@ -34,7 +34,7 @@ const Categories = () => {
         <Link
           to={`/category/${item.name}`}
           key={item.name}
-          className="hover:border-b-2 border-b-2 hover:border-neutral-700 border-transparent "
+          className="border-b-2 border-transparent py-1 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
         >
           {item.name}
         </Link>

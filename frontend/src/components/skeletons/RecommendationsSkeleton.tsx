@@ -2,7 +2,7 @@ const RecommendationsSkeleton = () => (
   <div
     aria-busy="true"
     aria-label="Loading recommendations"
-    className="max-w-[90rem] mx-auto px-4 pb-12 md:px-6 my-6"
+    className="mx-auto my-6 max-w-[90rem] px-4 pb-12 md:px-6"
   >
     <span className="sr-only" role="status">
       Loading recommendations
@@ -11,12 +11,12 @@ const RecommendationsSkeleton = () => (
       aria-hidden="true"
       className="motion-reduce:animate-none animate-pulse"
     >
-      <div className="mb-6 h-7 w-52 rounded-md bg-muted" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="mb-6 h-7 w-52 rounded-sm bg-muted" />
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {[0, 1, 2, 3].map((item) => (
           <div
             key={item}
-            className="h-[340px] rounded-xl border border-border/40 bg-muted/50 p-4"
+            className="h-[340px] rounded-sm border border-border bg-muted/50 p-4 shadow-sm"
           />
         ))}
       </div>

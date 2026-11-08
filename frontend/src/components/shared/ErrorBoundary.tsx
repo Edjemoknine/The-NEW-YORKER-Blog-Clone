@@ -41,13 +41,13 @@ const ErrorFallback = (props: ErrorFallbackProps) => {
       role="alert"
       className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center"
     >
-      <p className="text-sm font-semibold uppercase tracking-wide text-[#b3262d]">
+      <p className="text-sm font-semibold uppercase tracking-wide text-primary">
         {status ? `Error ${status}` : "Something went wrong"}
       </p>
-      <h1 className="text-3xl font-bold text-[#172033]">
+      <h1 className="font-editorial text-3xl font-semibold text-foreground">
         This page couldn’t be displayed.
       </h1>
-      <p className="max-w-lg text-neutral-600">
+      <p className="max-w-lg text-muted-foreground">
         Please try again or return to the homepage.
       </p>
       <div className="flex flex-wrap justify-center gap-3">

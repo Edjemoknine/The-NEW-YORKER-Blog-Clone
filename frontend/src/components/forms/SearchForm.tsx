@@ -17,27 +17,30 @@ type Props = {
 const SearchForm = ({ term, setTerm }: Props) => {
   return (
     <>
-      <div className="flex place-items-center max-w-3xl mx-auto mb-10">
-        <div className="w-full relative">
+      <div className="mx-auto mb-8 flex max-w-3xl items-center">
+        <div className="relative w-full">
           <Search
-            className="absolute font-bold text-neutral-600 top-1/2 -translate-y-1/2 left-3"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             size={18}
           />
           <Input
-            placeholder="Enter search terms"
-            className="rounded-none md:py-6 py-4 pl-10 focus-visible:ring-0  outline-none ring-0 "
+            placeholder="Search stories"
+            aria-label="Search stories"
+            className="h-12 rounded-r-none border-r-0 bg-card pl-10"
             value={term}
             onChange={(e) => setTerm(e.target.value)}
           />
         </div>
-        <Button className="rounded-none text-sm font-semibold md:py-6 py-3  px-10  ">
+        <Button className="h-12 rounded-l-none px-7 text-sm font-semibold">
           Search
         </Button>
       </div>
-      <div className="flex justify-between items-center w-full max-w-3xl mx-auto ">
-        <p className="font-grotesk font-medium">3,515 stories about {term}</p>
+      <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-4 text-sm">
+        <p className="text-muted-foreground">
+          {term ? `Stories about ${term}` : "Search the latest stories"}
+        </p>
         <div className="flex items-center gap-3">
-          <p className="font-grotesk font-medium">Sorted by</p>
+          <p className="text-muted-foreground">Sort by</p>
           <Select>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Relevance" />

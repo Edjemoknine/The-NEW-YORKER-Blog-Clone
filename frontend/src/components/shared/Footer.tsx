@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="p-4 sm:p-6 xl:p-8 bg-[#121212] w-full">
+    <footer className="w-full bg-foreground px-4 py-8 text-background sm:px-6 xl:px-8">
       <div className="flex items-center justify-between py-10">
         <Link to={"/"}>
           <span
             className={
-              "text-[19px] first-letter:text-5xl leading-5 first-letter:-mt-1.5 font-black duration-300   font-jerssy w-40 uppercase  first-letter:float-left text-white "
+              "w-40 font-editorial text-xl font-bold uppercase leading-5 tracking-tight text-background first-letter:float-left first-letter:-mt-1.5 first-letter:text-5xl"
             }
           >
             News
@@ -16,7 +16,7 @@ const Footer = () => {
             exus
           </span>
         </Link>
-        <div className="w-12 h-12 flex items-center justify-center cursor-pointer group bg-white rounded-full">
+        <div className="group flex size-11 cursor-pointer items-center justify-center rounded-full bg-background text-foreground">
           <ArrowUp
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="group-hover:animate-bounce duration-300"
@@ -24,11 +24,13 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 text-sm items-en text-[#A2A2A2] font-medium  py-6">
-        <div className="grid sm:grid-cols-2  items-end gap-6 border-t border-b border-neutral-700  py-6">
+      <div className="grid items-start py-6 text-sm font-medium text-background/65 md:grid-cols-2">
+        <div className="grid items-end gap-6 border-y border-background/15 py-6 sm:grid-cols-2">
           <div>
-            <h2 className="text-white mb-3">SECTIONS</h2>
-            <ul className="space-y-2 *:w-fit *:border-b hover:*:border-b hover:*:border-[#A2A2A2]  *:border-transparent ">
+            <h2 className="mb-3 font-editorial text-lg font-semibold text-background">
+              Sections
+            </h2>
+            <ul className="space-y-2 *:w-fit *:border-b *:border-transparent hover:*:border-background/50">
               <li>
                 <Link to={"/"}>News</Link>
               </li>
@@ -47,7 +49,7 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <ul className="space-y-2 *:w-fit *:border-b hover:*:border-b hover:*:border-[#A2A2A2]  *:border-transparent ">
+            <ul className="space-y-2 *:w-fit *:border-b *:border-transparent hover:*:border-background/50">
               <li>
                 <Link to={"/"}>News</Link>
               </li>
@@ -66,10 +68,12 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className="grid sm:grid-cols-2 gap-6 border-t border-b  border-neutral-700  py-6">
+        <div className="grid gap-6 border-y border-background/15 py-6 sm:grid-cols-2">
           <div>
-            <h2 className="text-white mb-3">MORE</h2>
-            <ul className="space-y-2 *:w-fit *:border-b hover:*:border-b hover:*:border-[#A2A2A2]  *:border-transparent ">
+            <h2 className="mb-3 font-editorial text-lg font-semibold text-background">
+              More
+            </h2>
+            <ul className="space-y-2 *:w-fit *:border-b *:border-transparent hover:*:border-background/50">
               <li>
                 <Link to={"/"}>Customer Care</Link>
               </li>
@@ -85,7 +89,7 @@ const Footer = () => {
             </ul>
           </div>
           <div className="mt-8">
-            <ul className="space-y-2 *:w-fit *:border-b hover:*:border-b hover:*:border-[#A2A2A2]  *:border-transparent ">
+            <ul className="space-y-2 *:w-fit *:border-b *:border-transparent hover:*:border-background/50">
               <li>
                 <Link to={"/"}>Digital Access</Link>
               </li>
@@ -102,8 +106,8 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="grid sm:grid-cols-2 text-sm text-[#A2A2A2] border-b  font-medium md:grid-cols-3 xl:grid-cols-4 gap-6 border-neutral-800 py-6">
-        <ul className="space-y-2 *:w-fit *:border-b hover:*:border-b hover:*:border-[#A2A2A2]  *:border-transparent    ">
+      <div className="grid gap-6 border-b border-background/15 py-6 text-sm font-medium text-background/65 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+        <ul className="space-y-2 *:w-fit *:border-b *:border-transparent hover:*:border-background/50">
           <li>
             <Link to={"/"}>About</Link>
           </li>
@@ -114,7 +118,7 @@ const Footer = () => {
             <Link to={"/"}>Contact</Link>
           </li>
         </ul>
-        <ul className="space-y-2 *:w-fit *:border-b hover:*:border-b hover:*:border-[#A2A2A2]  *:border-transparent ">
+        <ul className="space-y-2 *:w-fit *:border-b *:border-transparent hover:*:border-background/50">
           <li>
             <Link to={"/"}>F.A.Q</Link>
           </li>
@@ -126,7 +130,7 @@ const Footer = () => {
           </li>
         </ul>
 
-        <ul className="space-y-2 *:w-fit *:border-b hover:*:border-b hover:*:border-[#A2A2A2]  *:border-transparent ">
+        <ul className="space-y-2 *:w-fit *:border-b *:border-transparent hover:*:border-background/50">
           <li>
             <Link to={"/"}>Accessibility Help</Link>
           </li>
@@ -134,7 +138,7 @@ const Footer = () => {
             <Link to={"/"}>User Agreement</Link>
           </li>
         </ul>
-        <ul className="space-y-2 *:w-fit *:border-b hover:*:border-b hover:*:border-[#A2A2A2]  *:border-transparent ">
+        <ul className="space-y-2 *:w-fit *:border-b *:border-transparent hover:*:border-background/50">
           <li>
             <Link to={"/"}>Privacy Policy & Cookie Statement</Link>
           </li>
@@ -143,8 +147,8 @@ const Footer = () => {
           </li>
         </ul>
       </div>
-      <div className="flex items-center md:flex-row flex-col-reverse  justify-between text-[#A2A2A2] border-b border-neutral-800 pb-8">
-        <div className="text-xs text-center md:text-left max-w-5xl">
+      <div className="flex flex-col-reverse items-center justify-between border-b border-background/15 pb-8 text-background/65 md:flex-row">
+        <div className="max-w-5xl text-center text-xs md:text-left">
           © 2024 MokaEd. All rights reserved. The New Yorker may earn a portion
           of sales from products that are purchased through our site as part of
           our Affiliate Partnerships with retailers. The material on this site
@@ -152,14 +156,14 @@ const Footer = () => {
           used, except with the prior written permission of Condé Nast. Ad
           Choices
         </div>
-        <div className="flex py-6 gap-8">
+        <div className="flex gap-8 py-6">
           <Facebook size={25} className="cursor-pointer" />
           <Youtube size={25} className="cursor-pointer" />
           <Instagram size={25} className="cursor-pointer" />
           <Slack size={25} className="cursor-pointer" />
         </div>
       </div>
-      <p className="text-sm text-[#a2a2a2] text-center pt-6 italic">
+      <p className="pt-6 text-center text-sm italic text-background/50">
         Made with ❤️ by @moknine
       </p>
     </footer>

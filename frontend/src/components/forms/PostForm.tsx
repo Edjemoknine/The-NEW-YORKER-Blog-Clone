@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -61,11 +60,9 @@ export type FormValues = z.infer<typeof FormSchema>;
 export function PostForm({
   type,
   post,
-  close,
 }: {
   type?: string;
   post?: any;
-  close?: () => void;
 }) {
   const { user } = useSelector((store: any) => store.auth);
   const [ImG, setImage] = useState(post?.image ?? "");
@@ -107,11 +104,7 @@ export function PostForm({
           await onUpdate({ ...data, userId, postId });
           form.reset();
           setImage("");
-          if (close) {
-            close();
-          }
-
-          navigate(`/profile/${userId}`);
+          navigate(`/blog/${postId}`);
         } catch (error: unknown) {
           console.log(error);
         }
@@ -126,7 +119,7 @@ export function PostForm({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full  space-y-6 "
+          className="editorial-surface mx-auto w-full max-w-4xl space-y-6 p-5 shadow-sm sm:p-8"
         >
           <FormField
             control={form.control}
@@ -134,13 +127,13 @@ export function PostForm({
             render={() => (
               <FormItem>
                 <FormLabel>
-                  <div className="w-full bg-neutral-300 overflow-hidden relative rounded-xl h-72 cursor-pointer flex justify-center items-center">
-                    <PlusCircle className="text-neutral-500" size={80} />
+                  <div className="relative flex h-72 w-full cursor-pointer items-center justify-center overflow-hidden rounded-sm border border-dashed border-border bg-muted">
+                    <PlusCircle className="text-muted-foreground" size={64} />
                     {ImG !== "" && (
                       <img
                         src={ImG}
                         alt="Image"
-                        className="w-full h-full object-cover absolute inset-0 "
+                        className="absolute inset-0 h-full w-full object-cover"
                       />
                     )}
                   </div>
@@ -176,7 +169,11 @@ export function PostForm({
               <FormItem>
                 {/* <FormLabel>Username</FormLabel> */}
                 <FormControl>
-                  <Input placeholder="Title" {...field} />
+                  <Input
+                    placeholder="Story title"
+                    className="h-12 bg-background"
+                    {...field}
+                  />
                 </FormControl>
 
                 <FormMessage />
@@ -190,7 +187,11 @@ export function PostForm({
               <FormItem>
                 {/* <FormLabel>desc</FormLabel> */}
                 <FormControl>
-                  <Textarea placeholder="desc" {...field} />
+                  <Textarea
+                    placeholder="Write a short summary"
+                    className="min-h-28 resize-y bg-background"
+                    {...field}
+                  />
                 </FormControl>
 
                 <FormMessage />
@@ -204,7 +205,11 @@ export function PostForm({
               <FormItem>
                 {/* <FormLabel>Username</FormLabel> */}
                 <FormControl>
-                  <Textarea placeholder="content" {...field} />
+                  <Textarea
+                    placeholder="Write your story"
+                    className="min-h-64 resize-y bg-background"
+                    {...field}
+                  />
                 </FormControl>
 
                 <FormMessage />
@@ -257,8 +262,10 @@ export function PostForm({
             {isCreating
               ? "Creating..."
               : isUpdating
-                ? "Updating..."
-                : "Submit"}{" "}
+                ? "Saving..."
+                : type === "Edit"
+                  ? "Save changes"
+                  : "Publish story"}
           </Button>
         </form>
       </Form>

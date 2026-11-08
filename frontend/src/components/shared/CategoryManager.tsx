@@ -72,12 +72,12 @@ const CategoryManager = () => {
     <div className="space-y-8">
       <form
         onSubmit={handleCreateCategory}
-        className="flex flex-col gap-3 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:flex-row sm:items-end"
+        className="editorial-surface flex flex-col gap-3 p-5 shadow-sm sm:flex-row sm:items-end"
       >
         <div className="min-w-0 flex-1">
           <label
             htmlFor="new-category"
-            className="mb-2 block text-sm font-semibold text-neutral-700"
+            className="mb-2 block text-sm font-semibold text-foreground"
           >
             New category
           </label>
@@ -88,13 +88,13 @@ const CategoryManager = () => {
             maxLength={255}
             placeholder="e.g. Science & Technology"
             disabled={addCategory.isPending}
-            className="rounded-xl"
+            className="rounded-sm"
           />
         </div>
         <Button
           type="submit"
           disabled={!categoryName.trim() || addCategory.isPending}
-          className="gap-2 rounded-xl bg-[#202b42] hover:bg-[#303d58]"
+          className="gap-2 rounded-sm bg-primary hover:bg-primary/90"
         >
           <Plus className="size-4" />
           {addCategory.isPending ? "Adding..." : "Add category"}
@@ -102,13 +102,13 @@ const CategoryManager = () => {
       </form>
 
       {isLoadingCategories ? (
-        <div className="rounded-2xl border border-neutral-200 bg-white p-8 text-sm text-neutral-500">
+        <div className="editorial-surface p-8 text-sm text-muted-foreground">
           Loading categories...
         </div>
       ) : hasCategoryError ? (
         <div
           role="alert"
-          className="rounded-2xl border border-red-200 bg-white p-6 text-sm text-red-700"
+          className="rounded-sm border border-destructive/30 bg-card p-6 text-sm text-destructive"
         >
           <p>
             {categoryError instanceof Error
@@ -118,25 +118,30 @@ const CategoryManager = () => {
           <Button
             type="button"
             variant="outline"
-            className="mt-4 rounded-xl"
+            className="mt-4 rounded-sm"
             onClick={() => refetchCategories()}
           >
             Try again
           </Button>
         </div>
       ) : categories.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-neutral-300 bg-white p-8 text-center">
-          <Tags className="mx-auto size-8 text-neutral-400" />
-          <h3 className="mt-3 font-semibold">No categories yet</h3>
-          <p className="mt-1 text-sm text-neutral-500">
+        <div className="rounded-sm border border-dashed border-border bg-card p-8 text-center">
+          <Tags className="mx-auto size-8 text-muted-foreground" />
+          <h3 className="mt-3 font-editorial text-xl font-semibold">
+            No categories yet
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
             Add a category to organize and browse related posts.
           </p>
         </div>
       ) : (
         <div className="grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)]">
-          <aside className="h-fit rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
-            <h3 className="mb-3 px-2 text-sm font-bold text-neutral-700">
-              Categories <span className="text-neutral-400">({categories.length})</span>
+          <aside className="editorial-surface h-fit p-4 shadow-sm">
+            <h3 className="mb-3 px-2 text-sm font-bold text-foreground">
+              Categories{" "}
+              <span className="text-muted-foreground">
+                ({categories.length})
+              </span>
             </h3>
             <ul className="space-y-1">
               {categories.map((category: Category) => {
@@ -149,8 +154,8 @@ const CategoryManager = () => {
                       aria-pressed={isSelected}
                       className={`flex min-w-0 flex-1 items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm font-medium ${
                         isSelected
-                          ? "bg-[#202b42] text-white"
-                          : "text-neutral-700 hover:bg-neutral-100"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-foreground hover:bg-muted"
                       }`}
                     >
                       <FolderOpen className="size-4 shrink-0" />
@@ -162,7 +167,7 @@ const CategoryManager = () => {
                       disabled={deleteCategory.isPending}
                       aria-label={`Delete ${category.name} category`}
                       title="Delete category"
-                      className="grid size-9 shrink-0 place-items-center rounded-lg text-neutral-400 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                      className="grid size-9 shrink-0 place-items-center rounded-sm text-muted-foreground hover:bg-destructive/10 hover:text-destructive disabled:opacity-50"
                     >
                       <Trash2 className="size-4" />
                     </button>
@@ -175,29 +180,27 @@ const CategoryManager = () => {
           <section aria-label={`${selectedCategory} posts`} className="min-w-0">
             <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
               <div>
-                <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-[#b3262d]">
-                  Category posts
-                </p>
-                <h3 className="text-2xl font-bold text-[#172033]">
+                <p className="page-kicker mb-1 text-xs">Category posts</p>
+                <h3 className="font-editorial text-2xl font-semibold text-foreground">
                   {selectedCategory}
                 </h3>
               </div>
               <Link
                 to={`/category/${encodeURIComponent(selectedCategory)}`}
-                className="inline-flex items-center gap-1 text-sm font-semibold text-[#202b42] hover:underline"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
               >
                 View all posts <ArrowUpRight className="size-4" />
               </Link>
             </div>
 
             {isLoadingPosts ? (
-              <div className="rounded-2xl border border-neutral-200 bg-white p-8 text-sm text-neutral-500">
+              <div className="editorial-surface p-8 text-sm text-muted-foreground">
                 Loading posts...
               </div>
             ) : hasPostError ? (
               <div
                 role="alert"
-                className="rounded-2xl border border-red-200 bg-white p-6 text-sm text-red-700"
+                className="rounded-sm border border-destructive/30 bg-card p-6 text-sm text-destructive"
               >
                 <p>
                   {postError instanceof Error
@@ -207,7 +210,7 @@ const CategoryManager = () => {
                 <Button
                   type="button"
                   variant="outline"
-                  className="mt-4 rounded-xl"
+                  className="mt-4 rounded-sm"
                   onClick={() => refetchPosts()}
                 >
                   Try again
@@ -220,9 +223,9 @@ const CategoryManager = () => {
                 ))}
               </div>
             ) : (
-              <div className="rounded-2xl border border-dashed border-neutral-300 bg-white p-8 text-center">
+              <div className="rounded-sm border border-dashed border-border bg-card p-8 text-center">
                 <p className="font-semibold">No posts in this category yet</p>
-                <p className="mt-1 text-sm text-neutral-500">
+                <p className="mt-1 text-sm text-muted-foreground">
                   Posts tagged with this category will appear here.
                 </p>
               </div>

@@ -98,14 +98,14 @@ const User = () => {
   };
 
   return (
-    <main className="min-h-screen  pt-24 text-[#172033] md:pt-28">
+    <main className="min-h-screen bg-background pt-24 text-foreground md:pt-28">
       <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-[1480px] relative">
         <aside
-          className={`fixed inset-y-16 left-0 z-40 flex w-[260px] flex-col overflow-y-auto rounded-r-xl border border-neutral-200 bg-white px-4 pb-6 pt-4 shadow-xl transition-transform duration-200 lg:sticky lg:top-1/2 lg:max-h-[calc(100vh-4rem)] lg:-translate-y-1/2 lg:translate-x-0 lg:self-start lg:pt-6 lg:shadow-lg ${
+          className={`fixed inset-y-16 left-0 z-40 flex w-[260px] flex-col overflow-y-auto rounded-r-sm border border-border bg-card px-4 pb-6 pt-4 shadow-xl transition-transform duration-200 lg:sticky lg:top-1/2 lg:max-h-[calc(100vh-4rem)] lg:-translate-y-1/2 lg:translate-x-0 lg:self-start lg:pt-6 lg:shadow-sm ${
             menuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          <p className="mb-3 px-2 text-[10px] font-bold uppercase tracking-[0.18em] text-neutral-400">
+          <p className="mb-3 px-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
             Manage
           </p>
           <nav aria-label="Profile navigation" className="space-y-1">
@@ -124,21 +124,21 @@ const User = () => {
                   type="button"
                   onClick={() => selectSection(id)}
                   aria-current={isActive ? "page" : undefined}
-                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition-colors ${
+                  className={`flex w-full items-center gap-3 rounded-sm px-3 py-3 text-left text-sm font-semibold transition-colors ${
                     isActive
-                      ? "bg-[#000000] text-[#ffffff]"
-                      : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
                   <Icon
                     className={`size-[18px] ${
-                      isActive ? "text-[#ffffff]" : "text-neutral-400"
+                      isActive ? "text-primary-foreground" : "text-muted-foreground"
                     }`}
                     strokeWidth={2}
                   />
                   <span>{label}</span>
                   {count !== undefined && (
-                    <span className="ml-auto rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] text-neutral-500">
+                    <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
                       {count}
                     </span>
                   )}
@@ -147,9 +147,9 @@ const User = () => {
             })}
           </nav>
 
-          <div className="mt-auto rounded-xl bg-[#f8f5f2] p-4">
+          <div className="mt-auto rounded-sm bg-secondary p-4">
             <p className="text-sm font-bold">Your writing, in one place.</p>
-            <p className="mt-1 text-xs leading-5 text-neutral-500">
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
               Manage your stories and saved reading from your profile.
             </p>
           </div>
@@ -171,12 +171,12 @@ const User = () => {
             ) : isError ? (
               <div
                 role="alert"
-                className="rounded-2xl border border-red-200 bg-white p-8 text-center"
+                className="rounded-sm border border-destructive/30 bg-card p-8 text-center"
               >
                 <h2 className="text-lg font-bold">
                   Could not load your profile
                 </h2>
-                <p className="mt-2 text-sm text-neutral-600">
+                <p className="mt-2 text-sm text-muted-foreground">
                   {error instanceof Error
                     ? error.message
                     : "Please try again later."}
@@ -232,22 +232,22 @@ function SectionContent({
             toast={toast}
           />
           <aside className="space-y-5">
-            <div className="rounded-2xl bg-[#202b42] p-6 text-white shadow-sm">
-              <span className="inline-flex rounded-lg bg-white/10 p-2.5">
-                <LayoutDashboard className="size-4 text-red-200" />
+            <div className="rounded-sm bg-foreground p-6 text-background shadow-sm">
+              <span className="inline-flex rounded-sm bg-background/10 p-2.5">
+                <LayoutDashboard className="size-4 text-primary" />
               </span>
-              <p className="mt-7 text-sm font-medium text-white/65">
+              <p className="mt-7 text-sm font-medium text-background/65">
                 Your activity
               </p>
               <p className="mt-1 text-3xl font-bold">
                 {posts.length + savedPosts.length}
               </p>
-              <p className="mt-2 text-xs text-white/60">
+              <p className="mt-2 text-xs text-background/60">
                 Stories published and saved
               </p>
             </div>
-            <div className="rounded-2xl border border-neutral-200 bg-white p-6">
-              <h3 className="text-sm font-bold">Your library</h3>
+            <div className="editorial-surface p-6">
+              <h3 className="font-editorial text-lg font-semibold">Your library</h3>
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <Stat value={posts.length} label="Your posts" />
                 <Stat value={savedPosts.length} label="Saved" />
@@ -328,7 +328,7 @@ function SectionContent({
         title="Create a post"
         description="Write and publish a new story for the community."
       />
-      <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm sm:p-7">
+      <div className="editorial-surface p-4 shadow-sm sm:p-7">
         <PostForm type="create" />
       </div>
     </>
@@ -436,19 +436,19 @@ function ProfileSettings({
   };
 
   return (
-    <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-7">
-      <div className="flex flex-col justify-between gap-4 border-b border-neutral-100 pb-6 sm:flex-row sm:items-center">
+    <div className="editorial-surface p-5 shadow-sm sm:p-7">
+      <div className="flex flex-col justify-between gap-4 border-b border-border pb-6 sm:flex-row sm:items-center">
         <div className="flex items-center gap-4">
           <div className="relative">
             <ProfileAvatar
               src={avatar}
               name={profile?.name}
-              className="size-[76px] rounded-2xl"
+              className="size-[76px] rounded-sm"
             />
             {isEditing && (
               <label
                 htmlFor="profile-avatar"
-                className="absolute -bottom-2 -right-2 grid size-8 cursor-pointer place-items-center rounded-lg border-2 border-white bg-[#b3262d] text-white"
+                className="absolute -bottom-2 -right-2 grid size-8 cursor-pointer place-items-center rounded-sm border-2 border-card bg-primary text-primary-foreground"
                 aria-label="Change profile photo"
               >
                 <Camera className="size-4" />
@@ -465,8 +465,8 @@ function ProfileSettings({
           </div>
           <div>
             <h2 className="text-lg font-bold">{profile?.name}</h2>
-            <p className="mt-1 text-sm text-neutral-500">{profile?.email}</p>
-            <span className="mt-2 inline-flex rounded-full bg-[#fceeee] px-2.5 py-1 text-[11px] font-bold text-[#a3242b]">
+            <p className="mt-1 text-sm text-muted-foreground">{profile?.email}</p>
+            <span className="mt-2 inline-flex rounded-sm bg-secondary px-2.5 py-1 text-[11px] font-bold text-primary">
               Writer account
             </span>
           </div>
@@ -476,7 +476,7 @@ function ProfileSettings({
             type="button"
             variant="outline"
             onClick={startEditing}
-            className="gap-2 self-start rounded-xl sm:self-auto"
+            className="gap-2 self-start rounded-sm sm:self-auto"
           >
             <PenLine className="size-4" />
             Edit profile
@@ -499,7 +499,7 @@ function ProfileSettings({
                   <Input
                     {...field}
                     disabled={!isEditing || isSaving}
-                    className="rounded-xl disabled:bg-neutral-50"
+                    className="rounded-sm disabled:bg-muted"
                   />
                 </FormControl>
                 <FormMessage />
@@ -517,7 +517,7 @@ function ProfileSettings({
               id="profile-email"
               value={profile?.email ?? ""}
               disabled
-              className="rounded-xl bg-neutral-50"
+              className="rounded-sm bg-muted"
             />
           </div>
           {isEditing && (
@@ -534,7 +534,7 @@ function ProfileSettings({
                       autoComplete="new-password"
                       placeholder="Leave blank to keep your current password"
                       disabled={isSaving}
-                      className="rounded-xl"
+                      className="rounded-sm"
                     />
                   </FormControl>
                   <FormMessage />
@@ -555,7 +555,7 @@ function ProfileSettings({
                     maxLength={500}
                     disabled={!isEditing || isSaving}
                     placeholder="Tell readers a little about yourself..."
-                    className="resize-none rounded-xl disabled:bg-neutral-50"
+                    className="resize-none rounded-sm disabled:bg-muted"
                   />
                 </FormControl>
                 <FormMessage />
@@ -563,11 +563,11 @@ function ProfileSettings({
             )}
           />
           {isEditing && (
-            <div className="flex flex-wrap gap-3 border-t border-neutral-100 pt-5">
+            <div className="flex flex-wrap gap-3 border-t border-border pt-5">
               <Button
                 type="submit"
                 disabled={isSaving || isUploading}
-                className="gap-2 rounded-xl bg-[#202b42] hover:bg-[#303d58]"
+                className="gap-2 rounded-sm bg-primary hover:bg-primary/90"
               >
                 <Check className="size-4" />
                 {isSaving ? "Saving..." : "Save changes"}
@@ -577,13 +577,13 @@ function ProfileSettings({
                 variant="ghost"
                 onClick={cancelEditing}
                 disabled={isSaving}
-                className="gap-2 rounded-xl text-neutral-600"
+                className="gap-2 rounded-sm text-muted-foreground"
               >
                 <X className="size-4" />
                 Cancel
               </Button>
               {isUploading && (
-                <span className="self-center text-sm text-neutral-500">
+                <span className="self-center text-sm text-muted-foreground">
                   Uploading photo...
                 </span>
               )}
@@ -609,17 +609,17 @@ function SectionHeading({
   return (
     <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
       <div>
-        <p className="mb-2 text-sm font-semibold text-[#b3262d]">{eyebrow}</p>
-        <h2 className="text-3xl font-bold tracking-tight text-[#172033] sm:text-4xl">
+        <p className="page-kicker mb-2">{eyebrow}</p>
+        <h2 className="font-editorial text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
           {title}
         </h2>
-        <p className="mt-2 text-sm text-neutral-500">{description}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{description}</p>
       </div>
       {action && (
         <Button
           type="button"
           onClick={action.onClick}
-          className="gap-2 self-start rounded-xl bg-[#202b42] hover:bg-[#303d58] sm:self-auto"
+          className="gap-2 self-start rounded-sm bg-primary hover:bg-primary/90 sm:self-auto"
         >
           <Plus className="size-4" />
           {action.label}
@@ -642,12 +642,12 @@ function ProfileAvatar({
     <img
       src={src}
       alt={name ? `${name}'s profile` : "Profile"}
-      className={`shrink-0 object-cover ring-1 ring-black/5 ${className}`}
+      className={`shrink-0 border border-border object-cover ${className}`}
     />
   ) : (
     <div
       aria-label={name ? `${name}'s profile` : "Profile"}
-      className={`grid shrink-0 place-items-center bg-[#fceeee] font-bold text-[#a3242b] ring-1 ring-black/5 ${className}`}
+      className={`grid shrink-0 place-items-center bg-secondary font-bold text-primary ${className}`}
     >
       {name?.trim().charAt(0).toUpperCase() || <UserRound className="size-5" />}
     </div>
@@ -656,9 +656,9 @@ function ProfileAvatar({
 
 function Stat({ value, label }: { value: number; label: string }) {
   return (
-    <div className="rounded-xl bg-[#f7f7f8] p-4">
-      <p className="text-xl font-bold text-[#202b42]">{value}</p>
-      <p className="mt-1 text-xs font-medium text-neutral-500">{label}</p>
+    <div className="rounded-sm bg-muted p-4">
+      <p className="text-xl font-bold text-foreground">{value}</p>
+      <p className="mt-1 text-xs font-medium text-muted-foreground">{label}</p>
     </div>
   );
 }
@@ -675,18 +675,18 @@ function EmptyState({
   action?: { label: string; onClick: () => void };
 }) {
   return (
-    <div className="flex min-h-[360px] items-center justify-center rounded-2xl border border-dashed border-neutral-300 bg-white px-6 py-12 text-center">
+    <div className="flex min-h-[360px] items-center justify-center rounded-sm border border-dashed border-border bg-card px-6 py-12 text-center">
       <div className="max-w-md">
-        <div className="mx-auto mb-5 grid size-14 place-items-center rounded-2xl bg-[#fceeee] text-[#b3262d]">
+        <div className="mx-auto mb-5 grid size-14 place-items-center rounded-sm bg-secondary text-primary">
           <Icon className="size-6" />
         </div>
-        <h3 className="text-2xl font-bold tracking-tight">{title}</h3>
-        <p className="mt-2 text-sm leading-6 text-neutral-500">{description}</p>
+        <h3 className="font-editorial text-2xl font-semibold tracking-tight">{title}</h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
         {action && (
           <Button
             type="button"
             onClick={action.onClick}
-            className="mt-6 gap-2 rounded-xl bg-[#202b42] hover:bg-[#303d58]"
+            className="mt-6 gap-2 rounded-sm bg-primary hover:bg-primary/90"
           >
             {action.label}
             <ArrowUpRight className="size-4" />

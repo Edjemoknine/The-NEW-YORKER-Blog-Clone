@@ -51,16 +51,14 @@ const Navbar = () => {
           <span
             className={cn(
               scrollDown
-                ? "text-[19px] text-2xl text-black"
-                : `text-2xl  ${
-                    pathname === "/" ? "text-white" : "text-black"
-                  } `,
+                ? "text-[19px] text-xl text-black"
+                : `text-xl  ${pathname === "/" ? "text-white" : "text-black"} `,
               "flex items-center font-black duration-300 font-jerssy w-40 uppercase",
             )}
           >
             <span
               aria-hidden="true"
-              className=" text-[50px] leading-8 mb-[2px]"
+              className=" text-[42px] leading-8 mb-[-1px]"
             >
               N
             </span>

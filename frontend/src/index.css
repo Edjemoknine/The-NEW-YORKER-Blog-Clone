@@ -13,12 +13,38 @@
   }
 }
 
+@layer components {
+  .page-shell {
+    @apply mx-auto min-h-screen max-w-[90rem] px-4 pb-12 pt-32 md:px-6 md:pt-40;
+  }
+
+  .page-header {
+    @apply mb-8 border-b border-border pb-6;
+  }
+
+  .page-kicker {
+    @apply mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-primary;
+  }
+
+  .page-title {
+    @apply font-editorial text-4xl font-semibold leading-tight tracking-tight text-foreground sm:text-5xl md:text-6xl;
+  }
+
+  .page-description {
+    @apply mt-3 max-w-3xl text-base leading-7 text-muted-foreground;
+  }
+
+  .editorial-surface {
+    @apply rounded-sm border border-border bg-card;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 8px;
-  background-color: #d6d6d6;
+  background-color: hsl(var(--muted));
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #1f1f1f;
+  background-color: hsl(var(--foreground));
   border-radius: 50px;
 }
 
@@ -58,7 +84,7 @@
 }
 
 .swiper-pagination-bullet-active::before {
-  background: #ffffff;
+  background: hsl(var(--card));
 }
 
 .swiper-pagination-bullet:focus-visible {
@@ -68,35 +94,35 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 40 30% 97%;
+    --foreground: 220 16% 13%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 16% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 16% 13%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 356 58% 42%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 38 24% 92%;
+    --secondary-foreground: 220 16% 18%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 38 22% 93%;
+    --muted-foreground: 220 9% 42%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 38 24% 92%;
+    --accent-foreground: 220 16% 18%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 35 14% 84%;
+    --input: 35 14% 82%;
+    --ring: 356 58% 42%;
 
-    --radius: 0.5rem;
+    --radius: 0.25rem;
   }
 
   .dark {
@@ -136,5 +162,6 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: "DM Sans", sans-serif;
   }
 }

@@ -14,34 +14,37 @@ const Profile = () => {
   });
   if (isLoading) return <ProfileSkeleton />;
   return (
-    <div className="  pt-40  max-w-[90rem] mx-auto px-4 md:px-6 py-10">
-      <div className=" flex gap-6 flex-col border-b border-neutral-200 pb-16 md:flex-row items-center md:items-start">
-        <div className="h-52 w-52 rounded-full bg-sky-200 overflow-hidden">
+    <main className="page-shell">
+      <header className="page-header flex flex-col items-center gap-6 pb-10 md:flex-row md:items-start md:pb-12">
+        <div className="size-40 shrink-0 overflow-hidden rounded-full border border-border bg-muted md:size-48">
           {profile.avatar ? (
             <img
               src={profile.avatar}
               alt="profile picture"
-              className="h-full w-full  "
+              className="h-full w-full object-cover"
             />
           ) : (
             <img
               src="https://media.newyorker.com/photos/59097b85019dfc3494ea36f6/1:1/w_320,c_limit/marantz-andrew.png"
               alt="profile picture"
-              className="h-full w-full  "
+              className="h-full w-full object-cover"
             />
           )}
         </div>
         <div className="flex-1">
-          <h2 className="text-5xl mb-3 font-light font-grotesk">
-            {profile.name}
-          </h2>
-          <p className="">{profile?.bio}</p>
+          <p className="page-kicker">Contributor</p>
+          <h1 className="page-title">{profile.name}</h1>
+          {profile?.bio && (
+            <p className="page-description max-w-2xl">{profile.bio}</p>
+          )}
         </div>
-      </div>
-      {profile.posts.map((item: any) => (
-        <SearchCard item={item} key={item.id} />
-      ))}
-    </div>
+      </header>
+      <section className="mx-auto max-w-5xl divide-y divide-border">
+        {profile.posts.map((item: any) => (
+          <SearchCard item={item} key={item.id ?? item._id} />
+        ))}
+      </section>
+    </main>
   );
 };
 

@@ -34,7 +34,7 @@ const Slider = ({ data }: MagazineSliderProps) => {
 
         return (
           <SwiperSlide key={item._id} className=" flex items-end">
-            <div className="absolute bg-[#211b1b]/50 inset-0 z-10" />
+            <div className="absolute inset-0 z-10 bg-foreground/50" />
             <img
               src={getOptimizedImageUrl(item.image || "/placeholder.svg", 2000)}
               alt={item.title}
@@ -43,17 +43,17 @@ const Slider = ({ data }: MagazineSliderProps) => {
               fetchPriority={index === 0 ? "high" : "auto"}
               decoding="async"
             />
-            <div className="absolute inset-x-0 bottom-0 px-4 sm:px-6 xl:px-8 pb-28 w-full z-20 flex justify-between items-end text-white font-grotesk">
+            <div className="absolute inset-x-0 bottom-0 z-20 flex w-full items-end justify-between px-4 pb-28 text-white sm:px-6 xl:px-8">
               <div>
-                <p className="text-white mb-3 uppercase text-xs font-grotesk">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-white">
                   {item.postType || item.categories?.[0] || "Magazine"}
                 </p>
                 <Link to={`/blog/${item._id}`} className="group">
-                  <h1 className="text-white mb-7 font-light text-4xl max-w-md font-grotesk group-hover:underline">
+                  <h1 className="mb-7 max-w-2xl font-editorial text-4xl font-medium leading-tight tracking-tight text-white group-hover:underline md:text-6xl">
                     {item.title}
                   </h1>
                 </Link>
-                <p className="max-w-md text-xl">
+                <p className="max-w-md text-lg text-white/85">
                   By {item.username?.name || "Staff Writer"}
                 </p>
               </div>
