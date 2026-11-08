@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import { fetchPost, fetchPosts } from "@/api/handlers/posts";
 import { Bookmark, Edit, Trash } from "lucide-react";
@@ -20,6 +20,7 @@ const BlogDetails = () => {
   const { user } = useSelector((store: any) => store.auth);
   const userId = user?.otherData?._id;
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: details } = useQuery({
     queryKey: ["details", postId],
@@ -47,9 +48,13 @@ const BlogDetails = () => {
         eventType: "post_view",
         postId,
         metadata: { duration },
+      }).then((tracked) => {
+        if (tracked) {
+          return queryClient.invalidateQueries({ queryKey: ["for-you"] });
+        }
       });
     };
-  }, [hasDetails, postId]);
+  }, [hasDetails, postId, queryClient]);
 
   const { data: profile } = useQuery({
     queryKey: ["userProfile", userId],

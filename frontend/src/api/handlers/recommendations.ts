@@ -15,8 +15,10 @@ type UserEvent =
 export const trackEvent = async (event: UserEvent) => {
   try {
     await api.post("/api/events", event);
+    return true;
   } catch (error) {
     console.error("Failed to track user event:", error);
+    return false;
   }
 };
 

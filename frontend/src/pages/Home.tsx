@@ -21,7 +21,7 @@ const Home = () => {
     <div className="flex flex-col min-h-screen">
       <Hero />
       <Categories />
-      {user && (
+      {user && (forYouLoading || (forYouPosts?.posts?.length ?? 0) > 0) && (
         <Grid
           data={forYouPosts}
           isLoading={forYouLoading}

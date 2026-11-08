@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
+import { Link } from "react-router-dom";
 import { fetchPosts } from "@/api/handlers/posts";
 import { getOptimizedImageUrl } from "@/lib/optimizedImageUrl";
 
@@ -69,15 +70,19 @@ const MagazineView = ({ index }: { index: number }) => {
   return (
     <div
       ref={ref}
-      className={`${sectionClass} grid grid-rows-2 bg-black md:grid-rows-1 md:grid-cols-2`}
+      className={`${sectionClass} grid grid-rows-2 bg-black text-white no-underline md:grid-rows-1 md:grid-cols-2`}
     >
       <div className="flex flex-col gap-6 max-w-md mx-auto py-10 justify-center text-white text-center">
         <p className="font-grotesk">{post.postType}</p>
-        <h3 className="text-4xl font-medium font-grotesk">{post.title}</h3>
+        <Link to={`/blog/${post.id ?? post._id}`}>
+          <h3 className="text-4xl font-medium font-grotesk">{post.title}</h3>
+        </Link>
         <p className="line-clamp-5">{post.desc}</p>
-        <span className="font-medium">
-          By {post.username?.name ?? "Staff Writer"}
-        </span>
+        <Link to={`/profile/${post.username._id}`}>
+          <span className="font-medium">
+            By {post.username?.name ?? "Staff Writer"}
+          </span>
+        </Link>
       </div>
       <div className="overflow-hidden h-full w-full">
         <img
