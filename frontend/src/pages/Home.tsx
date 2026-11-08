@@ -6,6 +6,7 @@ import InCaseMissed from "@/components/utils/InCaseMissed";
 import { useCategoriesList, useCategoryPosts } from "@/api/hooks/useCategories";
 import MagazineView from "@/components/utils/MagazineView";
 import { useForYouPosts } from "@/api/hooks/useRecommendation";
+import CategoryListSkeleton from "@/components/skeletons/CategoryListSkeleton";
 import { useInView } from "react-intersection-observer";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/context/store";
@@ -16,7 +17,6 @@ const Home = () => {
     useCategoriesList();
 
   const { data: forYouPosts, isLoading: forYouLoading } = useForYouPosts(4);
-
   return (
     <div className="flex flex-col min-h-screen">
       <Hero />
@@ -32,9 +32,7 @@ const Home = () => {
       )}
 
       {categoriesLoading ? (
-        <div className="py-12 text-center text-muted-foreground">
-          Loading sections...
-        </div>
+        <CategoryListSkeleton />
       ) : (
         categoryList
           ?.slice(0, 4)

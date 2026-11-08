@@ -22,10 +22,7 @@ const InCaseMissed = () => {
   const posts = data?.posts || [];
 
   return (
-    <section
-      ref={ref}
-      className="max-w-[90rem] mx-auto px-4 py-12 md:px-6 my-12"
-    >
+    <section ref={ref} className="px-4 py-12 md:px-6 my-12">
       <div className="mb-6 flex items-end justify-between">
         <div>
           <h2 className="font-serif text-2xl font-bold tracking-tight">

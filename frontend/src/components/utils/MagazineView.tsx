@@ -4,6 +4,7 @@ import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
 import { fetchPosts } from "@/api/handlers/posts";
 import { getOptimizedImageUrl } from "@/lib/optimizedImageUrl";
+import MagazineSkeleton from "@/components/skeletons/MagazineSkeleton";
 
 const getDayKey = (date: Date) =>
   `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
@@ -42,23 +43,15 @@ const MagazineView = ({ index }: { index: number }) => {
     enabled: inView,
   });
   const post = data?.posts?.[index];
-  const sectionClass = "max-w-[90rem] h-[90vh] min-h-[36rem] my-16 mx-auto";
-
   if (!inView || isLoading) {
-    return (
-      <div
-        ref={ref}
-        className={`${sectionClass} bg-muted animate-pulse`}
-        aria-hidden="true"
-      />
-    );
+    return <MagazineSkeleton ref={ref} />;
   }
 
   if (!post) {
     return (
       <section
         ref={ref}
-        className={`${sectionClass} grid place-items-center bg-black text-white`}
+        className="max-w-[90rem] h-[90vh] min-h-[36rem] my-16 mx-auto grid place-items-center bg-black text-white"
       >
         {isError
           ? "Unable to load magazine story."
@@ -70,7 +63,7 @@ const MagazineView = ({ index }: { index: number }) => {
   return (
     <div
       ref={ref}
-      className={`${sectionClass} grid grid-rows-2 bg-black text-white no-underline md:grid-rows-1 md:grid-cols-2`}
+      className="max-w-[90rem] h-[90vh] min-h-[36rem] my-16 mx-auto grid grid-rows-2 bg-black text-white no-underline md:grid-rows-1 md:grid-cols-2"
     >
       <div className="flex flex-col gap-6 max-w-md mx-auto py-10 justify-center text-white text-center">
         <p className="font-grotesk">{post.postType}</p>

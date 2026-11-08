@@ -38,6 +38,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { handleImage } from "@/lib/cloudinaryUpload";
 import CategoryManager from "@/components/shared/CategoryManager";
+import UserProfileSkeleton from "@/components/skeletons/UserProfileSkeleton";
 
 type Section = "overview" | "posts" | "saved" | "categories" | "create";
 
@@ -166,7 +167,7 @@ const User = () => {
         <section className="min-w-0 flex-1">
           <div className="mx-auto max-w-[1180px] px-4 py-8 sm:px-7 lg:px-10 lg:py-10">
             {isLoading ? (
-              <ProfileLoading />
+              <UserProfileSkeleton />
             ) : isError ? (
               <div
                 role="alert"
@@ -691,18 +692,6 @@ function EmptyState({
             <ArrowUpRight className="size-4" />
           </Button>
         )}
-      </div>
-    </div>
-  );
-}
-
-function ProfileLoading() {
-  return (
-    <div className="animate-pulse space-y-6">
-      <div className="h-24 rounded-2xl bg-neutral-200" />
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
-        <div className="h-[520px] rounded-2xl bg-neutral-200" />
-        <div className="h-64 rounded-2xl bg-neutral-200" />
       </div>
     </div>
   );

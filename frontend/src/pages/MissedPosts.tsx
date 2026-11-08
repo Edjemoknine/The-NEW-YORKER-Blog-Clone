@@ -4,6 +4,7 @@ import { NewsCard } from "@/components/utils/NewsCard";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { ComponentProps } from "react";
 import { useState } from "react";
+import MissedPostsSkeleton from "@/components/skeletons/MissedPostsSkeleton";
 
 type MissedPostsResponse = {
   posts: ComponentProps<typeof NewsCard>["post"][];
@@ -35,14 +36,7 @@ const MissedPostsPage = () => {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={i}
-              className="h-64 bg-muted/50 animate-pulse rounded-xl"
-            />
-          ))}
-        </div>
+        <MissedPostsSkeleton />
       ) : posts.length === 0 ? (
         <div className="py-20 text-center text-muted-foreground">
           <p>No stories published before today.</p>

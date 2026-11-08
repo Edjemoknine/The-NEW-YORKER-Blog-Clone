@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { NewsCard } from "./NewsCard";
+import RecommendationsSkeleton from "@/components/skeletons/RecommendationsSkeleton";
 
 interface RecommendationsProps {
   recommendations?: {
@@ -16,19 +17,7 @@ const Recommendations = ({
   const posts = recommendations?.data || [];
 
   if (isLoading) {
-    return (
-      <div className="max-w-[90rem] mx-auto px-4 pb-12 md:px-6 my-6">
-        <div className="mb-6 h-7 w-52 bg-muted animate-pulse rounded-md" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {[...Array(4)].map((_, i) => (
-            <div
-              key={i}
-              className="h-[340px] bg-muted/50 animate-pulse rounded-xl border border-border/40 p-4 flex flex-col justify-between"
-            />
-          ))}
-        </div>
-      </div>
-    );
+    return <RecommendationsSkeleton />;
   }
 
   if (posts.length === 0) {

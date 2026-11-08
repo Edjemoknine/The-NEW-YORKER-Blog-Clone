@@ -11,6 +11,7 @@ import { userData } from "@/api/handlers/auth";
 import { useSavePost } from "@/api/hooks/usePosts";
 import { useRecommendations } from "@/api/hooks/useRecommendation";
 import Recommendations from "@/components/utils/Recommendations";
+import BlogDetailsSkeleton from "@/components/skeletons/BlogDetailsSkeleton";
 import { trackEvent } from "@/api/handlers/recommendations";
 
 const BlogDetails = () => {
@@ -22,7 +23,7 @@ const BlogDetails = () => {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: details } = useQuery({
+  const { data: details, isLoading: detailsLoading } = useQuery({
     queryKey: ["details", postId],
     queryFn: () => fetchPost(postId!),
   });
@@ -63,6 +64,8 @@ const BlogDetails = () => {
   const isSaved = profile?.savedPost.some(
     (post: { id: string }) => post.id === postId,
   );
+
+  if (detailsLoading) return <BlogDetailsSkeleton />;
 
   return (
     <div className="">

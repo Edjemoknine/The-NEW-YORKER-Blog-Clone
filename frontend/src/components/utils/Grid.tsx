@@ -2,6 +2,7 @@
 import Heading from "./Heading";
 import GameCard from "../shared/GameCard";
 import { NewsCard } from "./NewsCard";
+import GridSkeleton from "@/components/skeletons/GridSkeleton";
 
 type Props = {
   type: string;
@@ -23,7 +24,7 @@ const Grid = ({
 }: Props) => {
   if (isLoading) {
     return (
-      <section className="max-w-[90rem] mx-auto px-4 pb-10 md:px-6">
+      <section className="px-4 pb-10 md:px-6">
         {showHeading && (
           <Heading
             image={image}
@@ -31,19 +32,7 @@ const Grid = ({
             paragraph={HeadingSubTitle}
           />
         )}
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 my-6 lg:grid-cols-4 gap-6">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="animate-pulse">
-              <div className="aspect-[16/10] rounded-sm bg-muted/50" />
-              <div className="mt-4 h-3 w-1/4 rounded bg-muted" />
-              <div className="mt-3 h-5 w-full rounded bg-muted" />
-              <div className="mt-2 h-5 w-4/5 rounded bg-muted" />
-              <div className="mt-3 h-4 w-full rounded bg-muted/70" />
-              <div className="mt-2 h-4 w-3/4 rounded bg-muted/70" />
-              <div className="mt-5 h-8 border-t border-border/20" />
-            </div>
-          ))}
-        </div>
+        <GridSkeleton />
       </section>
     );
   }
