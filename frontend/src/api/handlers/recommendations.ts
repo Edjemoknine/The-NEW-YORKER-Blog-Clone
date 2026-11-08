@@ -1,16 +1,5 @@
 import api from "./client";
-
-type UserEvent =
-  | {
-      eventType: "post_view";
-      postId: string;
-      metadata?: Record<string, unknown>;
-    }
-  | {
-      eventType: "search";
-      searchQuery: string;
-      postId: string;
-    };
+import type { FetchForYouParams, UserEvent } from "@/types/recommendations";
 
 export const trackEvent = async (event: UserEvent) => {
   try {
@@ -22,10 +11,7 @@ export const trackEvent = async (event: UserEvent) => {
   }
 };
 
-export const fetchForYouPosts = async (params: {
-  limit: number;
-  page: number;
-}) => {
+export const fetchForYouPosts = async (params: FetchForYouParams) => {
   const response = await api.get(`/api/events`, {
     params,
   });

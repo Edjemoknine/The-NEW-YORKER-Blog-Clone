@@ -1,8 +1,8 @@
 import { useCategories } from "@/api/hooks/useCategories";
 import { cn } from "@/lib/utils";
+import { Category } from "@/types/categories";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import type { Category } from "@/api/handlers/categories";
 
 const Categories = () => {
   const [hideScroll, setHideScroll] = useState(false);

@@ -7,12 +7,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-declare module "axios" {
-  interface AxiosRequestConfig {
-    _retry?: boolean;
-  }
-}
-
 let refreshRequest: Promise<void> | null = null;
 
 api.interceptors.response.use(

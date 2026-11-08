@@ -11,12 +11,8 @@ import {
 } from "@/components/ui/popover";
 
 import { useCategories } from "@/api/hooks/useCategories";
-import type { Category } from "@/api/handlers/categories";
-
-type SelectCategoryProps = {
-  value: string[];
-  onChange: (value: string[]) => void;
-};
+import type { Category } from "@/types/categories";
+import type { SelectCategoryProps } from "@/types/categories";
 export function SelectCategory({ onChange, value }: SelectCategoryProps) {
   const [open, setOpen] = useState(false);
 

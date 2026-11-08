@@ -7,13 +7,11 @@ import {
   useCategoryPosts,
   useDeleteCategory,
 } from "@/api/hooks/useCategories";
-import type { Category } from "@/api/handlers/categories";
+import type { Category, CategoryPost } from "@/types/categories";
 import { NewsCard } from "@/components/utils/NewsCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import DeleteCategoryModel from "@/components/shared/DeleteCategoryModel";
-
-type CategoryPost = React.ComponentProps<typeof NewsCard>["post"];
 
 const CategoryManager = () => {
   const [categoryName, setCategoryName] = useState("");

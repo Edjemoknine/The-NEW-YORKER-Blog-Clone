@@ -2,14 +2,9 @@
 import { fetchMissedPosts } from "@/api/handlers/posts";
 import { NewsCard } from "@/components/utils/NewsCard";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import type { ComponentProps } from "react";
 import { useState } from "react";
 import MissedPostsSkeleton from "@/components/skeletons/MissedPostsSkeleton";
-
-type MissedPostsResponse = {
-  posts: ComponentProps<typeof NewsCard>["post"][];
-  totalPages: number;
-};
+import type { MissedPostsResponse } from "@/types/posts";
 
 const MissedPostsPage = () => {
   const [page, setPage] = useState(1);
@@ -25,7 +20,7 @@ const MissedPostsPage = () => {
   const totalPages = data?.totalPages || 1;
 
   return (
-    <main className="max-w-[90rem] mx-auto px-4 pt-40 md:px-6 min-h-screen">
+    <main className="max-w-[90rem] mx-auto px-4 pb-12 pt-40 md:px-6 min-h-screen">
       <div className="mb-8 border-b pb-4">
         <h1 className="font-serif text-3xl font-bold tracking-tight mb-2">
           All Earlier Stories

@@ -2,13 +2,7 @@
 
 import { NewsCard } from "./NewsCard";
 import RecommendationsSkeleton from "@/components/skeletons/RecommendationsSkeleton";
-
-interface RecommendationsProps {
-  recommendations?: {
-    data?: any[];
-  };
-  isLoading?: boolean;
-}
+import type { RecommendationsProps } from "@/types/posts";
 
 const Recommendations = ({
   recommendations,

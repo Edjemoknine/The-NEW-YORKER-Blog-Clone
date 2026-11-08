@@ -1,9 +1,5 @@
 import api from "./client";
-
-export type Category = {
-  id: string;
-  name: string;
-};
+import type { Category } from "@/types/categories";
 
 export const addCategory = async (category: string) => {
   const { data } = await api.post<Category>("/api/categories", { category });

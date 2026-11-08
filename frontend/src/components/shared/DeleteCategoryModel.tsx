@@ -8,14 +8,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import type { Category } from "@/api/handlers/categories";
-
-type DeleteCategoryModelProps = {
-  category: Category | null;
-  isDeleting: boolean;
-  onOpenChange: (open: boolean) => void;
-  onConfirm: () => void;
-};
+import type { DeleteCategoryModelProps } from "@/types/categories";
 
 const DeleteCategoryModel = ({
   category,

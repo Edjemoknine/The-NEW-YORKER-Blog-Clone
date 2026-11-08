@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "@/api/handlers/client";
-
-type SessionStatus = "unknown" | "checking" | "authenticated" | "unauthenticated" | "error";
+import type { LoginPayload, SessionStatus } from "@/types/auth";
 
 const getStoredUser = () => {
   const storedUser = localStorage.getItem("user");
@@ -26,11 +25,6 @@ const initialState = {
   sessionStatus: "unknown" as SessionStatus,
 };
 
-interface LoginPayload {
-  name: string;
-  email: string;
-  password: string;
-}
 // Register
 
 export const register = createAsyncThunk(

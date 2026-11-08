@@ -1,25 +1,6 @@
-import { FormValues } from "@/components/forms/PostForm";
+import type { CreatePostProps, FetchPostsParams } from "@/types/posts";
 import api from "./client";
 
-type Props = {
-  category?: string;
-  postType?: string;
-  limit: number;
-  search?: string;
-  pageParam?: number;
-  sortBy?: string;
-  order?: "asc" | "desc";
-};
-export type PostProps = {
-  title: string;
-  description: string;
-  content: string;
-  postType: FormValues["postType"];
-  categories: string[];
-  ImG: string;
-  userId: string;
-};
-export type CreatePostProps = FormValues & { userId: string };
 export const fetchPosts = async ({
   category = "",
   postType,
@@ -28,7 +9,7 @@ export const fetchPosts = async ({
   pageParam = 1,
   sortBy,
   order,
-}: Props) => {
+}: FetchPostsParams) => {
   const params = new URLSearchParams({
     category,
     limit: String(limit),

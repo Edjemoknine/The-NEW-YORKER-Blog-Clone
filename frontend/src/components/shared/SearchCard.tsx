@@ -1,18 +1,5 @@
 import { Link } from "react-router-dom";
-
-interface SearchCardProps {
-  item: {
-    id: string;
-    title?: string;
-    desc?: string;
-    username?: {
-      name: string;
-    };
-    date?: string | number | Date | undefined;
-    image?: string;
-    categories?: string[];
-  };
-}
+import type { SearchCardProps } from "@/types/posts";
 
 const SearchCard: React.FC<SearchCardProps> = ({ item }) => {
   const date = item.date == null ? null : new Date(item.date);

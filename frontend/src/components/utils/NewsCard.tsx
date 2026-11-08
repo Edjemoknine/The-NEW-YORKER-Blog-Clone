@@ -1,22 +1,8 @@
 import { Link } from "react-router-dom";
 import { getOptimizedImageUrl } from "@/lib/optimizedImageUrl";
+import type { NewsCardProps } from "@/types/posts";
 
-interface PostCardProps {
-  post: {
-    id?: string;
-    _id?: string;
-    title: string;
-    desc: string;
-    image: string;
-    postType?: string;
-    categories: string[];
-    username?: { name: string };
-    createdAt?: string;
-  };
-  onClick?: () => void;
-}
-
-export function NewsCard({ post, onClick }: PostCardProps) {
+export function NewsCard({ post, onClick }: NewsCardProps) {
   return (
     <article
       onClick={onClick}

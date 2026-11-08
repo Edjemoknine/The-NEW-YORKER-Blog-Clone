@@ -2,11 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/components/ui/use-toast";
 import {
   createPost,
-  CreatePostProps,
   deletePost,
   savePost,
   updatePost,
 } from "../handlers/posts";
+import { CreatePostProps } from "@/types/posts";
 
 export const useCreatePost = () => {
   const queryClient = useQueryClient();

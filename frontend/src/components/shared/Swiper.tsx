@@ -7,21 +7,9 @@ import { getOptimizedImageUrl } from "@/lib/optimizedImageUrl";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-type BlogProps = {
-  data: MagazinePost[];
-};
+import type { MagazineSliderProps } from "@/types/posts";
 
-type MagazinePost = {
-  _id: string;
-  title: string;
-  desc: string;
-  image: string;
-  postType?: string;
-  categories?: string[];
-  username?: { name: string };
-};
-
-const Slider = ({ data }: BlogProps) => {
+const Slider = ({ data }: MagazineSliderProps) => {
   const pagination = {
     clickable: true,
   };

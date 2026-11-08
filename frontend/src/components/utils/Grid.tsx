@@ -3,16 +3,7 @@ import Heading from "./Heading";
 import GameCard from "../shared/GameCard";
 import { NewsCard } from "./NewsCard";
 import GridSkeleton from "@/components/skeletons/GridSkeleton";
-
-type Props = {
-  type: string;
-  data: any;
-  HeadingTitle: string;
-  HeadingSubTitle: string;
-  image?: string;
-  isLoading?: boolean;
-  showHeading?: boolean;
-};
+import type { GridProps } from "@/types/posts";
 const Grid = ({
   type,
   data,
@@ -21,7 +12,7 @@ const Grid = ({
   image,
   isLoading,
   showHeading = true,
-}: Props) => {
+}: GridProps) => {
   if (isLoading) {
     return (
       <section className="px-4 pb-10 md:px-6">

@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useContext, useState } from "react";
-
-interface AuthContextType {
-  user: any;
-  setUser: React.Dispatch<React.SetStateAction<any>>;
-}
+import type { AuthContextType } from "@/types/auth";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 

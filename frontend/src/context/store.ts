@@ -4,9 +4,6 @@ import authSlice from "./authSlice";
 const store = configureStore({
   reducer: { auth: authSlice },
 });
-
-
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
+export type { AppDispatch, RootState } from "@/types/store";
 
 export default store;
