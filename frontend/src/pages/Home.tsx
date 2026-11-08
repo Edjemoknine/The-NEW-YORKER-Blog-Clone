@@ -27,7 +27,6 @@ const Home = () => {
           isLoading={forYouLoading}
           HeadingTitle="For You"
           HeadingSubTitle="Recommended for you"
-          type="News"
         />
       )}
 
@@ -73,7 +72,6 @@ const DynamicCategoryRow = ({ name }: { name: string }) => {
         isLoading={!inView || isLoading}
         HeadingTitle={name}
         HeadingSubTitle={`Latest posts and insights in ${name}`}
-        type="category"
       />
     </div>
   );

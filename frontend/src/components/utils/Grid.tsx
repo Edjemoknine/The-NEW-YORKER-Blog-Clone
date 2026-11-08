@@ -1,18 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Heading from "./Heading";
-import GameCard from "../shared/GameCard";
 import { NewsCard } from "./NewsCard";
 import GridSkeleton from "@/components/skeletons/GridSkeleton";
-import type { GridProps } from "@/types/posts";
+import type { PostCardPost } from "@/types/posts";
+
 const Grid = ({
-  type,
   data,
   HeadingTitle,
   HeadingSubTitle,
   image,
   isLoading,
   showHeading = true,
-}: GridProps) => {
+}: {
+  data?: { posts?: PostCardPost[] };
+  HeadingTitle: string;
+  HeadingSubTitle: string;
+  image?: string;
+  isLoading?: boolean;
+  showHeading?: boolean;
+}) => {
   if (isLoading) {
     return (
       <section className="px-4 pb-10 md:px-6">
@@ -37,12 +43,8 @@ const Grid = ({
         />
       )}
       <div className="grid sm:grid-cols-2 md:grid-cols-3 my-6 lg:grid-cols-4 gap-6 divide-x2 divide-gray-500">
-        {data?.posts?.map((item: any, index: number) => {
-          return type === "game" ? (
-            <GameCard key={index} />
-          ) : (
-            <NewsCard post={item} key={index} />
-          );
+        {data?.posts?.map((item, index) => {
+          return <NewsCard post={item} key={index} />;
         })}
       </div>
       {data?.posts?.length === 0 ? (

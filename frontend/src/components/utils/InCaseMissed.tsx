@@ -47,7 +47,6 @@ const InCaseMissed = () => {
         </p>
       ) : !inView || isLoading ? (
         <Grid
-          type="News"
           data={data}
           HeadingTitle="In Case You Missed It"
           HeadingSubTitle="Catch up on stories published before today."
@@ -56,7 +55,6 @@ const InCaseMissed = () => {
         />
       ) : posts.length ? (
         <Grid
-          type="News"
           data={data}
           HeadingTitle="In Case You Missed It"
           HeadingSubTitle="Catch up on stories published before today."

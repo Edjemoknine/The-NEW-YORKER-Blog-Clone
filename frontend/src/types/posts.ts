@@ -113,16 +113,6 @@ export type MissedPostsResponse = {
   totalPages: number;
 };
 
-export type GridProps = {
-  type: string;
-  data?: { posts?: PostCardPost[] };
-  HeadingTitle: string;
-  HeadingSubTitle: string;
-  image?: string;
-  isLoading?: boolean;
-  showHeading?: boolean;
-};
-
 export type RecommendationsProps = {
   recommendations?: {
     data?: PostCardPost[];
